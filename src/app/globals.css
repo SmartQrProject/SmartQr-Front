@@ -15,3 +15,74 @@ h4, h5, h6 {
     font-family: var(--font-lato), 'Lato', sans-serif;
     font-weight: 600; 
 }
+
+@theme {
+    --color-sage-950: #0A100E;
+    --color-sage-900: #1D302A;
+    --color-sage-800: #305046;
+    --color-sage-700: #49796B;
+    --color-sage-600: #568F7F;
+    --color-sage-500: #70A998;
+    --color-sage-400: #90BCAF;
+    --color-sage-300: #AFCFC6;
+    --color-sage-200: #CFE2DD;
+    --color-sage-100: #EFF5F4;
+    --color-sage-50: #F7FAF9;
+
+    --color-sienna-950: #160704;
+    --color-sienna-900: #41160B;
+    --color-sienna-800: #6D2412;
+    --color-sienna-700: #99331A;
+    --color-sienna-600: #C44121;
+    --color-sienna-500: #DE5A3B;
+    --color-sienna-400: #E57F66;
+    --color-sienna-300: #EDA492;
+    --color-sienna-200: #F4C8BE;
+    --color-sienna-100: #FBEDE9;
+    --color-sienna-50: #FFF5F2;
+
+    --color-default-950: #0A0C0F;
+    --color-default-900: #1F242D;
+    --color-default-800: #343D4C;
+    --color-default-700: #49556A;
+    --color-default-600: #5D6D88;
+    --color-default-500: #7787A2;
+    --color-default-400: #95A1B6;
+    --color-default-300: #B3BCCC;
+    --color-default-200: #D2D7E0;
+    --color-default-100: #F0F2F5;
+    --color-default-50: #F8F9FB;
+}
+
+.sage-light {
+  --color-bg: var(--color-sage-100);
+  --color-text: var(--color-sage-900);
+  --color-primary: var(--color-sage-600);
+}
+.sage-dark {
+  --color-bg: var(--color-sage-900);
+  --color-text: var(--color-sage-100);
+  --color-primary: var(--color-sage-400);
+}
+
+.sienna-light {
+  --color-bg: var(--color-sienna-100);
+  --color-text: var(--color-sienna-900);
+  --color-primary: var(--color-sienna-600);
+}
+.sienna-dark {
+  --color-bg: var(--color-sienna-900);
+  --color-text: var(--color-sienna-100);
+  --color-primary: var(--color-sienna-400);
+}
+
+.default-light {
+  --color-bg: var(--color-default-100);
+  --color-text: var(--color-default-900);
+  --color-primary: var(--color-default-600);
+}
+.default-dark {
+  --color-bg: var(--color-default-950);
+  --color-text: var(--color-default-100);
+  --color-primary: var(--color-default-400);
+}
