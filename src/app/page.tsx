@@ -1,5 +1,6 @@
-// src/app/page.tsx
-
-export default function Page() {
+"use client";
+const Page = () => {
     return <div>page</div>;
-}
+};
+
+export default Page;
