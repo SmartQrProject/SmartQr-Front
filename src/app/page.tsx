@@ -1,5 +1,5 @@
-const Page = () => {
-    return <div>page</div>;
-};
+// src/app/page.tsx
 
-export default Page;
+export default function Page() {
+    return <div>page</div>;
+}
