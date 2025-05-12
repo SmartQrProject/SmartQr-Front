@@ -1,5 +1,21 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Lato, Open_Sans } from 'next/font/google';
+import { Toaster } from "react-hot-toast";
+
+const lato = Lato({ 
+  subsets: ['latin'],
+  variable: '--font-lato',
+  display: 'swap',
+  weight: ['400', '700', '900'],
+});
+
+const openSans = Open_Sans({ 
+  subsets: ['latin'],
+  variable: '--font-open-sans',
+  display: 'swap',
+});
+
 
 
 
@@ -14,10 +30,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-       
-      >
+    <html lang="en" className={`${lato.variable} ${openSans.variable}`}>
+      <body className="bg-gray-200 min-h-screen flex flex-col">
+      <Toaster position="top-center" />
         {children}
       </body>
     </html>
