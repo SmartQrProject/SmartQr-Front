@@ -4,8 +4,7 @@ import { Lato, Open_Sans } from 'next/font/google';
 import { Toaster } from "react-hot-toast";
 import { AdminRegisterProvider } from "./(admin)/register/adminRegisterContext";
 import { AdminLoginProvider } from "./(admin)/login/adminLoginContext";
-import Navbar from "@/components/subscribers/navbar/Navbar";
-import Footer from "@/components/subscribers/footer/Footer";
+
 
 
 
@@ -41,9 +40,9 @@ export default function RootLayout({
       <Toaster position="top-center" />
       <AdminLoginProvider>
         <AdminRegisterProvider>
-          <Navbar/>
+          
           {children}
-          <Footer/>
+          
         </AdminRegisterProvider>
       </AdminLoginProvider>
       </body>
