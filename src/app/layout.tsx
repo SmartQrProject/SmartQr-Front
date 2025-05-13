@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Lato, Open_Sans } from 'next/font/google';
 import { Toaster } from "react-hot-toast";
+import { AdminRegisterProvider } from "./(admin)/register/adminRegisterContext";
+import { AdminLoginProvider } from "./(admin)/login/adminLoginContext";
 import Navbar from "@/components/subscribers/navbar/Navbar";
 import Footer from "@/components/subscribers/footer/Footer";
+
 
 
 const lato = Lato({ 
@@ -34,11 +37,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${lato.variable} ${openSans.variable}`}>
-      <body className="bg-gray-200 min-h-screen flex flex-col">
+      <body className=" min-h-screen flex flex-col">
       <Toaster position="top-center" />
-      <Navbar/>
-        {children}
-      <Footer/>
+      <AdminLoginProvider>
+        <AdminRegisterProvider>
+          <Navbar/>
+          {children}
+          <Footer/>
+        </AdminRegisterProvider>
+      </AdminLoginProvider>
       </body>
     </html>
   );
