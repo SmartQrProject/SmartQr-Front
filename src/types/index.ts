@@ -1,4 +1,4 @@
-export interface IAdmin{
+export interface IAdmin {
     id: number;
     name: string;
     email: string;
@@ -6,13 +6,11 @@ export interface IAdmin{
     storeName: string;
     slug: string;
     password: string;
-
 }
 
-
-enum Role{
+enum Role {
     ADMIN = "admin",
-    USER = "user"
+    USER = "user",
 }
 
 export interface IAdminRegister {
@@ -25,11 +23,23 @@ export interface IAdminRegister {
 }
 
 export interface IAdminSession {
-    user:IAdmin;
-   
+    user: IAdmin;
 }
 
 export interface IAdminLogin {
     email: string;
     password: string;
 }
+
+// Chat bot
+
+export type Message = {
+    sender: "user" | "bot";
+    text: string;
+};
+
+export type ChatWindowProps = {
+    messages: Message[];
+    setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+    close: () => void;
+};
