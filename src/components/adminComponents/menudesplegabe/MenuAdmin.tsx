@@ -15,17 +15,17 @@ const MenuAdmin = () => {
           <span className='text-md'>Restaurant</span>          
         </div>
         
-        <Link href={"/dashboardAdmin"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF] '><HiOutlineHome/>Home</Link>
+        <Link href={"/dashboard"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF] '><HiOutlineHome/>Home</Link>
         
-        <Link href={"/dashboardAdmin/stores"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF] '><HiOutlineBuildingStorefront/>Stores</Link>
+        <Link href={"/dashboard/stores"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF] '><HiOutlineBuildingStorefront/>Stores</Link>
         
-        <Link href={"/dashboardAdmin/orders"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF]'><HiOutlineShoppingBag/>Orders</Link>
+        <Link href={"/dashboard/orders"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF]'><HiOutlineShoppingBag/>Orders</Link>
         
-        <Link href={"/dashboardAdmin/reports"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF]'><HiOutlineChartBar/>Reports</Link>
+        <Link href={"/dashboard/reports"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF]'><HiOutlineChartBar/>Reports</Link>
         
-        <Link href={"/dashboardAdmin/menu"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF] '><GiKnifeFork />Menu</Link>
+        <Link href={"/dashboard/menu"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF] '><GiKnifeFork />Menu</Link>
         
-        <Link href={"/dashboardAdmin/settings"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF]'><HiOutlineCog6Tooth/>Settings</Link>
+        <Link href={"/dashboard/settings"} className='flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-[#9CA3AF]'><HiOutlineCog6Tooth/>Settings</Link>
 
         
       </div>
