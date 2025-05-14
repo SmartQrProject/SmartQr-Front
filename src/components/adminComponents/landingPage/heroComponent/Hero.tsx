@@ -5,7 +5,7 @@ export default function Hero() {
     return (
         <div className="bg-[#4285F4] min-h-[500px] w-full relative overflow-hidden py-16">
             <div className="absolute top-0 left-0">
-                <Image src="/imagenes/coffe.png" alt="Coffee beans" width={200} height={200} className="object-contain" priority />
+                <Image unoptimized src="/imagenes/coffe.png" alt="Coffee beans" width={200} height={200} className="object-contain" priority />
             </div>
 
             <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
