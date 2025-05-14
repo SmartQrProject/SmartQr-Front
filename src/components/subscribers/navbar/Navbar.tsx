@@ -20,7 +20,7 @@ const Navbar = () => {
                     <Link href={'/'}>Features</Link>
                     <Link href={'/'}>Benefits</Link>
                     <Link href={'/'}>Pricing</Link>
-                    <Link className='py-2 px-6 bg-[#6494ED] text-white rounded-3xl ' href={'/'}>Sign In</Link>
+                    <Link className='py-2 px-6 bg-[#6494ED] text-white rounded-3xl ' href={'/login'}>Sign In</Link>
                 </div>
             </div>
             
@@ -29,7 +29,7 @@ const Navbar = () => {
                     <Link href={'/'}>Features</Link>
                     <Link href={'/'}>Benefits</Link>
                     <Link href={'/'}>Pricing</Link>
-                    <Link className='py-2 px-6 bg-[#6494ED] text-white rounded-3xl w-fit ' href={'/'}>Sign In</Link>
+                    <Link className='py-2 px-6 bg-[#6494ED] text-white rounded-3xl w-fit ' href={'/login'}>Sign In</Link>
                 </div>
             )}
         </nav>
