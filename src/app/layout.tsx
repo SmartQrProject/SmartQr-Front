@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Lato, Open_Sans } from 'next/font/google';
 import { Toaster } from "react-hot-toast";
-import { AdminRegisterProvider } from "./(admin)/register/adminRegisterContext";
 import { AdminLoginProvider } from "./(admin)/login/adminLoginContext";
 import Navbar from "@/components/subscribers/navbar/Navbar";
 import Footer from "@/components/subscribers/footer/Footer";
@@ -40,11 +39,11 @@ export default function RootLayout({
       <body className=" min-h-screen flex flex-col">
       <Toaster position="top-center" />
       <AdminLoginProvider>
-        <AdminRegisterProvider>
           <Navbar/>
-          {children}
+            <main className="flex-1">
+              {children}
+            </main>
           <Footer/>
-        </AdminRegisterProvider>
       </AdminLoginProvider>
       </body>
     </html>

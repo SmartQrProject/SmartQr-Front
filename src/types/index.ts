@@ -33,3 +33,12 @@ export interface IAdminLogin {
     email: string;
     password: string;
 }
+
+export interface IAdminSession {
+  token: string;
+  IAdmin: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
