@@ -18,11 +18,11 @@ const NavbarAdmin = () => {
 
                 <button className='sm:hidden text-2xl ' onClick={() => setOpen(!open)}>☰</button>
                 
-                <div className='hidden sm:flex space-x-4 items-center '>
-                    <Link className='py-2 px-4 bg-[#9CA3AF] rounded-3xl border border-transparent hover:border-white flex items-center' href={'/'}> <AiOutlineQuestionCircle className="mr-2"/> Get Help</Link>
-                    <Link className='hover:text-[#9CA3AF]' href={'/'}><HiOutlineBell/></Link>
-                    <Link className='hover:text-[#9CA3AF]' href={'/'}>FAQ</Link>
-                    <Link className='py-2 px-4  rounded-3xl border border-transparent hover:border-[#9CA3AF] ' href={'/'}>Log out</Link>
+                <div className='hidden sm:flex items-center '>
+                    <Link className='py-2 px-4 rounded-3xl border border-transparent hover:bg-[#9CA3AF] hover:border-white flex items-center' href={'/'}> <AiOutlineQuestionCircle className="mr-2"/> Get Help</Link>
+                    <Link className='py-2 px-4 rounded-3xl border border-transparent hover:bg-[#9CA3AF] hover:border-white' href={'/'}><HiOutlineBell/></Link>
+                    <Link className='py-2 px-4 rounded-3xl border border-transparent hover:bg-[#9CA3AF] hover:border-white' href={'/'}>FAQ</Link>
+                    <Link className='py-2 px-4 rounded-3xl border border-transparent hover:bg-[#9CA3AF] hover:border-white ' href={'/'}>Log out</Link>
                 </div>
             </div>
             
