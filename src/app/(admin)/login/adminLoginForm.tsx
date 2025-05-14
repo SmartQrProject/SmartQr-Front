@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary";
-import { loginSchema } from "../register/authSchema";
+import { loginSchema } from "../signup/authSchema";
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import Link from "next/link";
@@ -63,7 +63,7 @@ export default function LoginForm() {
         <ButtonPrimary type="submit" disabled={isSubmitting} loading={isSubmitting}>Login</ButtonPrimary>
         <p className="text-sm text-gray-700">
           Do not have an account yet?{" "}
-          <Link href="/register" className="text-blue-500 hover:underline">
+          <Link href="/signup" className="text-blue-500 hover:underline">
             Register
           </Link>
         </p>

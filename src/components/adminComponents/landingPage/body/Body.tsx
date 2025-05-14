@@ -42,13 +42,13 @@ export default function RestaurantFeatures() {
                 </div>
 
                 <div className="md:w-1/2 flex justify-center md:justify-end">
-                    <Image src="/imagenes/qr.jpg" alt="Digital menu management on tablet" width={400} height={300} className="rounded-md object-cover" />
+                    <Image unoptimized src="/imagenes/qr.jpg" alt="Digital menu management on tablet" width={400} height={300} className="rounded-md object-cover" />
                 </div>
             </div>
 
             <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-8">
                 <div className="md:w-1/2 flex justify-center md:justify-start">
-                    <Image src="/imagenes/home-section.jpg" alt="Chef working in restaurant" width={400} height={300} className="rounded-md object-cover" />
+                    <Image unoptimized src="/imagenes/home-section.jpg" alt="Chef working in restaurant" width={400} height={300} className="rounded-md object-cover" />
                 </div>
 
                 <div className="md:w-1/2">

@@ -31,6 +31,15 @@ export interface IAdminLogin {
     password: string;
 }
 
+export interface IAdminSession {
+  token: string;
+  IAdmin: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
 // Chat bot
 
 export type Message = {

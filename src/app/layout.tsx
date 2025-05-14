@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Lato, Open_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
-import { AdminRegisterProvider } from "./(admin)/register/adminRegisterContext";
 import { AdminLoginProvider } from "./(admin)/login/adminLoginContext";
 import ChatBot from "@/components/chatbot/ChatBot";
 
@@ -34,10 +33,10 @@ export default function RootLayout({
             <body className=" min-h-screen flex flex-col">
                 <Toaster position="top-center" />
                 <AdminLoginProvider>
-                    <AdminRegisterProvider>
-                        {children}
-                        <ChatBot />
-                    </AdminRegisterProvider>
+                  <main className="flex-1">
+                      {children}
+                  </main>
+                  <ChatBot />
                 </AdminLoginProvider>
             </body>
         </html>

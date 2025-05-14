@@ -3,7 +3,7 @@ import RegisterForm from './AdminRegisterForm'
 
 const AdminRegisterPage = () => {
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen bg-default-100">
      
       <div className="w-full md:w-[70%] h-64 md:h-auto">
         <img

@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterFormInputs, AdminRegisterSchema } from "./authSchema";
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { loadStripe } from "@stripe/stripe-js";
 import Link from "next/link";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary";
 import { useState } from "react";
@@ -17,7 +16,7 @@ export default function RegisterForm() {
 
   const {
     register,
-    handleSubmit,
+    handleSubmit, 
     formState: { errors, isSubmitting },
     reset,
   } = useForm<RegisterFormInputs>({
@@ -26,31 +25,28 @@ export default function RegisterForm() {
 
   const onSubmit = async (data: RegisterFormInputs) => {
     setIsLoading(true);
-    try {
-      const res = await fetch(`${APIURL}/stripe/checkout-session`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
 
+    try {
+      const { ...cleanData } = data;
+      localStorage.setItem("pendingRestaurant", JSON.stringify(cleanData));
+
+      const res = await fetch(`${APIURL}/stripe/subscription-session`);
       const { url } = await res.json();
 
       if (!url) {
-        toast.error("Stripe Checkout URL not received.");
-        return;
+        throw new Error("No Stripe session found");
       }
 
-      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-      if (stripe) {
-        window.location.href = url; 
-      }
-    } catch (error) {
+      window.location.href = url;
+    } catch (error: any) {
+      const message = error?.message || "Something went wrong. Please try again";
+      toast.error(message);
       console.error("Checkout error:", error);
-      toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="max-w-md mx-auto mt-10 mb-10 p-6 bg-default-50 rounded-xl">
@@ -69,7 +65,7 @@ export default function RegisterForm() {
 
         <div>
           <label>Store Name</label>
-          <input {...register("storeName")} className="w-full p-2 bg-white rounded-md" placeholder="John's Store" />
+          <input {...register("storeName")} className="w-full p-2 bg-white rounded-md" placeholder="My Store" />
           {errors.storeName && <p className="text-red-500">{errors.storeName.message}</p>}
         </div>
 
@@ -91,8 +87,11 @@ export default function RegisterForm() {
           {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
         </div>
 
-        <ButtonPrimary type="submit" disabled={isSubmitting || isLoading}>
-          {isLoading ? "Redirecting..." : "Continue to Checkout"}
+        <ButtonPrimary
+          type="submit"
+          loading={isSubmitting || isLoading}
+        >
+          Continue to Checkout
         </ButtonPrimary>
 
         <p className="text-sm text-gray-700">

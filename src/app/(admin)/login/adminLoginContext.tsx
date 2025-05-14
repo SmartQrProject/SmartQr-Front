@@ -37,12 +37,12 @@ export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
                 throw new Error(data.message || "Login failed");
             }
 
-            setUser(data);
-            localStorage.setItem("userSession", JSON.stringify(data));
-        } catch (error) {
-            throw error;
-        }
-    };
+      setUser(data);
+      localStorage.setItem("userSession", JSON.stringify({token: data.token, user: data.user}));
+    } catch (error) {
+      throw error;
+    }
+  };
 
     const logoutAdmin = () => {
         setUser(null);
