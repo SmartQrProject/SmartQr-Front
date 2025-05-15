@@ -5,6 +5,8 @@ import { Toaster } from "react-hot-toast";
 import { AdminLoginProvider } from "./(admin)/login/adminLoginContext";
 import ChatBot from "@/components/chatbot/ChatBot";
 
+
+
 const lato = Lato({
     subsets: ["latin"],
     variable: "--font-lato",
@@ -31,13 +33,15 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${lato.variable} ${openSans.variable}`}>
             <body className=" min-h-screen flex flex-col">
+                
                 <Toaster position="top-center" />
                 <AdminLoginProvider>
-                  <main className="flex-1">
-                      {children}
-                  </main>
-                  <ChatBot />
+                <main className="flex-1">
+                    {children}
+                </main>
+                <ChatBot />
                 </AdminLoginProvider>
+            
             </body>
         </html>
     );
