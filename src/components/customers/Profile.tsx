@@ -1,5 +1,6 @@
 'use client';
 import { useUser, getAccessToken } from '@auth0/nextjs-auth0';
+import Link from 'next/link';
 import { useEffect } from 'react';
 
 export default function CustomerProfile() {
@@ -22,7 +23,7 @@ export default function CustomerProfile() {
           body: JSON.stringify({
             name: user.name,
             email: user.email,
-            sub: user.sub,
+            auth0Id: user.sub,
             picture: user.picture,
           }),
         });
@@ -41,14 +42,22 @@ export default function CustomerProfile() {
   if (!user) return <p>No autenticado</p>;
 
   return (
-    <div className="text-center mt-20">
-      <img
-        src={user.picture ?? ''}
-        alt="Foto"
-        className="rounded-full w-20 h-20 mx-auto"
-      />
-      <h2 className="text-xl font-bold">{user.name}</h2>
-      <p>{user.email}</p>
-    </div>
+
+    <>
+    
+        <div className="text-center mt-20">
+        <img
+            src={user.picture ?? ''}
+            alt="Foto"
+            className="rounded-full w-20 h-20 mx-auto"
+        />
+        <h2 className="text-xl font-bold">{user.name}</h2>
+        <p>{user.email}</p>
+        </div>
+        <Link href="/" className="bg-blue-500 text-white p-4 rounded-md     ">
+        Home
+        </Link>
+    
+    </>
   );
 }
