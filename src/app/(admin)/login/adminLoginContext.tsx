@@ -13,7 +13,16 @@ interface IAuthContextProps {
 }
 
 const AuthContext = createContext<IAuthContextProps | undefined>(undefined);
-
+function parseJwt(token: string) {
+  try {
+    const base64Payload = token.split('.')[1];
+    const payload = atob(base64Payload);
+    return JSON.parse(payload);
+  } catch (e) {
+    console.error("Error parsing JWT:", e);
+    return null;
+  }
+}
 export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<IAdminSession | null>(null);
 
@@ -36,9 +45,13 @@ export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
           if (!response.ok) {
               throw new Error(data.message || "Login failed");
           }
+          const decodedToken = parseJwt(data.access_token)
 
-      setUser({token: data.access_token});
-      localStorage.setItem("adminSession", JSON.stringify({token: data.access_token}));
+      setUser({ token: data.access_token, ...decodedToken });
+      localStorage.setItem("adminSession", JSON.stringify({
+      token: data.access_token,
+      payload: decodedToken,
+    }));
     } catch (error) {
       throw error;
     }

@@ -28,7 +28,8 @@ const CategoriesList = () => {
         setError("Token not found");
         return;
       }
-
+      //ELIANA TANGARIFE
+      
       const parsed = JSON.parse(storedData);
       const token = parsed.token;
 
