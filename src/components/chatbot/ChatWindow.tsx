@@ -58,11 +58,11 @@ export default function ChatWindow({ messages, setMessages, close }: ChatWindowP
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                    placeholder="Escribe algo..."
+                    placeholder="Send a mess..."
                     className="chatbot-input"
                 />
                 <button onClick={sendMessage} disabled={loading} className="chatbot-send-button">
-                    {loading ? "..." : "Enviar"}
+                    {loading ? "..." : "Send"}
                 </button>
             </div>
         </div>

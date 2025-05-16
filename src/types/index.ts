@@ -1,3 +1,5 @@
+import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
+
 export interface IAdmin {
     id: number;
     name: string;
@@ -32,12 +34,34 @@ export interface IAdminLogin {
 }
 
 export interface IAdminSession {
-  token: string;
-  IAdmin: {
+    token: string;
+    IAdmin: {
+        id: string;
+        name: string;
+        email: string;
+    };
+}
+
+export interface ITables {
+    id?: number;
+    rest_id?: number;
+    code?: string;
+    is_active?: boolean;
+    created_at?: number;
+    exist: boolean;
+}
+
+export interface IOrder {
     id: string;
-    name: string;
-    email: string;
-  };
+    status: string;
+    payStatus: string;
+    order_type: string;
+    total_price: number;
+    created_at: string;
+    tableId: number;
+    customerId: string;
+    restaurantId: string;
+    exist: boolean;
 }
 
 // Chat bot
