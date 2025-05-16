@@ -18,7 +18,7 @@ export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<IAdminSession | null>(null);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem("userSession");
+        const storedUser = localStorage.getItem("adminSession");
         if (storedUser) {
             setUser(JSON.parse(storedUser));
         }
@@ -37,8 +37,8 @@ export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
               throw new Error(data.message || "Login failed");
           }
 
-      setUser(data);
-      localStorage.setItem("userSession", JSON.stringify({token: data.token, user: data.user}));
+      setUser({token: data.access_token});
+      localStorage.setItem("adminSession", JSON.stringify({token: data.access_token}));
     } catch (error) {
       throw error;
     }
@@ -46,7 +46,7 @@ export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
 
     const logoutAdmin = () => {
         setUser(null);
-        localStorage.removeItem("userSession");
+        localStorage.removeItem("adminSession");
     };
 
     return <AuthContext.Provider value={{ user, setUser, loginAdmin, logoutAdmin }}>{children}</AuthContext.Provider>;
