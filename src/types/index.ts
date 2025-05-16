@@ -23,8 +23,13 @@ export interface IAdminRegister {
 }
 
 export interface IAdminSession {
-    token: string;
+  token: string;
+  id: string;
+  email: string;
+  roles: string;
+  slug: string;
 }
+
 
 export interface IAdminLogin {
     email: string;

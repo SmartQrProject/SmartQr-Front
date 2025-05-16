@@ -1,30 +1,42 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useCreateRestaurantAndUser } from "@/libs/hooks/useCreateRestaurantAndUser";
+import { toast } from "react-hot-toast";
 
 export default function SuccessPage() {
-  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
   const { create } = useCreateRestaurantAndUser();
 
   useEffect(() => {
-    const stored = localStorage.getItem("pendingRestaurant");
-    if (!stored) return;
+    const pendingData = localStorage.getItem("pendingRestaurant");
 
-    const data = JSON.parse(stored);
-    create(data).finally(() => setIsLoading(false));
-  }, [create]);
+    if (!pendingData) {
+      toast.error("No registration data found.");
+      router.push("/signup");
+      return;
+    }
+
+    const parsedData = JSON.parse(pendingData);
+
+    create({
+      storeName: parsedData.storeName,
+      email: parsedData.email,
+      password: parsedData.password,
+      slug: parsedData.slug,
+    }).then(() => {
+      
+      localStorage.removeItem("pendingRestaurant");
+    }).catch((err) => {
+      toast.error("Error finalizing registration: " + err.message);
+    });
+  }, [create, router]);
 
   return (
-    <div className="max-w-md mx-auto mt-20 text-center">
-      <h1 className="text-2xl font-bold mb-4">✅ Payment Completed</h1>
-      {isLoading ? (
-        <div className="flex flex-col items-center">
-          <p>We are creating your restaurant and user...</p>
-          <div className="mt-4 w-8 h-8 border-4 border-blue-400 border-dashed rounded-full animate-spin"></div>
-        </div>
-      ) : (
-        <p>Completed.</p>
-      )}
+    <div className="text-center mt-10">
+      <h2 className="text-2xl font-semibold">Thank you for your payment!</h2>
+      <p>We’re setting up your restaurant...</p>
     </div>
   );
 }

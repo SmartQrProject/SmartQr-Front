@@ -4,6 +4,8 @@ import { Lato, Open_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { AdminLoginProvider } from "./(admin)/login/adminLoginContext";
 import ChatBot from "@/components/chatbot/ChatBot";
+import Script from 'next/script';
+
 
 
 
@@ -32,6 +34,13 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={`${lato.variable} ${openSans.variable}`}>
+            <head>
+                <Script
+                src="https://widget.cloudinary.com/v2.0/global/all.js"
+                strategy="beforeInteractive"
+                async
+                />
+            </head>
             <body className=" min-h-screen flex flex-col">
                 
                 <Toaster position="top-center" />

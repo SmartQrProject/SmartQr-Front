@@ -24,28 +24,54 @@ export default function RegisterForm() {
   });
 
   const onSubmit = async (data: RegisterFormInputs) => {
-    setIsLoading(true);
+  setIsLoading(true);
+  const { email, slug, ...rest } = data;
+  const trimmedEmail = email.trim().toLowerCase();
+  const trimmedSlug = slug.trim().toLowerCase();
 
-    try {
-      const { ...cleanData } = data;
-      localStorage.setItem("pendingRestaurant", JSON.stringify(cleanData));
+  try {
+    
+    const slugRes = await fetch(`${APIURL}/restaurants?slug=${trimmedSlug}`);
+    
+    if (slugRes.ok) {
+      const restaurantData = await slugRes.json();
+      
+      if (restaurantData.exist) {
+        if (restaurantData.owner_email === trimmedEmail) {
+          toast.error("This email is already registered with this restaurant.");
+        } else {
+          toast.error("This store slug is already taken.");
+        }
 
-      const res = await fetch(`${APIURL}/stripe/subscription-session`);
-      const { url } = await res.json();
-
-      if (!url) {
-        throw new Error("No Stripe session found");
+        setIsLoading(false);
+        return;
       }
-
-      window.location.href = url;
-    } catch (error: any) {
-      const message = error?.message || "Something went wrong. Please try again";
-      toast.error(message);
-      console.error("Checkout error:", error);
-    } finally {
-      setIsLoading(false);
     }
-  };
+
+    const cleanData = { email: trimmedEmail, slug: trimmedSlug, ...rest };
+    localStorage.setItem("pendingRestaurant", JSON.stringify(cleanData));
+
+    const res = await fetch(`${APIURL}/stripe/subscription-session`);
+    const { url } = await res.json();
+
+    if (!url) {
+      throw new Error("No Stripe session found");
+    }
+
+    reset();
+    toast.success("Redirecting to payment...");
+    setTimeout(() => {
+      window.location.href = url;
+    }, 2000);
+  } catch (error: any) {
+    const message = error?.message || "Something went wrong. Please try again.";
+    toast.error(message);
+    console.error("Checkout error:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
 
   return (
@@ -58,7 +84,7 @@ export default function RegisterForm() {
         </div>
 
         <div>
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
           <input {...register("email")} className="w-full p-2 bg-white rounded-md" placeholder="johnSmith@mail.com" />
           {errors.email && <p className="text-red-500">{errors.email.message}</p>}
         </div>

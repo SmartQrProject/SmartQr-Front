@@ -1,4 +1,4 @@
-import EditableBanner from '@/components/adminComponents/editableRestaurant/landing page/EditableBanner';
+import EditableBanner from '@/components/adminComponents/editableRestaurant/landingPage/EditableBanner';
 
 export default function AdminPreviewPage() {
   return (
