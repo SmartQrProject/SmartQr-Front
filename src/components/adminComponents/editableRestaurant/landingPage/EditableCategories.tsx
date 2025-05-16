@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { useAuth } from '@/app/(admin)/login/adminLoginContext';
+import toast from 'react-hot-toast';
 
 type Category = {
   id: string;
@@ -63,7 +64,7 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
       return data;
     } catch (err) {
       console.error(err);
-      alert('Error creating category');
+      toast.error('Error creating category');
       return null;
     }
   };

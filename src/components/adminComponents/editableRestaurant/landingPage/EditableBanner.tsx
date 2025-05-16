@@ -63,7 +63,7 @@ export default function EditableBannerWidget() {
   };
 
   return (
-    <div className="w-full h-[33vh] sm:h-[40vh] md:h-[50vh] bg-gray-100 relative">
+    <div className="w-full h-[33vh] sm:h-[40vh] md:h-[50vh] bg-gray-100 relative ">
       {bannerUrl ? (
         <div className="relative w-full h-full">
           <img
@@ -73,7 +73,7 @@ export default function EditableBannerWidget() {
           />
           <button
             onClick={openWidget}
-            className="absolute top-2 right-2 bg-white/80 text-lg font-semibold px-3 py-3 rounded-lg  hover:bg-white mt-5 mr-5 flex gap-3 cursor-pointer"
+            className="absolute top-2 right-2 bg-white/80 text-lg font-semibold px-3 py-3 rounded-lg  hover:bg-white mt-5 mr-5 flex gap-3 cursor-pointer "
           >
             <PencilIcon /> Edit Banner
           </button>
@@ -81,7 +81,7 @@ export default function EditableBannerWidget() {
       ) : (
         <button
           onClick={openWidget}
-          className="w-full h-full flex items-center justify-center text-gray-500 hover:text-black"
+          className="w-full h-full flex items-center justify-center text-gray-500 hover:text-black cursor-pointer"
         >
           <UploadIcon className="mr-2" />
           Upload banner
