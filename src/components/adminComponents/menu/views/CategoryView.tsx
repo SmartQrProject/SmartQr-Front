@@ -4,18 +4,6 @@ import { useEffect, useState } from 'react';
 import { getCategories } from '../menuHelpers/fetch/categories';
 import { ICategories } from '../menuTypes/menuTypes';
 
-// ✅ función utilitaria para decodificar JWT
-function parseJwt(token: string) {
-  try {
-    const base64Payload = token.split('.')[1];
-    const payload = atob(base64Payload);
-    return JSON.parse(payload);
-  } catch (e) {
-    console.error("Error parsing JWT:", e);
-    return null;
-  }
-}
-
 const CategoriesList = () => {
   const [categories, setCategories] = useState<ICategories[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -33,9 +21,10 @@ const CategoriesList = () => {
       const parsed = JSON.parse(storedData);
       const token = parsed.token;
 
-      const payload = parseJwt(token);
+      const payload = parsed.payload
+
       const slug = payload?.slug;
-      console.log(slug);
+     
       
       if (!slug) {
         setError("Slug not found in token");
