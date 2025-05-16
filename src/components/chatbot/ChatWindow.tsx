@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { socket } from "@/lib/socket";
+import { socket } from "../../lib/socket";
 import { Message, ChatWindowProps } from "./../../types";
 
 export default function ChatWindow({ messages, setMessages, close }: ChatWindowProps) {

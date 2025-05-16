@@ -25,7 +25,7 @@ export interface IAdminRegister {
 }
 
 export interface IAdminSession {
-    user: IAdmin;
+    token: string;
 }
 
 export interface IAdminLogin {
