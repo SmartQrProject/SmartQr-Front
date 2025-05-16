@@ -23,21 +23,12 @@ export interface IAdminRegister {
 }
 
 export interface IAdminSession {
-    user: IAdmin;
+    token: string;
 }
 
 export interface IAdminLogin {
     email: string;
     password: string;
-}
-
-export interface IAdminSession {
-  token: string;
-  IAdmin: {
-    id: string;
-    name: string;
-    email: string;
-  };
 }
 
 // Chat bot
