@@ -43,11 +43,15 @@ export interface IAdminSession {
 }
 
 export interface ITables {
-    id?: number;
-    rest_id?: number;
-    code?: string;
-    is_active?: boolean;
-    created_at?: number;
+    id: string;
+    code: string;
+    is_active: boolean;
+    created_at: string | Date; // puede venir como string si es desde JSON
+    orders: IOrder[];
+    restaurant: {
+        id: string;
+        name: string;
+    };
     exist: boolean;
 }
 
@@ -57,8 +61,8 @@ export interface IOrder {
     payStatus: string;
     order_type: string;
     total_price: number;
-    created_at: string;
-    tableId: number;
+    created_at: String;
+    tableId: string;
     customerId: string;
     restaurantId: string;
     exist: boolean;
