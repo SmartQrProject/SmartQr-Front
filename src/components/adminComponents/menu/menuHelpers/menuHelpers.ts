@@ -1,4 +1,4 @@
-import { MenuFormData } from "./schemas/createSchema";
+import { MenuFormData } from "./schemas/createProductSchema";
 
 export function formatMenuFormData(data: MenuFormData): FormData {
   const formData = new FormData();

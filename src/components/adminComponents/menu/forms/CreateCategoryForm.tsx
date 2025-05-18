@@ -1,14 +1,17 @@
 'use client'
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema, CategoryFormData } from "../menuHelpers/schemas/createCategorySchema"; 
 import ButtonPrimary from '@/components/buttons/ButtonPrimary';
 import { createCategory } from "../menuHelpers/fetch/categories";
+import toast from "react-hot-toast";
 
 const CreateCategoryForm = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
@@ -16,28 +19,34 @@ const CreateCategoryForm = () => {
 
     const onSubmit = async (data: CategoryFormData) => {
   try {
-    const slug = "fecho-cafe";
 
     const session = localStorage.getItem("adminSession");
-    if (!session) throw new Error("No session found");
 
-    const { token } = JSON.parse(session);
-    if (!token) throw new Error("Token not found");
+    if (!session) throw new Error("No session found")
+
+    const parsed = JSON.parse(session);
+    const token = parsed.token;
+
+    const payload = parsed.payload
+    const slug = payload?.slug;
 
     const response = await createCategory(token, data, slug);
 
     if (response.success) {
-      alert("Category created successfully");
+      toast.success("Category created successfully");
+      reset()
     } else {
-      alert("Error creating category");
+      if (response.message?.includes("categoría con el nombre")) {
+        toast.error("This category already exists");
+      } else {
+        toast.error(response.message || "Something went wrong");
+      }
     }
-  } catch (error) {
-    console.error("Error in category creation:", error);
-    alert("Error creating category");
-  }
-};
-
-  
+      } catch (error) {
+        
+        toast.error("Something went wrong");
+      }
+    };
 
   return (
     <div className='flex flex-col lg:flex-row gap-4 w-full p-6 rounded-xl justify-center space-y-4'>
