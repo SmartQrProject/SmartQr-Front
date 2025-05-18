@@ -1,13 +1,13 @@
 import { toast } from "react-hot-toast";
 
-export const useCreateRestaurantAndUser = () => {
+export const userCreateRestaurantAndUser = () => {
   const create = async ({
-    storeName,
+    name,
     email,
     password,
     slug,
   }: {
-    storeName: string;
+    name: string;
     email: string;
     password: string;
     slug: string;
@@ -15,7 +15,7 @@ export const useCreateRestaurantAndUser = () => {
     const API = process.env.NEXT_PUBLIC_API_URL;
 
     const restaurantPayload = {
-      name: storeName.trim(),
+      name: name.trim(),
       slug: slug.trim().toLowerCase().replace(/[^a-z0-9\-]/g, "-"),
       owner_email: email.trim(),
       owner_pass: password,

@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { AdminLoginProvider } from "./(admin)/login/adminLoginContext";
 import ChatBot from "@/components/chatbot/ChatBot";
 import Script from 'next/script';
+import Footer from "@/components/subscribers/footer/Footer";
 
 
 

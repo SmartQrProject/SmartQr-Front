@@ -23,15 +23,57 @@ export interface IAdminRegister {
     confirmPassword: string;
 }
 
+
 export interface IAdminSession {
   token: string;
-  id: string; 
-  email: string;
-  roles: "admin" | "user" | "owner";
-  slug: string;
+  payload: {
+    id: string;
+    email: string;
+    slug: string;
+    roles: Role[];
+  
+  };
+}
+
+
+export interface ICategory{
+    id: string;
+    name: string;
+    products: IProduct[];
+    newProductName?: string;
+}
+
+export interface IRestaurant{
+    id: string;
+    name: string;
+    slug: string;
+    owner_email: string;
+    is_active: boolean;
+    categories: ICategory[];    
+}
+export interface IProduct{
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    image_url: string;
+    category: ICategory;
+    restaurant: IRestaurant;
   
 }
 
+export interface IProductResponse {
+  products: IProduct[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface Restaurant {
+  id: string;
+  name: string;
+  slug: string;
+}
 
 
 export interface IAdminLogin {

@@ -5,7 +5,7 @@ import EditableCategories from './EditableCategories';
 
 export default function CategorySlug() {
   const { user } = useAuth();
-  const slug = user?.slug || user?.slug || user?.slug;
+  const slug = user?.payload?.slug || user?.payload?.slug || user?.payload?.slug;
 
   if (!slug) return <p>Loading...</p>;
 

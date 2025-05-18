@@ -1,37 +1,34 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2, Plus } from 'lucide-react';
 import { useAuth } from '@/app/(admin)/login/adminLoginContext';
 import toast from 'react-hot-toast';
-
-type Category = {
-  id: string;
-  name: string;
-};
+import { ICategory } from '@/types/index';
+import { userCreateCategory } from '@/libs/hooks/userCreateCategory';
+import AddCategoryModal from '@/components/adminComponents/editableRestaurant/landingPage/AddCategoryModal';
+import AddProductModal from '@/components/adminComponents/editableRestaurant/landingPage/AddProductModal';
 
 interface EditableCategoriesProps {
   slug: string;
 }
 
 export default function EditableCategories({ slug }: EditableCategoriesProps) {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [newCategoryName, setNewCategoryName] = useState('');
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const { user } = useAuth();
+  const { createCategory } = userCreateCategory();
   const token = user?.token;
+  const API = process.env.NEXT_PUBLIC_API_URL;
 
- 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/categories/restaurant/${slug}?page=1&limit=100`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await fetch(`${API}/${slug}/categories?page=1&limit=100`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         if (!res.ok) throw new Error('Failed to fetch categories');
 
@@ -39,34 +36,24 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
         setCategories(data.categories);
       } catch (err) {
         console.error('Error loading categories:', err);
+        toast.error('Error loading categories');
       }
     };
 
-    if (token && slug) {
-      fetchCategories();
-    }
+    if (token && slug) fetchCategories();
   }, [token, slug]);
 
-  const createCategory = async (name: string) => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/restaurant/${slug}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name }),
-      });
+  const handleCreateCategory = async (name: string) => {
+    const newCategory = await createCategory(name);
+    if (!newCategory) return;
+    setCategories((prev) => [...prev, newCategory]);
+    toast.success('Category added');
+  };
 
-      if (!res.ok) throw new Error('Failed to create category');
-
-      const data = await res.json();
-      return data;
-    } catch (err) {
-      console.error(err);
-      toast.error('Error creating category');
-      return null;
-    }
+  const handleDeleteCategory = (id: string) => {
+    const confirmed = confirm('Delete this category?');
+    if (!confirmed) return;
+    setCategories((prev) => prev.filter((cat) => cat.id !== id));
   };
 
   const handleEditCategory = (id: string) => {
@@ -74,63 +61,66 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
     if (!current) return;
     const name = prompt('Edit category name:', current.name);
     if (!name) return;
-    setCategories((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, name } : c))
-    );
-  };
-
-  const handleDeleteCategory = (id: string) => {
-    const confirmed = confirm('Delete this category?');
-    if (!confirmed) return;
-    setCategories((prev) => prev.filter((c) => c.id !== id));
+    setCategories((prev) => prev.map((c) => (c.id === id ? { ...c, name } : c)));
   };
 
   return (
-    <section className="mt-6">
-      <div className="flex gap-4 overflow-x-auto whitespace-nowrap pb-2">
+    <section className="p-4">
+      <div className="flex gap-4 overflow-x-auto pb-4">
         {categories.map((cat) => (
           <div
             key={cat.id}
-            className="min-w-[240px] h-[60px] bg-default-100 rounded-lg p-2 flex flex-col justify-between"
+            className="min-w-[240px] h-[100px] bg-default-100 rounded-lg p-3 flex flex-col justify-between"
           >
-            <span className="font-semibold truncate text-center">{cat.name}</span>
-            <div className="flex gap-2 justify-end text-gray-700">
-              <button onClick={() => handleEditCategory(cat.id)}>
-                <Pencil className="w-4 h-4 hover:text-blue-600 cursor-pointer" />
-              </button>
-              <button onClick={() => handleDeleteCategory(cat.id)}>
-                <Trash2 className="w-4 h-4 hover:text-red-600 cursor-pointer" />
-              </button>
+            <div className="flex justify-between items-start">
+              <span className="font-semibold truncate text-md">{cat.name}</span>
+              <div className="flex gap-1 text-gray-600">
+                <button onClick={() => handleEditCategory(cat.id)}>
+                  <Pencil className="w-4 h-4 hover:text-blue-600 cursor-pointer" />
+                </button>
+                <button onClick={() => handleDeleteCategory(cat.id)}>
+                  <Trash2 className="w-4 h-4 hover:text-red-600 cursor-pointer" />
+                </button>
+              </div>
             </div>
+            <button
+              onClick={() => {
+                setSelectedCategory(cat);
+                setIsProductModalOpen(true);
+              }}
+              className="mt-2 py-1 text-sm text-white font-semibold bg-default-800 rounded hover:bg-default-700 cursor-pointer"
+            >
+              Add Product
+            </button>
           </div>
         ))}
 
-        <div className="min-w-[240px] h-[120px] flex flex-col justify-between border border-dashed rounded px-2 py-3 ml-5">
-          <input
-            type="text"
-            value={newCategoryName}
-            onChange={(e) => setNewCategoryName(e.target.value)}
-            placeholder="New category"
-            className="text-sm px-3 py-3 border-0 rounded-lg bg-default-100/80"
-          />
-          <button
-            onClick={async () => {
-              if (!newCategoryName.trim()) return;
-              const newCategory = await createCategory(newCategoryName.trim());
-              if (!newCategory) return;
-
-              setCategories((prev) => [
-                ...prev,
-                { id: newCategory.id, name: newCategory.name },
-              ]);
-              setNewCategoryName('');
-            }}
-            className="text-default-50 text-md font-semibold mt-1 flex justify-center items-center p-2 bg-sage-500 rounded-lg gap-1 cursor-pointer"
-          >
-            Add Category
-          </button>
+        {/* Add Category Box */}
+        <div
+          onClick={() => setIsCategoryModalOpen(true)}
+          className="min-w-[240px] h-[100px] flex flex-col justify-center items-center border border-dashed border-gray-400 rounded-lg cursor-pointer hover:bg-default-100"
+        >
+          <Plus className="w-6 h-6 mb-1 text-gray-600" />
+          <span className="text-sm font-medium text-gray-600">Add Category</span>
         </div>
       </div>
+
+      <AddCategoryModal
+        open={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
+        onSave={handleCreateCategory}
+      />
+
+      <AddProductModal
+        open={isProductModalOpen}
+        onClose={() => setIsProductModalOpen(false)}
+        onAdd={(product) => {
+          // You can implement product addition logic here, e.g., call an API or update state
+          toast.success(`Product "${product.name}" added!`);
+          setIsProductModalOpen(false);
+        }}
+        category={selectedCategory}
+      />
     </section>
   );
 }

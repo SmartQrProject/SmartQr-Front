@@ -2,15 +2,17 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useCreateRestaurantAndUser } from "@/libs/hooks/useCreateRestaurantAndUser";
+import { userCreateRestaurantAndUser } from "@/libs/hooks/userCreateRestaurantAndUser";
 import { toast } from "react-hot-toast";
 
 export default function SuccessPage() {
   const router = useRouter();
-  const { create } = useCreateRestaurantAndUser();
+  const { create } = userCreateRestaurantAndUser();
 
   useEffect(() => {
     const pendingData = localStorage.getItem("pendingRestaurant");
+    console.log("✅ SuccessPage mounted");
+    console.log("pendingRestaurant:", localStorage.getItem("pendingRestaurant"));
 
     if (!pendingData) {
       toast.error("No registration data found.");
@@ -19,9 +21,10 @@ export default function SuccessPage() {
     }
 
     const parsedData = JSON.parse(pendingData);
+    
 
     create({
-      storeName: parsedData.storeName,
+      name: parsedData.name,
       email: parsedData.email,
       password: parsedData.password,
       slug: parsedData.slug 

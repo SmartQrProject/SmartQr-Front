@@ -3,7 +3,7 @@
 import { useAuth } from '@/app/(admin)/login/adminLoginContext';
 import { toast } from 'react-hot-toast';
 
-export function useCreateCategory() {
+export function userCreateCategory() {
   const { user } = useAuth();
 
   const createCategory = async (name: string) => {
@@ -14,7 +14,7 @@ export function useCreateCategory() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/categories/restaurant/${user.payload?.slug}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/${user.payload.slug}/categories`, // ✅ correct endpoint
         {
           method: 'POST',
           headers: {
