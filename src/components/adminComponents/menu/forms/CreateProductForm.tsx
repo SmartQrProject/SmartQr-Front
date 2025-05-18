@@ -243,7 +243,7 @@ console.log("Archivo comprimido:", compressedFile);
 
         {preview && (
           <div className="w-full max-w-sm p-4">
-            <CardView name={preview.name} description={preview.description} price={preview.price} file={preview.imageUrl} detail={preview.details} available={preview.available} categoryId={preview.categoryId}/>
+            <CardView name={preview.name} description={preview.description} price={preview.price} file={preview.imageUrl} details={preview.details} is_available={preview.available} categoryId={preview.categoryId}/>
           </div>
         
         )}
