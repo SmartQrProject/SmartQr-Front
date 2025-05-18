@@ -123,7 +123,9 @@ console.log("Archivo comprimido:", compressedFile);
       price: Number(data.price),
       categoryId: data.categoryId, 
       image_url, 
-      token, 
+      token,
+      is_available: data.available,
+      details: data.details, 
     })
 
     if (response.success) {

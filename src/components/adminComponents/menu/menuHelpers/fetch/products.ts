@@ -1,10 +1,4 @@
-import { log } from "console";
-import { ProductFormData } from "../schemas/createProductSchema";
-
-
 const APIURL = process.env.NEXT_PUBLIC_API_URL
-const preset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET
-const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
 
 export async function getProducts (slug: string, token: string) {
   try {
@@ -46,7 +40,6 @@ console.log("Respuesta Cloudinary (texto plano):", secureUrl);
 return secureUrl;
 }
 
-
 //enviando producto a la base de datos
 
 
@@ -57,6 +50,8 @@ const createProduct = async ({
   price,
   categoryId,
   image_url,
+  is_available,
+  details,
   token,
 }: {
   slug: string;
@@ -65,6 +60,8 @@ const createProduct = async ({
   price: number;
   categoryId: string;
   image_url: string;
+  is_available: boolean;
+  details: string[];
   token: string;
 }) => {
 console.log("Enviando producto:", {
@@ -73,6 +70,8 @@ console.log("Enviando producto:", {
   price,
   categoryId,
   image_url,
+  is_available,
+  details,
 });
   const res = await fetch(`${APIURL}/${slug}/products`, {
     method: 'POST',
@@ -86,6 +85,8 @@ console.log("Enviando producto:", {
       description,
       image_url,
       categoryId,
+      is_available,
+      details,
     }),
   });
   console.log("Respuesta del servidor:", res);
@@ -93,49 +94,3 @@ console.log("Enviando producto:", {
   return await res.json();
 }
 export default createProduct;
-
-
-// export async function createProduct( token: string, data: ProductFormData & { image: string }, slug: string) {
-//   const response = await fetch(`${APIURL}/${slug}/products`, {
-//     method: 'POST',
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//     body: JSON.stringify(data),
-//   });
-
-//   if (!response.ok) {
-//     const text = await response.text();
-//     console.error("Error en backend:", text);
-//     throw new Error(`HTTP error! status: ${response.status}`);
-//   }
-
-//   return response.json();
-// }
-
-
-
-// export async function createProduct (token: string, data: ProductFormData, slug: string) {
-//     try {
-        
-//         const response = await fetch(`${APIURL}/${slug}/products`,{
-//             method: "POST",
-//               headers: {
-//                 "Content-Type": "application/json",
-//                 Authorization: `Bearer ${token}`
-//               },
-//             body: JSON.stringify(data),
-//         })
-
-//     if (!response.ok) {
-//       const error = await response.json();
-//       throw new Error(error.message || "Failed to create product");
-//     }
-
-//     return { success: true };
-//   } catch (error) {
-//     console.error("Error creating product:", error);
-//     return { success: false };
-//   }
-// }
