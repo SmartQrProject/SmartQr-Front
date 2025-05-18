@@ -8,6 +8,9 @@ import { IoClose } from 'react-icons/io5'
 const NavbarAdmin = () => {
   const [open, setOpen] = useState(false)
 
+// useAuth 
+// LogOutAdmin
+
   return (
     <div>
       <nav className='m-5'>
