@@ -12,8 +12,8 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({ preview }) => {
         description={preview.description}
         price={preview.price}
         file={preview.imageUrl}
-        detail={preview.detail}
-        available={preview.available}
+        details={preview.details ?? []} // <- Esto asegura que sea string[]
+        is_available={preview.is_available ?? false}
         categoryId={preview.categoryId}
       />
     </div>

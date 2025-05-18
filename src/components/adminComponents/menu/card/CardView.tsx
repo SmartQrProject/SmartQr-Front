@@ -5,8 +5,8 @@ interface CardViewProps {
   description: string
   price: number
   file?: string
-  detail: string[]
-  available: boolean
+  details: string[]
+  is_available: boolean
   categoryId: string
 }
 
@@ -15,8 +15,8 @@ const CardView: React.FC<CardViewProps> = ({
   description,
   price,
   file,
-  detail,
-  available,
+  details,
+  is_available,
   categoryId
 }) => {
   const imageUrl = React.useMemo(() => {
@@ -34,10 +34,10 @@ const CardView: React.FC<CardViewProps> = ({
           <p className="text-sm text-gray-700 mb-1 line-clamp-2">{description}</p>
           <p className="text-sm font-semibold text-gray-900 mb-2">$ {price}</p>
           <p className="text-xs text-gray-500">Category: {categoryId}</p>
-          <p className="text-xs text-gray-500">Available: {available ? 'Yes' : 'No'}</p>
-          {detail.length > 0 && (
+          <p className="text-xs text-gray-500">Available: {is_available ? 'Yes' : 'No'}</p>
+          {details.length > 0 && (
             <ul className="text-xs text-left text-gray-600 w-full mt-2 pl-4 list-disc">
-              {detail.map((item, idx) => (
+              {details.map((item, idx) => (
                 <li key={idx}>{item}</li>
               ))}
             </ul>

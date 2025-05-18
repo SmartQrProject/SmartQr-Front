@@ -19,8 +19,8 @@ export interface IPreviewData {
   description: string
   price: number
   imageUrl?: string
-  detail?: string[]
-  available?: boolean
+  details?: string[]
+  is_available?: boolean
   categoryId: string
 }
 
