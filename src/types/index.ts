@@ -11,6 +11,7 @@ export interface IAdmin {
 enum Role {
     ADMIN = "admin",
     USER = "user",
+    OWNER = "owner"
 }
 
 export interface IAdminRegister {
@@ -24,11 +25,13 @@ export interface IAdminRegister {
 
 export interface IAdminSession {
   token: string;
-  id: string;
+  id: string; 
   email: string;
-  roles: string;
+  roles: "admin" | "user" | "owner";
   slug: string;
+  
 }
+
 
 
 export interface IAdminLogin {

@@ -127,7 +127,7 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
             }}
             className="text-default-50 text-md font-semibold mt-1 flex justify-center items-center p-2 bg-sage-500 rounded-lg gap-1 cursor-pointer"
           >
-            Add
+            Add Category
           </button>
         </div>
       </div>

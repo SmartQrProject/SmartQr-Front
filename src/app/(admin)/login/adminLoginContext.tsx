@@ -50,7 +50,7 @@ export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
       setUser({ token: data.access_token, ...decodedToken });
       localStorage.setItem("adminSession", JSON.stringify({
       token: data.access_token,
-      ...decodedToken,
+      payload: decodedToken,
       
     }));
     } catch (error) {

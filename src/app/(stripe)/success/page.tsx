@@ -24,13 +24,17 @@ export default function SuccessPage() {
       storeName: parsedData.storeName,
       email: parsedData.email,
       password: parsedData.password,
-      slug: parsedData.slug,
-    }).then(() => {
-      
-      localStorage.removeItem("pendingRestaurant");
-    }).catch((err) => {
-      toast.error("Error finalizing registration: " + err.message);
-    });
+      slug: parsedData.slug 
+    })
+      .then(() => {
+        localStorage.removeItem("pendingRestaurant");
+        toast.success("Restaurant successfully created!");
+        router.push("/dashboard");
+      })
+      .catch((err) => {
+        toast.error("Error finalizing registration: " + err.message);
+        router.push("/signup");
+      });
   }, [create, router]);
 
   return (

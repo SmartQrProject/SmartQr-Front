@@ -25,47 +25,35 @@ export default function RegisterForm() {
 
   const onSubmit = async (data: RegisterFormInputs) => {
   setIsLoading(true);
-  const { email, slug, ...rest } = data;
-  const trimmedEmail = email.trim().toLowerCase();
-  const trimmedSlug = slug.trim().toLowerCase();
 
   try {
-    
-    const slugRes = await fetch(`${APIURL}/restaurants?slug=${trimmedSlug}`);
-    
-    if (slugRes.ok) {
-      const restaurantData = await slugRes.json();
-      
-      if (restaurantData.exist) {
-        if (restaurantData.owner_email === trimmedEmail) {
-          toast.error("This email is already registered with this restaurant.");
-        } else {
-          toast.error("This store slug is already taken.");
-        }
+    const { confirmPassword, ...cleanData } = data;
 
-        setIsLoading(false);
-        return;
-      }
+    const check = await fetch(`${APIURL}/restaurants?slug=${cleanData.slug}`);
+    if (check.status === 200) {
+      toast.error("This slug is already taken. Please choose another.");
+      return;
+    } else if (check.status !== 404) {
+      toast.error("Unable to validate slug. Please try again.");
+      return;
     }
 
-    const cleanData = { email: trimmedEmail, slug: trimmedSlug, ...rest };
     localStorage.setItem("pendingRestaurant", JSON.stringify(cleanData));
 
-    const res = await fetch(`${APIURL}/stripe/subscription-session`);
-    const { url } = await res.json();
-
-    if (!url) {
-      throw new Error("No Stripe session found");
+    const res = await fetch(`${APIURL}/stripe/checkout-session`);
+    if (!res.ok) {
+      const errorText = await res.text();
+      toast.error(`Stripe error ${res.status}: ${errorText}`);
+      return;
     }
 
-    reset();
-    toast.success("Redirecting to payment...");
-    setTimeout(() => {
-      window.location.href = url;
-    }, 2000);
+    const { url } = await res.json();
+    if (!url) throw new Error("No Stripe session returned");
+
+    window.location.href = url;
+
   } catch (error: any) {
-    const message = error?.message || "Something went wrong. Please try again.";
-    toast.error(message);
+    toast.error(error?.message || "Something went wrong. Please try again.");
     console.error("Checkout error:", error);
   } finally {
     setIsLoading(false);
@@ -84,7 +72,7 @@ export default function RegisterForm() {
         </div>
 
         <div>
-          <label htmlFor="email">Email</label>
+          <label>Email</label>
           <input {...register("email")} className="w-full p-2 bg-white rounded-md" placeholder="johnSmith@mail.com" />
           {errors.email && <p className="text-red-500">{errors.email.message}</p>}
         </div>

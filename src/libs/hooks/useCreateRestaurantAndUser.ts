@@ -1,9 +1,6 @@
-import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
 export const useCreateRestaurantAndUser = () => {
-  const router = useRouter();
-
   const create = async ({
     storeName,
     email,
@@ -26,28 +23,28 @@ export const useCreateRestaurantAndUser = () => {
 
     try {
       console.log("📤 Creating restaurant:", restaurantPayload);
-      const restRes = await fetch(`${API}/restaurants/create`, {
+
+      const res = await fetch(`${API}/restaurants/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(restaurantPayload),
       });
 
-      const restJson = await restRes.json();
-      if (!restRes.ok) {
-        console.error("❌ Restaurant creation failed", restJson);
-        let msg = restJson.message || "Error creating the restaurant";
+      const json = await res.json();
+
+      if (!res.ok) {
+        console.error("❌ Restaurant creation failed:", json);
+        let msg = json.message || "Error creating the restaurant";
         if (msg.includes("ya registrado")) {
-          msg = "Este restaurante ya está registrado.";
+          msg = "This restaurant name is already registered";
         }
         throw new Error(msg);
       }
 
-      toast.success("🎉 Registro completado con éxito");
-      localStorage.removeItem("pendingRestaurant");
-      router.push("/login");
+      toast.success("🎉 Register completed");
     } catch (err: any) {
-      toast.error(err.message || "❌ Algo salió mal");
-      setTimeout(() => router.push("/signup"), 3000);
+      toast.error(err.message || "❌ Something went wrong");
+      throw err;
     }
   };
 
