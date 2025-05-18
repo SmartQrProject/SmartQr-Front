@@ -1,6 +1,7 @@
 import FooterAdmin from '@/components/adminComponents/footer/Footer'
-import CreateMenuForm from '@/components/adminComponents/menu/forms/CreateMenuForm'
+import CreateMenuForm from '@/components/adminComponents/menu/forms/CreateProductForm'
 import Sidebar from '@/components/adminComponents/menu/sidebar/sidebar'
+import ListProducts from '@/components/adminComponents/menu/views/ProductsView'
 import MenuAdmin from '@/components/adminComponents/menudesplegabe/MenuAdmin'
 import NavbarAdmin from '@/components/adminComponents/navbar/NavbarAdmin'
 import React from 'react'
@@ -18,6 +19,7 @@ const page = () => {
           <Sidebar/>
            <h1 className="text-xl font-semibold ">Create Product</h1>
           <CreateMenuForm />
+          <ListProducts/>
         </div>
       </div>
 
