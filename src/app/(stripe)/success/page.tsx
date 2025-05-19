@@ -13,20 +13,22 @@ export default function SuccessPage() {
     const pendingData = localStorage.getItem("pendingRestaurant");
     console.log("✅ SuccessPage mounted");
     console.log("pendingRestaurant:", localStorage.getItem("pendingRestaurant"));
-
+    
+    
     if (!pendingData) {
       toast.error("No registration data found.");
       router.push("/signup");
       return;
     }
-
+    
     const parsedData = JSON.parse(pendingData);
+    console.log("✅ Parsed pendingData:", parsedData);
     
 
     create({
       name: parsedData.name,
-      email: parsedData.email,
-      password: parsedData.password,
+      owner_email: parsedData.email,
+      owner_pass: parsedData.password,
       slug: parsedData.slug 
     })
       .then(() => {

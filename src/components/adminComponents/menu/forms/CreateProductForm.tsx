@@ -12,7 +12,7 @@ import ConfirmDialog from "../menuHelpers/confirm/confirmDialog"
 import createProduct, { uploadImage } from "../menuHelpers/fetch/products"
 import { useCategories } from "../menuHelpers/hook/useCategories"
 import imageCompression from 'browser-image-compression';
-import { File, Image, Leaf, LeafyGreen, LucideVegan, Vegan, VeganIcon, Wheat } from "lucide-react"
+import {  Image, Wheat } from "lucide-react"
 
 
 export type ProductPreviewData = Omit<ProductFormData, 'file'> & {
@@ -222,7 +222,7 @@ console.log("Archivo comprimido:", compressedFile);
                   const values = getValues();
                   productSchema.parse(values);
                   setFormDataToSubmit(values); 
-                  setShowConfirm(true); 
+                  setShowConfirm(true);
                 } catch (error) {
                   toast.error("Please fix form errors before submitting.");
                 }
@@ -235,11 +235,12 @@ console.log("Archivo comprimido:", compressedFile);
             isOpen={showConfirm}
             title="Confirmation"
             message="Are you sure you want to create this product?"
-            onConfirm={() => {
+            onConfirm={async() => {
               if (formDataToSubmit) {
                 onSubmit(formDataToSubmit);
               }
               setShowConfirm(false);
+              toast.success("Product created successfully");
             }}
             onCancel={() => setShowConfirm(false)}
           />

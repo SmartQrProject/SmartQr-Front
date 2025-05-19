@@ -5,10 +5,11 @@ import RestaurantPageClient from '@/components/adminComponents/editableRestauran
 import EditableCategories from '@/components/adminComponents/editableRestaurant/landingPage/EditableCategories';
 import { useState } from 'react';
 import ListProducts from '../../menu/views/ProductsView';
+import CategoryProductList from './CategoryProductList';
 
 export default function StorePageClient() {
   const { user } = useAuth();
-  const slug = user?.payload?.slug;
+  const slug = user?.payload.slug;
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false); // starts closed
 
   console.log('user from context:', user);
@@ -23,8 +24,9 @@ export default function StorePageClient() {
       <div>
         <RestaurantPageClient />
         <EditableCategories slug={slug} />
+        <CategoryProductList slug={slug} />
     
-        <ListProducts/>
+       
       </div>
     </>
   );

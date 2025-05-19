@@ -5,6 +5,7 @@ import { Pencil, Trash2, Plus } from 'lucide-react';
 import { useAuth } from '@/app/(admin)/login/adminLoginContext';
 import toast from 'react-hot-toast';
 import { ICategory } from '@/types/index';
+import { getCategories } from '@/components/adminComponents/menu/menuHelpers/fetch/categories';
 import { userCreateCategory } from '@/libs/hooks/userCreateCategory';
 import AddCategoryModal from '@/components/adminComponents/editableRestaurant/landingPage/AddCategoryModal';
 import CreateMenuForm from '../../menu/forms/CreateProductForm';
@@ -19,35 +20,32 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
   const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
   const { user } = useAuth();
-  const { createCategory } = userCreateCategory();
   const token = user?.token;
-  const API = process.env.NEXT_PUBLIC_API_URL;
+  const { createCategory } = userCreateCategory();
+
+  const fetchAllCategories = async () => {
+    try {
+      const res = await getCategories(slug, token!);
+      setCategories(res.categories);
+    } catch (err) {
+      console.error('Error loading categories:', err);
+      toast.error('Error loading categories');
+    }
+  };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch(`${API}/${slug}/categories?page=1&limit=100`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!res.ok) throw new Error('Failed to fetch categories');
-
-        const data = await res.json();
-        setCategories(data.categories);
-      } catch (err) {
-        console.error('Error loading categories:', err);
-        toast.error('Error loading categories');
-      }
-    };
-
-    if (token && slug) fetchCategories();
+    if (token && slug) {
+      fetchAllCategories();
+    }
   }, [token, slug]);
 
   const handleCreateCategory = async (name: string) => {
     const newCategory = await createCategory(name);
     if (!newCategory) return;
-    setCategories((prev) => [...prev, newCategory]);
+
+    await fetchAllCategories();
     toast.success('Category added');
   };
 
@@ -96,7 +94,6 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
           </div>
         ))}
 
-        {/* Add Category Box */}
         <div
           onClick={() => setIsCategoryModalOpen(true)}
           className="min-w-[240px] h-[100px] flex flex-col justify-center items-center border border-dashed border-gray-400 rounded-lg cursor-pointer hover:bg-default-100"
@@ -115,7 +112,6 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
       <ProductModal open={isProductModalOpen} onClose={() => setIsProductModalOpen(false)}>
         <CreateMenuForm />
       </ProductModal>
-
     </section>
   );
 }

@@ -1,3 +1,4 @@
+import CategoryProductList from '@/components/adminComponents/editableRestaurant/landingPage/CategoryProductList'
 import FooterAdmin from '@/components/adminComponents/footer/Footer'
 import MenuAdmin from '@/components/adminComponents/menudesplegabe/MenuAdmin'
 import NavbarAdmin from '@/components/adminComponents/navbar/NavbarAdmin'
@@ -11,12 +12,9 @@ const orders = () => {
         
             <div className="flex flex-1">
                 <MenuAdmin/>
-                <main className="flex-1 p-4">        
-
-                    <OrdersView/>
+                <main className="flex-1 p-4">
                     
-                    
-                    
+               
                 </main>
             </div>
             <FooterAdmin/>         
