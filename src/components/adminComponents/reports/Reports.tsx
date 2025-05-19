@@ -7,6 +7,7 @@ const Reports = () => {
     
     const { user } = useAuth();
     const token = user?.token;
+    const restaurantSlug = user?.payload.slug
     
 
 
