@@ -7,8 +7,7 @@ import ChatBot from "@/components/chatbot/ChatBot";
 import Script from 'next/script';
 import Footer from "@/components/subscribers/footer/Footer";
 
-
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const lato = Lato({
     subsets: ["latin"],
@@ -48,6 +47,7 @@ export default function RootLayout({
                 <AdminLoginProvider>
                 <main className="flex-1">
                     {children}
+                    <SpeedInsights />
                 </main>
                 <ChatBot />
                 </AdminLoginProvider>
