@@ -4,8 +4,7 @@ import { Lato, Open_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { AdminLoginProvider } from "./(admin)/login/adminLoginContext";
 import ChatBot from "@/components/chatbot/ChatBot";
-
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const lato = Lato({
     subsets: ["latin"],
@@ -38,6 +37,7 @@ export default function RootLayout({
                 <AdminLoginProvider>
                 <main className="flex-1">
                     {children}
+                    <SpeedInsights />
                 </main>
                 <ChatBot />
                 </AdminLoginProvider>
