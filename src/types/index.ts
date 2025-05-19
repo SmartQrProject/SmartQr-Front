@@ -1,3 +1,5 @@
+import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
+
 export interface IAdmin {
     id: number;
     name: string;
@@ -79,6 +81,41 @@ export interface Restaurant {
 export interface IAdminLogin {
     email: string;
     password: string;
+}
+
+export interface IAdminSession {
+    token: string;
+    IAdmin: {
+        id: string;
+        name: string;
+        email: string;
+    };
+}
+
+export interface ITables {
+    id: string;
+    code: string;
+    is_active: boolean;
+    created_at: string | Date; // puede venir como string si es desde JSON
+    orders: IOrder[];
+    restaurant: {
+        id: string;
+        name: string;
+    };
+    exist: boolean;
+}
+
+export interface IOrder {
+    id: string;
+    status: string;
+    payStatus: string;
+    order_type: string;
+    total_price: number;
+    created_at: String;
+    tableId: string;
+    customerId: string;
+    restaurantId: string;
+    exist: boolean;
 }
 
 // Chat bot
