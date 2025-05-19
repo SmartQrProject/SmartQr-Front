@@ -50,11 +50,11 @@ const MenuAdmin = () => {
                             {pathname === "/dashboard" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black " />}
                             <HiOutlineHome /> Home
                         </Link>
-                        <Link href="/dashboard/stores" onClick={handleLinkClick} className={linkClasses("/dashboard/stores")}>
-                            {pathname === "/dashboard/stores" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black " />}
+                        <Link href="/dashboard/store" onClick={handleLinkClick} className={linkClasses("/dashboard/store")}>
+                            {pathname === "/dashboard/store" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black " />}
                             <HiOutlineBuildingStorefront /> Stores
                         </Link>
-                        <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/orders")}>
+                        <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/tables")}>
                             {pathname === "/dashboard/tables" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black " />}
                             <HiOutlineShoppingBag /> Tables
                         </Link>

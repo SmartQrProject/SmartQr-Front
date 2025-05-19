@@ -34,23 +34,24 @@ export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const loginAdmin = async (loginData: IAdminLogin) => {
-        try {
-          const response = await fetch(`${APIURL}/users/signin`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(loginData),
-          });
+      try {
+      const response = await fetch(`${APIURL}/users/signin`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(loginData),
+      });
 
-          const data = await response.json();
-          if (!response.ok) {
-              throw new Error(data.message || "Login failed");
-          }
-          const decodedToken = parseJwt(data.access_token)
+      const data = await response.json();
+      if (!response.ok) {
+          throw new Error(data.message || "Login failed");
+      }
+      const decodedToken = parseJwt(data.access_token)
 
       setUser({ token: data.access_token, ...decodedToken });
       localStorage.setItem("adminSession", JSON.stringify({
       token: data.access_token,
       payload: decodedToken,
+      
     }));
     } catch (error) {
       throw error;
