@@ -1,13 +1,13 @@
-import React from 'react'
+import React from 'react';
 
 interface CardViewProps {
-  name: string
-  description: string
-  price: number
-  file?: string
-  details: string[]
-  is_available: boolean
-  categoryId: string
+  name: string;
+  description: string;
+  price: number;
+  file?: string;
+  details: string[];
+  is_available: boolean;
+  categoryId: string;
 }
 
 const CardView: React.FC<CardViewProps> = ({
@@ -17,26 +17,25 @@ const CardView: React.FC<CardViewProps> = ({
   file,
   details,
   is_available,
-  categoryId
+  categoryId,
 }) => {
   const imageUrl = React.useMemo(() => {
-    if (!file) return undefined
-    if (typeof file === "string") return file
-    return URL.createObjectURL(file)
-  }, [file])
+    if (!file) return undefined;
+    if (typeof file === 'string') return file;
+    return URL.createObjectURL(file);
+  }, [file]);
 
   return (
-    <div className="flex justify-center p-4 w-full sm:w-20 md:w-96 lg:w-[22rem] m-auto">
-      <div className="flex items-center rounded-2xl shadow-lg p-4 gap-4 hover:shadow-md hover:scale-105 transition-transform duration-200 w-full bg-white">
-
-        <div className="flex flex-col justify-between w-full">
-          <h2 className="text-base font-semibold text-gray-900 mb-1">{name}</h2>
-          <p className="text-sm text-gray-700 mb-1 line-clamp-2">{description}</p>
-          <p className="text-sm font-semibold text-gray-900 mb-2">$ {price}</p>
-          <p className="text-xs text-gray-500">Category: {categoryId}</p>
-          <p className="text-xs text-gray-500">Available: {is_available ? 'Yes' : 'No'}</p>
+    <div className="w-full max-w-[600px] mx-auto">
+      <div className="flex flex-row gap-6 p-4 bg-default-100 rounded-2xl shadow-md">
+        {/* Text content */}
+        <div className="flex flex-col justify-between w-2/3 gap-2">
+          <h2 className="text-xl font-semibold text-gray-900">{name}</h2>
+          <p className="text-sm text-gray-700 line-clamp-3">{description}</p>
+          <p className="text-lg font-bold text-default-800">${Number(price).toFixed(2)}</p>
+          <p className="text-xs text-gray-600">Available: {is_available ? 'Yes' : 'No'}</p>
           {details.length > 0 && (
-            <ul className="text-xs text-left text-gray-600 w-full mt-2 pl-4 list-disc">
+            <ul className="text-sm text-default-700 mt-2 list-disc list-inside italic">
               {details.map((item, idx) => (
                 <li key={idx}>{item}</li>
               ))}
@@ -44,11 +43,23 @@ const CardView: React.FC<CardViewProps> = ({
           )}
         </div>
 
-        {file && <img src={imageUrl} alt="Product preview" className="w-full h-auto" />}
-
+        {/* Image preview */}
+        <div className="w-1/3 flex items-center justify-center">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt="Product preview"
+              className="w-[120px] h-[120px] object-cover rounded-lg border border-gray-200"
+            />
+          ) : (
+            <div className="w-[120px] h-[120px] bg-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-500">
+              No image
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CardView
+export default CardView;

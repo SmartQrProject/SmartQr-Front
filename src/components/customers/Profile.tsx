@@ -49,6 +49,5 @@ export default function CustomerProfile() {
       />
       <h2 className="text-xl font-bold">{user.name}</h2>
       <p>{user.email}</p>
-    </div>
-  );
+    </div>  );
 }

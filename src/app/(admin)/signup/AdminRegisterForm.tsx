@@ -27,26 +27,46 @@ export default function RegisterForm() {
     setIsLoading(true);
 
     try {
-      const { ...cleanData } = data;
-      localStorage.setItem("pendingRestaurant", JSON.stringify(cleanData));
-
-      const res = await fetch(`${APIURL}/stripe/subscription-session`);
-      const { url } = await res.json();
-
-      if (!url) {
-        throw new Error("No Stripe session found");
+      // Slug validation first
+      const check = await fetch(`${APIURL}/restaurants?slug=${data.slug}`);
+      if (check.status === 200) {
+        toast.error("This slug is already taken. Please choose another.");
+        return;
+      } else if (check.status !== 404) {
+        toast.error("Unable to validate slug. Please try again.");
+        return;
       }
 
+      // Save all required info for SuccessPage
+      const restaurantData = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        slug: data.slug,
+      };
+      localStorage.setItem("pendingRestaurant", JSON.stringify(restaurantData));
+      console.log("✅ Saved to localStorage:", restaurantData);
+
+      // Redirect to Stripe
+      const res = await fetch(`${APIURL}/stripe/checkout-session`);
+      if (!res.ok) {
+        const errorText = await res.text();
+        toast.error(`Stripe error ${res.status}: ${errorText}`);
+        return;
+      }
+
+      const { url } = await res.json();
+      if (!url) throw new Error("No Stripe session returned");
+
       window.location.href = url;
+
     } catch (error: any) {
-      const message = error?.message || "Something went wrong. Please try again";
-      toast.error(message);
+      toast.error(error?.message || "Something went wrong. Please try again.");
       console.error("Checkout error:", error);
     } finally {
       setIsLoading(false);
     }
   };
-
 
   return (
     <div className="max-w-md mx-auto mt-10 mb-10 p-6 bg-default-50 rounded-xl">
@@ -87,10 +107,7 @@ export default function RegisterForm() {
           {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
         </div>
 
-        <ButtonPrimary
-          type="submit"
-          loading={isSubmitting || isLoading}
-        >
+        <ButtonPrimary type="submit" loading={isSubmitting || isLoading}>
           Continue to Checkout
         </ButtonPrimary>
 

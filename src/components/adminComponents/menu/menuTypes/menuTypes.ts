@@ -28,3 +28,8 @@ export interface ProductPreviewProps {
   preview: IPreviewData
 }
 
+export interface ICategoryWithProducts {
+  id: string;
+  name: string;
+  products: IProducts[];
+}

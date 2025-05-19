@@ -17,7 +17,7 @@ const page = () => {
         <div className="p-4">
           <h1 className='text-2xl'>Menu</h1>
           <Sidebar/>
-           <h1 className="text-xl font-semibold ">Create Product</h1>
+          <h1 className="text-xl font-semibold ">Create Product</h1>
           <CreateMenuForm />
           <ListProducts/>
         </div>

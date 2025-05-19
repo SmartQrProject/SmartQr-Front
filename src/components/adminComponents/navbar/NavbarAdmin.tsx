@@ -30,7 +30,7 @@ const NavbarAdmin = () => {
           <div className='hidden sm:flex items-center space-x-4'>
             <Link className='py-2 px-4 rounded-3xl border border-transparent hover:bg-[#9CA3AF] hover:border-white flex items-center' href={'/'}><AiOutlineQuestionCircle className="mr-2" /> Get Help</Link>
             <Link className='py-2 px-4 rounded-3xl border border-transparent hover:bg-[#9CA3AF] hover:border-white' href={'/'}><HiOutlineBell /></Link>
-            <Link className='py-2 px-4 rounded-3xl border border-transparent hover:bg-[#9CA3AF] hover:border-white' href={'/'}>FAQ</Link>
+            <Link className='py-2 px-4 rounded-3xl border border-transparent hover:bg-[#9CA3AF] hover:border-white' href={'/dashboard'}>Dashboard</Link>
             <button onClick={logOutHandler} className='py-2 px-4 rounded-3xl border border-transparent hover:bg-[#9CA3AF] hover:border-white'>Log out</button>
           </div>
         </div>
@@ -48,7 +48,7 @@ const NavbarAdmin = () => {
           <div className="flex flex-col space-y-2">
             <Link className='py-1 px-4 rounded-3xl hover:bg-gray-300 w-30' href={'/'}>Get Help</Link>
             <Link className='py-2 px-4 rounded-3xl hover:bg-gray-300 w-30' href={'/'}><HiOutlineBell /></Link>
-            <Link className='py-1 px-4 rounded-3xl hover:bg-gray-300 w-30' href={'/'}>FAQ</Link>
+            <Link className='py-1 px-4 rounded-3xl hover:bg-gray-300 w-30' href={'/dashboard'}>Dashboard</Link>
             <button onClick={logOutHandler} className='py-1 px-4 rounded-3xl hover:bg-gray-300 w-30'>Log out</button>
           </div>
         </div>
