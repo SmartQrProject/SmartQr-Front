@@ -46,11 +46,16 @@ export default function ChatWindow({ messages, setMessages, close }: ChatWindowP
                 </button>
             </div>
             <div className="flex-1 overflow-y-auto p-2 space-y-2">
-                {messages.map((m, i) => (
-                    <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
-                        <div className={`${m.sender === "user" ? "chatbot-message-user" : "chatbot-message-bot"}`}>{m.text}</div>
-                    </div>
-                ))}
+                {messages.map((m, i) => {
+                    console.log("🧾 Mensaje recibido:", m); // debug opcional
+                    return (
+                        <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
+                            <div className={`${m.sender === "user" ? "chatbot-message-user" : "chatbot-message-bot"}`}>
+                                {typeof m.text === "string" && m.text.trim() ? m.text : "[Mensaje vacío]"}
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
             <div className="p-2 border-t flex items-center">
                 <input
@@ -58,11 +63,11 @@ export default function ChatWindow({ messages, setMessages, close }: ChatWindowP
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                    placeholder="Send a mess..."
+                    placeholder="Escribe algo..."
                     className="chatbot-input"
                 />
                 <button onClick={sendMessage} disabled={loading} className="chatbot-send-button">
-                    {loading ? "..." : "Send"}
+                    {loading ? "..." : "Enviar"}
                 </button>
             </div>
         </div>

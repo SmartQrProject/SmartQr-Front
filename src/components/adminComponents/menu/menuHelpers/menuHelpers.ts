@@ -1,16 +1,16 @@
-import { MenuFormData } from "./schemas/createSchema";
+import { ProductFormData } from "./schemas/createProductSchema";
 
-export function formatMenuFormData(data: MenuFormData): FormData {
+export function formatMenuFormData(data: ProductFormData): FormData {
   const formData = new FormData();
 
   formData.append("name", data.name);
   formData.append("description", data.description);
   formData.append("price", data.price.toString());
   formData.append("available", data.available.toString());
-  formData.append("category", data.category.toString());
+  formData.append("categoryId", data.categoryId);
 
-  if (data.imageFile && data.imageFile[0]) {
-    formData.append("imageFile", data.imageFile[0]);
+  if (data.file && data.file.length > 0) {
+    formData.append("file", data.file[0]);
   }
 
   data.details.forEach((detail, index) => {
