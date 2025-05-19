@@ -44,7 +44,7 @@ const ListProducts = () => {
   }, []);
 
   return (
-    <div className="space-y-4 w-full max-w-md p-6 rounded-md bg-neutral-100 shadow">
+    <div className="space-y-4 w-full max-w-md p-6 rounded-md bg-neutral-100 shadow mx-auto mb-8">
       <h2 className="text-xl font-semibold text-center border-b border-gray-100 pb-2">
         Available Products
       </h2>
@@ -59,9 +59,9 @@ const ListProducts = () => {
               <div>
                 <p className="font-semibold">{product.name}</p>
                 <p className="text-sm text-gray-500">{product.description}</p>
+                <p className="text-sm font-bold">${product.price}</p>
               </div>
               <img src={product.image_url} alt={product.name} className="h-16 w-16 object-cover rounded" />
-              <span className="text-sm font-bold">${product.price}</span>
             </li>
           ))}
         </ul>

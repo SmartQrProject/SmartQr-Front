@@ -1,12 +1,12 @@
 'use client";'
-import { ICategory } from "@/types";
+
 import { useState } from "react";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   onAdd: (product: { name: string; price: string; image: string }) => void;
-  category: ICategory | null;
+  category: { id: number; name: string } | null;
 }
 
 export default function AddProductModal({ open, onClose, onAdd, category }: Props) {

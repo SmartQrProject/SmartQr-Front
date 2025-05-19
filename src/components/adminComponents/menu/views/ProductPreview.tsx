@@ -6,7 +6,7 @@ import { ProductPreviewProps } from "../menuTypes/menuTypes"
 
 const ProductPreview: React.FC<ProductPreviewProps> = ({ preview }) => {
   return (
-    <div className="w-full max-w-sm p-4">
+    <div className="w-full max-w-md mx-auto rounded-md">
       <CardView
         name={preview.name}
         description={preview.description}

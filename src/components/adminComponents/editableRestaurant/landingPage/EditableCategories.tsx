@@ -7,7 +7,8 @@ import toast from 'react-hot-toast';
 import { ICategory } from '@/types/index';
 import { userCreateCategory } from '@/libs/hooks/userCreateCategory';
 import AddCategoryModal from '@/components/adminComponents/editableRestaurant/landingPage/AddCategoryModal';
-import AddProductModal from '@/components/adminComponents/editableRestaurant/landingPage/AddProductModal';
+import CreateMenuForm from '../../menu/forms/CreateProductForm';
+import ProductModal from '@/components/adminComponents/editableRestaurant/landingPage/ProducModal';
 
 interface EditableCategoriesProps {
   slug: string;
@@ -53,15 +54,15 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
   const handleDeleteCategory = (id: string) => {
     const confirmed = confirm('Delete this category?');
     if (!confirmed) return;
-    setCategories((prev) => prev.filter((cat) => cat.id !== id));
+    setCategories((prev) => prev.filter((cat) => String(cat.id) !== String(id)));
   };
 
   const handleEditCategory = (id: string) => {
-    const current = categories.find((c) => c.id === id);
+    const current = categories.find((c) => String(c.id) === String(id));
     if (!current) return;
     const name = prompt('Edit category name:', current.name);
     if (!name) return;
-    setCategories((prev) => prev.map((c) => (c.id === id ? { ...c, name } : c)));
+    setCategories((prev) => prev.map((c) => (String(c.id) === String(id) ? { ...c, name } : c)));
   };
 
   return (
@@ -75,10 +76,10 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
             <div className="flex justify-between items-start">
               <span className="font-semibold truncate text-md">{cat.name}</span>
               <div className="flex gap-1 text-gray-600">
-                <button onClick={() => handleEditCategory(cat.id)}>
+                <button onClick={() => handleEditCategory(String(cat.id))}>
                   <Pencil className="w-4 h-4 hover:text-blue-600 cursor-pointer" />
                 </button>
-                <button onClick={() => handleDeleteCategory(cat.id)}>
+                <button onClick={() => handleDeleteCategory(String(cat.id))}>
                   <Trash2 className="w-4 h-4 hover:text-red-600 cursor-pointer" />
                 </button>
               </div>
@@ -111,16 +112,10 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
         onSave={handleCreateCategory}
       />
 
-      <AddProductModal
-        open={isProductModalOpen}
-        onClose={() => setIsProductModalOpen(false)}
-        onAdd={(product) => {
-          // You can implement product addition logic here, e.g., call an API or update state
-          toast.success(`Product "${product.name}" added!`);
-          setIsProductModalOpen(false);
-        }}
-        category={selectedCategory}
-      />
+      <ProductModal open={isProductModalOpen} onClose={() => setIsProductModalOpen(false)}>
+        <CreateMenuForm />
+      </ProductModal>
+
     </section>
   );
 }

@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useRef } from "react";
 import Cropper from "react-easy-crop";
-import Dropzone from "react-dropzone";
 import { getCroppedImg } from "@/utils/cropImg";
 import { toast } from "react-hot-toast";
 import { PencilIcon } from "lucide-react";

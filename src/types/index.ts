@@ -37,7 +37,7 @@ export interface IAdminSession {
 
 
 export interface ICategory{
-    id: string;
+    id: number;
     name: string;
     products: IProduct[];
     newProductName?: string;

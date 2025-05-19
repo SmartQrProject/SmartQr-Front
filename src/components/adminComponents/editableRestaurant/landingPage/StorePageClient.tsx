@@ -4,6 +4,7 @@ import { useAuth } from '@/app/(admin)/login/adminLoginContext';
 import RestaurantPageClient from '@/components/adminComponents/editableRestaurant/landingPage/RestaurantPageClient';
 import EditableCategories from '@/components/adminComponents/editableRestaurant/landingPage/EditableCategories';
 import { useState } from 'react';
+import ListProducts from '../../menu/views/ProductsView';
 
 export default function StorePageClient() {
   const { user } = useAuth();
@@ -22,6 +23,8 @@ export default function StorePageClient() {
       <div>
         <RestaurantPageClient />
         <EditableCategories slug={slug} />
+    
+        <ListProducts/>
       </div>
     </>
   );
