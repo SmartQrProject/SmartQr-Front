@@ -12,7 +12,7 @@ interface TableProps extends ITables {
 
 const Table: React.FC<TableProps> = ({ id, code, created_at, is_active, onTableDeleted, onTableEdited }) => {
     return (
-        <div className={`relative rounded-xl p-4 w-[260px] h-[120px] shadow-md ${is_active ? "bg-gray-200" : "bg-gray-100 opacity-50"}`}>
+        <div className={`relative rounded-xl p-4 w-[260px] h-[120px] shadow-md ${is_active ? "bg-gray-200" : "bg-gray-100"}`}>
             <div className="absolute top-2 left-2">
                 <EditTableButton tableId={id} currentCode={code} isActive={is_active} onTableEdited={onTableEdited} />
             </div>
@@ -27,7 +27,7 @@ const Table: React.FC<TableProps> = ({ id, code, created_at, is_active, onTableD
                 <div className="w-10 h-10 bg-white rounded-full border border-gray-400" />
                 <div className="flex flex-col justify-center">
                     <p className="text-lg font-semibold">Mesa {code}</p>
-                    <p className="text-xs text-green-600 font-medium">State: {is_active ? "Active" : "Inactive"}</p>
+                    <p className={`text-xs font-medium ${is_active ? "text-green-600" : "text-red-600"}`}>State: {is_active ? "Active" : "Inactive"}</p>
                 </div>
             </div>
         </div>
