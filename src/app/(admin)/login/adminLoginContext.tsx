@@ -1,30 +1,40 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { IAdminLogin, IAdminSession } from "@/types";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import { IAdminLogin } from "@/types";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
+type IAdminSessionStorage = {
+    token: string;
+    payload: any;
+};
+
 interface IAuthContextProps {
-    user: IAdminSession | null;
-    setUser: (user: IAdminSession | null) => void;
+    user: IAdminSessionStorage | null;
+    setUser: (user: IAdminSessionStorage | null) => void;
     loginAdmin: (data: IAdminLogin) => Promise<void>;
     logoutAdmin: () => void;
 }
 
 const AuthContext = createContext<IAuthContextProps | undefined>(undefined);
+
 function parseJwt(token: string) {
-  try {
-    const base64Payload = token.split('.')[1];
-    const payload = atob(base64Payload);
-    return JSON.parse(payload);
-  } catch (e) {
-    console.error("Error parsing JWT:", e);
-    return null;
-  }
+    try {
+        const base64Payload = token.split(".")[1];
+        const payload = atob(base64Payload);
+        return JSON.parse(payload);
+    } catch (e) {
+        console.error("Error parsing JWT:", e);
+        return null;
+    }
 }
+
 export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<IAdminSession | null>(null);
+    const [user, setUser] = useState<IAdminSessionStorage | null>(null);
+    const router = useRouter();
 
     useEffect(() => {
         const storedUser = localStorage.getItem("adminSession");
@@ -34,33 +44,44 @@ export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const loginAdmin = async (loginData: IAdminLogin) => {
-      try {
-      const response = await fetch(`${APIURL}/users/signin`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(loginData),
-      });
+        try {
+            const response = await fetch(`${APIURL}/users/signin`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(loginData),
+            });
 
-      const data = await response.json();
-      if (!response.ok) {
-          throw new Error(data.message || "Login failed");
-      }
-      const decodedToken = parseJwt(data.access_token)
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || "Login failed");
+            }
 
-      setUser({ token: data.access_token, ...decodedToken });
-      localStorage.setItem("adminSession", JSON.stringify({
-      token: data.access_token,
-      payload: decodedToken,
-      
-    }));
-    } catch (error) {
-      throw error;
-    }
-  };
+            const decodedToken = parseJwt(data.access_token);
+
+            const sessionData: IAdminSessionStorage = {
+                token: data.access_token,
+                payload: decodedToken,
+            };
+
+            setUser(sessionData);
+            localStorage.setItem("adminSession", JSON.stringify(sessionData));
+            Cookies.set("adminSession", JSON.stringify(sessionData), {
+                sameSite: "Strict",
+                secure: true,
+            });
+        } catch (error) {
+            throw error;
+        }
+    };
 
     const logoutAdmin = () => {
         setUser(null);
         localStorage.removeItem("adminSession");
+        Cookies.remove("adminSession");
+        localStorage.removeItem("userSession");
+        // localStorage.removeItem("pendingRestaurant");
+        localStorage.removeItem("cart");
+        router.push("/");
     };
 
     return <AuthContext.Provider value={{ user, setUser, loginAdmin, logoutAdmin }}>{children}</AuthContext.Provider>;
