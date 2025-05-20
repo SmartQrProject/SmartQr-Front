@@ -13,7 +13,7 @@ export interface IAdmin {
 enum Role {
     ADMIN = "admin",
     USER = "user",
-    OWNER = "owner"
+    OWNER = "owner",
 }
 
 export interface IAdminRegister {
@@ -25,35 +25,37 @@ export interface IAdminRegister {
     confirmPassword: string;
 }
 
-
 export interface IAdminSession {
-  token: string;
-  payload: {
-    id: string;
-    email: string;
-    slug: string;
-    roles: Role[];
-  
-  };
+    token: string;
+    payload: {
+        id: string;
+        email: string;
+        slug: string;
+        roles: Role[];
+    };
 }
 
+export type IAdminSessionStorage = {
+    token: string;
+    payload: any;
+};
 
-export interface ICategory{
+export interface ICategory {
     id: number;
     name: string;
     products: IProduct[];
     newProductName?: string;
 }
 
-export interface IRestaurant{
+export interface IRestaurant {
     id: string;
     name: string;
     slug: string;
     owner_email: string;
     is_active: boolean;
-    categories: ICategory[];    
+    categories: ICategory[];
 }
-export interface IProduct{
+export interface IProduct {
     id: string;
     name: string;
     description: string;
@@ -61,22 +63,20 @@ export interface IProduct{
     image_url: string;
     category: ICategory;
     restaurant: IRestaurant;
-  
 }
 
 export interface IProductResponse {
-  products: IProduct[];
-  total: number;
-  page: number;
-  limit: number;
+    products: IProduct[];
+    total: number;
+    page: number;
+    limit: number;
 }
 
 export interface Restaurant {
-  id: string;
-  name: string;
-  slug: string;
+    id: string;
+    name: string;
+    slug: string;
 }
-
 
 export interface IAdminLogin {
     email: string;
