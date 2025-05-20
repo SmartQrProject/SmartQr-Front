@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 
 export default function CustomerProfile() {
   const { user, isLoading } = useUser();
+  
+  const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const syncUser = async () => {
@@ -13,7 +15,7 @@ export default function CustomerProfile() {
         const tokenResponse = await getAccessToken();
         const token = tokenResponse.accessToken;
 
-        const res = await fetch('https://smartqr-back.onrender.com/customers/sincronizar', {
+        const res = await fetch(`${APIURL}/customers/sincronizar`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
