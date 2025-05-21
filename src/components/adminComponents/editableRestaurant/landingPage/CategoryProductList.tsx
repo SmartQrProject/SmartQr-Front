@@ -8,7 +8,7 @@ import { getCategories } from '@/components/adminComponents/menu/menuHelpers/fet
 import CardView from '@/components/adminComponents/menu/card/CardView';
 import ProductModal from '@/components/adminComponents/editableRestaurant/landingPage/ProducModal';
 import CreateMenuForm from '@/components/adminComponents/menu/forms/CreateProductForm';
-import { ICategoryWithProducts, IProducts } from '@/components/adminComponents/menu/menuTypes/menuTypes';
+import { ICategoryWithProducts } from '@/components/adminComponents/menu/menuTypes/menuTypes';
 import { ProductFormData } from '@/components/adminComponents/menu/menuHelpers/schemas/createProductSchema';
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -24,7 +24,7 @@ export default function CategoryProductList({ slug }: Props) {
   const [editProduct, setEditProduct] = useState<(ProductFormData & { id?: string; image_url?: string }) | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 
-  const fetchCategories = async () => {
+  const refetchCategories = async () => {
     if (!slug || !token) return;
     try {
       const res = await getCategories(slug, token);
@@ -36,7 +36,7 @@ export default function CategoryProductList({ slug }: Props) {
   };
 
   useEffect(() => {
-    fetchCategories();
+    refetchCategories();
   }, [slug, token]);
 
   const handleDeleteProduct = async (productId: string) => {
@@ -49,7 +49,7 @@ export default function CategoryProductList({ slug }: Props) {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      await fetchCategories();
+      await refetchCategories();
       toast.success('Product deleted');
     } catch (error) {
       console.error(error);
@@ -78,7 +78,7 @@ export default function CategoryProductList({ slug }: Props) {
                         description={product.description}
                         price={product.price}
                         file={typeof product.image_url === 'string' ? product.image_url : ''}
-                        details={product.detail ?? []}
+                        details={Array.isArray(product.detail) ? product.detail : []}
                         is_available={product.available ?? false}
                         categoryId={cat.id}
                       />
@@ -87,16 +87,14 @@ export default function CategoryProductList({ slug }: Props) {
                         <button
                           onClick={() => {
                             setEditProduct({
-                              id: product.id !== undefined ? String(product.id) : undefined,
+                              id: String(product.id),
                               name: product.name,
                               description: product.description,
                               price: product.price,
-                              available: product.available ?? false,
+                              available: product.available ?? true,
                               categoryId: cat.id,
                               details: product.detail
-                                ? product.detail.map((d: any) =>
-                                    typeof d === 'string' ? d : d.name
-                                  )
+                                ? product.detail.map((d: any) => typeof d === 'string' ? d : d.name)
                                 : [],
                               image_url: typeof product.image_url === 'string' ? product.image_url : '',
                             });
@@ -127,21 +125,23 @@ export default function CategoryProductList({ slug }: Props) {
         })}
       </div>
 
-      {editProduct && (
+      {isProductModalOpen && editProduct && (
         <ProductModal
           open={isProductModalOpen}
           onClose={() => {
-            setEditProduct(null);
             setIsProductModalOpen(false);
+            setEditProduct(null);
           }}
         >
           <CreateMenuForm
-            initialData={editProduct}
             mode="edit"
-            onSuccess={() => {
-              setEditProduct(null);
+            initialData={editProduct}
+            onClose={() => {
               setIsProductModalOpen(false);
-              fetchCategories();
+              setEditProduct(null);
+            }}
+            onSuccess={() => {
+              refetchCategories();
             }}
           />
         </ProductModal>
