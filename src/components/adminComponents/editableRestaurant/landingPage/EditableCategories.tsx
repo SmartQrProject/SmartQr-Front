@@ -49,19 +49,61 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
     toast.success('Category added');
   };
 
-  const handleDeleteCategory = (id: string) => {
-    const confirmed = confirm('Delete this category?');
-    if (!confirmed) return;
-    setCategories((prev) => prev.filter((cat) => String(cat.id) !== String(id)));
-  };
+  const handleDeleteCategory = async (id: string) => {
+  const confirmed = confirm('Delete this category?');
+  if (!confirmed) return;
 
-  const handleEditCategory = (id: string) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to delete category');
+    }
+
+    toast.success('Category deleted');
+    await fetchAllCategories(); 
+  } catch (error) {
+    console.error(error);
+    toast.error('Could not delete category');
+  }
+};
+
+
+    const handleEditCategory = async (id: string) => {
     const current = categories.find((c) => String(c.id) === String(id));
     if (!current) return;
-    const name = prompt('Edit category name:', current.name);
-    if (!name) return;
-    setCategories((prev) => prev.map((c) => (String(c.id) === String(id) ? { ...c, name } : c)));
+
+    const newName = prompt('Edit category name:', current.name);
+    if (!newName || newName.trim() === current.name.trim()) return;
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${id}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: newName }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to update category');
+      }
+
+      toast.success('Category updated');
+      await fetchAllCategories(); // Refresh list
+    } catch (err) {
+      console.error(err);
+      toast.error('Could not update category');
+    }
   };
+
 
   return (
     <section className="p-4">
