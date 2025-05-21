@@ -2,79 +2,106 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { HiOutlineHome, HiOutlineShoppingBag, HiOutlineBuildingStorefront, HiOutlineCog6Tooth, HiOutlineChartBar } from "react-icons/hi2";
+import {HiOutlineHome, HiOutlineShoppingBag, HiOutlineBuildingStorefront, HiOutlineCog6Tooth, HiOutlineChartBar, HiOutlineUserGroup } from "react-icons/hi2";
 import { GiKnifeFork } from "react-icons/gi";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { useUserRole } from "../hooks/useUserRole";
 
 const MenuAdmin = () => {
-    const pathname = usePathname();
-    const [isOpen, setIsOpen] = useState(true);
-    const [isMobile, setIsMobile] = useState(false);
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [restaurantName, setRestaurantName] = useState("Restaurant");
 
-    useEffect(() => {
-        const checkMobile = () => {
-            const mobile = window.innerWidth < 640;
-            setIsMobile(mobile);
-            setIsOpen(!mobile);
-        };
+  const role = useUserRole();
+  const validRoles = ["owner", "staff"] as const;
 
-        checkMobile();
-        window.addEventListener("resize", checkMobile);
-        return () => window.removeEventListener("resize", checkMobile);
-    }, []);
-
-    const handleLinkClick = () => {
-        if (isMobile) setIsOpen(false);
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 640;
+      setIsMobile(mobile);
+      setIsOpen(!mobile);
     };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
 
-    const linkClasses = (path: string) => {
-        const isActive = pathname === path;
-        return `flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-gray-300 relative ${isActive ? "font-semibold" : ""}`;
-    };
+    const session = localStorage.getItem("adminSession");
+    if (session) {
+      try {
+        const parsed = JSON.parse(session);
+        setRestaurantName(parsed.payload.restaurant.name || "Restaurant");
+      } catch {
+        setRestaurantName("Restaurant");
+      }
+    }
 
-    return (
-        <div className="w-full sm:w-64 p-4 bg-white shadow-md rounded-md">
-            <div className="flex flex-col space-y-2">
-                <div className={`flex justify-between items-center cursor-pointer ${isMobile ? "" : "pointer-events-none"}`} onClick={() => isMobile && setIsOpen(!isOpen)}>
-                    <div>
-                        <h1 className="font-semibold text-lg">Name</h1>
-                        <span className="text-sm text-gray-500">Restaurant</span>
-                    </div>
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
-                    {isMobile && (isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />)}
-                </div>
+  if (role === undefined) return <div>Loading...</div>;
 
-                {isOpen && (
-                    <div className="flex flex-col space-y-2 pt-2">
-                        <Link href="/dashboard" onClick={handleLinkClick} className={linkClasses("/dashboard")}>
-                            {pathname === "/dashboard" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black " />}
-                            <HiOutlineHome /> Home
-                        </Link>
-                        <Link href="/dashboard/store" onClick={handleLinkClick} className={linkClasses("/dashboard/store")}>
-                            {pathname === "/dashboard/store" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black " />}
-                            <HiOutlineBuildingStorefront /> Stores
-                        </Link>
-                        <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/tables")}>
-                            {pathname === "/dashboard/tables" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black " />}
-                            <HiOutlineShoppingBag /> Tables
-                        </Link>
-                        <Link href="/dashboard/reports" onClick={handleLinkClick} className={linkClasses("/dashboard/reports")}>
-                            {pathname === "/dashboard/reports" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black " />}
-                            <HiOutlineChartBar /> Reports
-                        </Link>
-                        <Link href="/dashboard/menu/createproduct" onClick={handleLinkClick} className={linkClasses("/dashboard/menu")}>
-                            {pathname === "/dashboard/menu/createproduct" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black " />}
-                            <GiKnifeFork /> Menu
-                        </Link>
-                        <Link href="/dashboard/settings" onClick={handleLinkClick} className={linkClasses("/dashboard/settings")}>
-                            {pathname === "/dashboard/settings" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black " />}
-                            <HiOutlineCog6Tooth /> Settings
-                        </Link>
-                    </div>
-                )}
-            </div>
+  if (!validRoles.includes(role as any)) return <div>No autorizado</div>;
+
+  const handleLinkClick = () => {
+    if (isMobile) setIsOpen(false);
+  };
+
+  const linkClasses = (path: string) => {
+  const isActive = 
+    path === "/dashboard"
+      ? pathname === "/dashboard"
+      : pathname === path || pathname.startsWith(path + "/");
+
+  return `flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-gray-300 relative ${isActive ? "font-semibold" : ""}`;
+};
+
+  return (
+    <div className="w-full sm:w-64 p-4 bg-white shadow-md rounded-md">
+      <div className="flex flex-col space-y-2">
+        <div className={`flex justify-between items-center cursor-pointer ${ isMobile ? "" : "pointer-events-none"}`} onClick={() => isMobile && setIsOpen(!isOpen)}>
+          <div>
+            <h1 className="font-semibold text-lg">{restaurantName}</h1>
+            <span className="text-sm text-gray-500">Restaurant</span>
+          </div>
+
+          {isMobile && (isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />)}
         </div>
-    );
+
+        {isOpen && (
+          <div className="flex flex-col space-y-2 pt-2">
+
+            <Link href="/dashboard" onClick={handleLinkClick} className={linkClasses("/dashboard")}>{pathname === "/dashboard" && (<div className="absolute left-0 top-2 bottom-2 w-1 bg-black" /> )}<HiOutlineHome />Home
+            </Link>
+
+            {role === "owner" && (
+              <>
+                <Link href="/dashboard/staffcreation" onClick={handleLinkClick} className={linkClasses("/dashboard/staffcreation")}>{pathname === "/dashboard/staffcreation" && (<div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />)}<HiOutlineUserGroup  />User Creation
+                </Link>
+
+                <Link href="/dashboard/store" onClick={handleLinkClick} className={linkClasses("/dashboard/store")}> {pathname === "/dashboard/store" && ( <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />)}<HiOutlineBuildingStorefront /> Stores
+                </Link>                
+
+                <Link href="/dashboard/menu/createcategory" onClick={handleLinkClick} className={linkClasses("/dashboard/menu/createcategory")}> {pathname === "/dashboard/menu/createcategory" && ( <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />)}<GiKnifeFork /> Menu
+                </Link>
+
+                <Link href="/dashboard/reports" onClick={handleLinkClick} className={linkClasses("/dashboard/reports")}> {pathname === "/dashboard/reports" && (<div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />)}<HiOutlineChartBar /> Reports
+                </Link>
+              </>
+            )}
+
+            {/* Visible para owner y staff */}
+            
+            <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/tables")}>{pathname === "/dashboard/tables" && ( <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" /> )} <HiOutlineShoppingBag /> Tables
+            </Link>
+
+            <Link href="/dashboard/settings" onClick={handleLinkClick} className={linkClasses("/dashboard/settings")}> {pathname === "/dashboard/settings" && ( <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />)}<HiOutlineCog6Tooth /> Settings
+            </Link>
+            
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default MenuAdmin;
