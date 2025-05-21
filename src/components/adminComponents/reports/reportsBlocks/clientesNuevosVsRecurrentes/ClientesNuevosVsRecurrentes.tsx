@@ -6,15 +6,15 @@ import ClientesPorSemana from "./ClientesPorSemana";
 import ClientesPorMes from "./ClientesPorMes";
 import ClientesPorAño from "./ClientesPorAño";
 
-const tabs = ["Día", "Semana", "Mes", "Año"];
+const tabs = ["Semana", "Mes", "Año"]; // Día está desactivado
 
 const ClientesNuevosVsRecurrentes = () => {
-  const [tab, setTab] = useState("Día");
+  const [tab, setTab] = useState("Semana");
 
   const renderTab = () => {
     switch (tab) {
-      case "Día":
-        return <ClientesPorDia />;
+      // case "Día":
+      //   return <ClientesPorDia />;
       case "Semana":
         return <ClientesPorSemana />;
       case "Mes":
@@ -27,18 +27,21 @@ const ClientesNuevosVsRecurrentes = () => {
   };
 
   return (
-    <div className="p-4 rounded-xl border shadow-sm bg-white">
-      <h2 className="text-xl font-semibold mb-4">
+    <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
+      <h2 className="text-2xl font-bold mb-6 text-center">
         Clientes Nuevos vs Recurrentes
       </h2>
 
-      <div className="flex gap-2 mb-6">
+      {/* Tabs */}
+      <div className="flex flex-wrap justify-center gap-2 mb-8">
         {tabs.map((item) => (
           <button
             key={item}
             onClick={() => setTab(item)}
-            className={`px-4 py-2 rounded-full border ${
-              tab === item ? "bg-black text-white" : "bg-gray-100 text-black"
+            className={`px-4 py-2 rounded-full border transition ${
+              tab === item
+                ? "bg-black text-white shadow"
+                : "bg-gray-100 text-black hover:bg-gray-200"
             }`}
           >
             {item}
@@ -46,6 +49,7 @@ const ClientesNuevosVsRecurrentes = () => {
         ))}
       </div>
 
+      {/* Contenido */}
       <div>{renderTab()}</div>
     </div>
   );

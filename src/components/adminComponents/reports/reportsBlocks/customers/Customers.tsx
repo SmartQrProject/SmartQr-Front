@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import IndexClientesVisual from "./IndexClientesVisual";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import dayjs from "dayjs";
 
@@ -70,6 +71,9 @@ const Customers = () => {
   return (
     <div className="p-4 rounded-xl border shadow-sm bg-white">
       <h2 className="text-xl font-semibold mb-4">Clientes</h2>
+      <div className="mb-8">
+        <IndexClientesVisual />
+      </div>
 
       {/* Filtro de cantidad por página */}
       <div className="mb-4">

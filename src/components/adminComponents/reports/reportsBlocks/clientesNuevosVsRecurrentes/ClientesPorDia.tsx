@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const ClientesPorDia = () => {
   const { user } = useAuth();
@@ -36,6 +37,7 @@ const ClientesPorDia = () => {
           }
         );
 
+        console.log(res);
         if (!res.ok) throw new Error("Error en la respuesta del servidor");
 
         const result = await res.json();
@@ -57,8 +59,48 @@ const ClientesPorDia = () => {
   if (data.newCustomers + data.returningCustomers === 0)
     return <p>No hubo clientes en este día.</p>;
 
+  const chartData = [
+    {
+      name: "Nuevos",
+      value: data.newCustomers,
+    },
+    {
+      name: "Recurrentes",
+      value: data.returningCustomers,
+    },
+  ];
+
+  const COLORS = ["#8884d8", "#82ca9d"];
+
   return (
     <div className="space-y-4">
+      {/* Donut Chart */}
+      <div className="w-full h-60">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={chartData}
+              dataKey="value"
+              nameKey="name"
+              innerRadius={50}
+              outerRadius={80}
+              paddingAngle={3}
+              label={({ name, percent }) =>
+                `${name} ${(percent * 100).toFixed(1)}%`
+              }
+            >
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Cuadros de valores */}
       <div className="grid grid-cols-2 gap-4">
         <div className="p-4 border rounded-lg text-center">
           <h3 className="text-lg font-semibold">Clientes Nuevos</h3>

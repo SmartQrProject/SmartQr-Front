@@ -7,9 +7,9 @@ import TopPorMes from "./TopPorMes";
 import TopPorAño from "./TopPorAño";
 import TopCustom from "./TopCustom";
 
-const tabs = ["Día", "Semana", "Mes", "Año", "Custom"];
+const Tabs = ["Día", "Semana", "Mes", "Año", "Custom"];
 
-const TopProductos = () => {
+const IndexTopProductos = () => {
   const [tab, setTab] = useState("Día");
 
   const renderTab = () => {
@@ -30,15 +30,19 @@ const TopProductos = () => {
   };
 
   return (
-    <div className="p-4 rounded-xl border shadow-sm bg-white">
-      <h2 className="text-xl font-semibold mb-4">Top productos vendidos</h2>
-      <div className="flex gap-2 mb-6">
-        {tabs.map((item) => (
+    <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
+      <h2 className="text-2xl font-bold mb-6 text-center">Top productos</h2>
+
+      {/* Tabs */}
+      <div className="flex flex-wrap justify-center gap-2 mb-8">
+        {Tabs.map((item) => (
           <button
             key={item}
             onClick={() => setTab(item)}
-            className={`px-4 py-2 rounded-full border ${
-              tab === item ? "bg-black text-white" : "bg-gray-100"
+            className={`px-4 py-2 rounded-full border transition ${
+              tab === item
+                ? "bg-black text-white shadow"
+                : "bg-gray-100 text-black hover:bg-gray-200"
             }`}
           >
             {item}
@@ -46,9 +50,10 @@ const TopProductos = () => {
         ))}
       </div>
 
-      {renderTab()}
+      {/* Contenido */}
+      <div>{renderTab()}</div>
     </div>
   );
 };
 
-export default TopProductos;
+export default IndexTopProductos;

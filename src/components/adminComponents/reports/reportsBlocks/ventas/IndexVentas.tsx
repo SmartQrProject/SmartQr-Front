@@ -30,17 +30,19 @@ const IndexVentas = () => {
   };
 
   return (
-    <div className="p-4 rounded-xl border shadow-sm bg-white">
-      <h2 className="text-xl font-semibold mb-4">Ventas</h2>
+    <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
+      <h2 className="text-2xl font-bold mb-6 text-center">Resumen de Ventas</h2>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex flex-wrap justify-center gap-2 mb-8">
         {Tabs.map((item) => (
           <button
             key={item}
             onClick={() => setTab(item)}
-            className={`px-4 py-2 rounded-full border ${
-              tab === item ? "bg-black text-white" : "bg-gray-100 text-black"
+            className={`px-4 py-2 rounded-full border transition ${
+              tab === item
+                ? "bg-black text-white shadow"
+                : "bg-gray-100 text-black hover:bg-gray-200"
             }`}
           >
             {item}

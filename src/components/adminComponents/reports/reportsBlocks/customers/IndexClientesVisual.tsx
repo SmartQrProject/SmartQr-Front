@@ -1,29 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import CategoriaPorDia from "./CategoriaPorDia";
-import CategoriaPorSemana from "./CategoriaPorSemana";
-import CategoriaPorMes from "./CategoriaPorMes";
-import CategoriaPorAño from "./CategoriaPorAño";
-import CategoriaCustom from "./CategoriaCustom";
+import TopClientesPorOrden from "./TopClientesPorOrden";
+import TopClientesPorGasto from "./TopClientesPorGasto";
+import TopClientesPorTicket from "./TopClientesPorTicket";
+import ClientesNuevosPorMes from "./ClientesNuevosPorMes";
 
-const Tabs = ["Día", "Semana", "Mes", "Año", "Custom"];
+const tabs = [
+  "Más órdenes",
+  "Más gasto",
+  "Mejor ticket promedio",
+  "Nuevos por mes",
+];
 
-const IndexCategorias = () => {
-  const [tab, setTab] = useState("Día");
+const IndexClientesVisual = () => {
+  const [tab, setTab] = useState("Más órdenes");
 
   const renderTab = () => {
     switch (tab) {
-      case "Día":
-        return <CategoriaPorDia />;
-      case "Semana":
-        return <CategoriaPorSemana />;
-      case "Mes":
-        return <CategoriaPorMes />;
-      case "Año":
-        return <CategoriaPorAño />;
-      case "Custom":
-        return <CategoriaCustom />;
+      case "Más órdenes":
+        return <TopClientesPorOrden />;
+      case "Más gasto":
+        return <TopClientesPorGasto />;
+      case "Mejor ticket promedio":
+        return <TopClientesPorTicket />;
+      case "Nuevos por mes":
+        return <ClientesNuevosPorMes />;
       default:
         return null;
     }
@@ -32,12 +34,11 @@ const IndexCategorias = () => {
   return (
     <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center">
-        Ventas por categoría
+        Visualización de Clientes
       </h2>
 
-      {/* Tabs */}
       <div className="flex flex-wrap justify-center gap-2 mb-8">
-        {Tabs.map((item) => (
+        {tabs.map((item) => (
           <button
             key={item}
             onClick={() => setTab(item)}
@@ -52,10 +53,9 @@ const IndexCategorias = () => {
         ))}
       </div>
 
-      {/* Contenido */}
       <div>{renderTab()}</div>
     </div>
   );
 };
 
-export default IndexCategorias;
+export default IndexClientesVisual;

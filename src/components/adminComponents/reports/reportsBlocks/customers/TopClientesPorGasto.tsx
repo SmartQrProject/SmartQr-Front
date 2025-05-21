@@ -6,39 +6,43 @@ import {
   Bar,
   XAxis,
   YAxis,
+  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  CartesianGrid,
   LabelList,
 } from "recharts";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 
-type PuntoSemana = {
-  label: string; // "Lunes", "Martes", etc.
-  count: number;
+type Cliente = {
+  name: string;
+  totalSpent: number;
+  orders: number;
 };
 
-const FrecuenciaPorSemana = () => {
+const TopClientesPorGasto = () => {
   const { user } = useAuth();
   const slug = user?.payload?.slug;
   const token = user?.token;
-
-  const [data, setData] = useState<PuntoSemana[]>([]);
+  const [data, setData] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!slug || !token) return;
+
     const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `${APIURL}/${slug}/reports/sales-frequency?group=weekday`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          `${APIURL}/${slug}/reports/customers?sortBy=totalSpent&order=desc&limit=10&page=1`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
         const json = await res.json();
-        setData(Array.isArray(json) ? json : []);
-      } catch {
+        setData(Array.isArray(json.data) ? json.data : []);
+      } catch (err) {
+        console.error("Error al obtener clientes por gasto:", err);
         setData([]);
       } finally {
         setLoading(false);
@@ -51,29 +55,36 @@ const FrecuenciaPorSemana = () => {
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
       <h3 className="text-lg font-semibold mb-4">
-        Frecuencia por día de la semana
+        Top 10 clientes por gasto total
       </h3>
 
       {loading ? (
         <p>Cargando...</p>
       ) : data.length === 0 ? (
-        <p>No hay datos de ventas por día de la semana.</p>
+        <p>No hay datos disponibles.</p>
       ) : (
-        <div className="h-[400px]">
+        <div className="h-[500px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
+              layout="vertical"
+              margin={{ top: 0, right: 50, left: 100, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" tick={{ fontSize: 12 }} />
-              <YAxis allowDecimals={false} />
-              <Tooltip formatter={(value: number) => [`${value}`, "Ventas"]} />
-              <Bar dataKey="count" fill="#8884d8">
+              <XAxis type="number" />
+              <YAxis dataKey="name" type="category" width={150} />
+              <Tooltip
+                formatter={(value: number, name: string) =>
+                  name === "totalSpent"
+                    ? [`$${value.toFixed(2)}`, "Total gastado"]
+                    : [`${value}`, "Órdenes"]
+                }
+              />
+              <Bar dataKey="totalSpent" fill="#82ca9d">
                 <LabelList
-                  dataKey="count"
-                  position="top"
-                  formatter={(v: number) => `${v}`}
+                  dataKey="orders"
+                  position="right"
+                  formatter={(v: number) => `${v} ord`}
                 />
               </Bar>
             </BarChart>
@@ -84,4 +95,4 @@ const FrecuenciaPorSemana = () => {
   );
 };
 
-export default FrecuenciaPorSemana;
+export default TopClientesPorGasto;

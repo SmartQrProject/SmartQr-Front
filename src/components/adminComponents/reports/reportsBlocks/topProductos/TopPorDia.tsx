@@ -1,6 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  LabelList,
+} from "recharts";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import dayjs from "dayjs";
 
@@ -11,13 +21,14 @@ const TopPorDia = () => {
 
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [sort, setSort] = useState<"asc" | "desc">("desc"); // nuevo
+  const [sort, setSort] = useState<"asc" | "desc">("desc");
+
+  const today = dayjs().format("YYYY-MM-DD");
 
   useEffect(() => {
     if (!slug || !token) return;
 
     const APIURL = process.env.NEXT_PUBLIC_API_URL;
-    const today = dayjs().format("YYYY-MM-DD");
 
     const fetchData = async () => {
       try {
@@ -28,7 +39,12 @@ const TopPorDia = () => {
           }
         );
         const data = await res.json();
-        setProductos(data);
+        const parsed = data.map((item: any) => ({
+          ...item,
+          quantity: Number(item.quantity),
+        }));
+        setProductos(parsed);
+        console.log("Top productos del día:", parsed);
       } catch (err) {
         console.error("Error al obtener top productos del día:", err);
       } finally {
@@ -37,11 +53,15 @@ const TopPorDia = () => {
     };
 
     fetchData();
-  }, [slug, token, sort]); // incluye sort
+  }, [slug, token, sort]);
 
   return (
-    <div>
-      {/* Selector de orden */}
+    <div className="bg-white p-4 rounded-xl border shadow-sm">
+      <h3 className="text-lg font-semibold mb-4">Top productos del día</h3>
+      <p className="text-sm mb-2">
+        Fecha: <strong>{today}</strong>
+      </p>
+
       <div className="mb-4">
         <label className="font-medium mr-2">Orden:</label>
         <select
@@ -57,15 +77,32 @@ const TopPorDia = () => {
       {loading ? (
         <p>Cargando...</p>
       ) : productos.length === 0 ? (
-        <p>No hay productos vendidos en este día.</p>
+        <p>No hubo productos vendidos hoy.</p>
       ) : (
-        <ul className="space-y-1">
-          {productos.map((p: any, index: number) => (
-            <li key={index}>
-              {p.name}: <strong>{p.quantity}</strong> vendidos
-            </li>
-          ))}
-        </ul>
+        <ResponsiveContainer width="100%" height={50 * productos.length}>
+          <BarChart
+            layout="vertical"
+            data={productos}
+            margin={{ top: 0, right: 40, left: 100, bottom: 0 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis type="number" />
+            <YAxis
+              dataKey="name"
+              type="category"
+              width={150}
+              tick={{ fontSize: 12 }}
+            />
+            <Tooltip formatter={(value: number) => [`${value}`, "Vendidos"]} />
+            <Bar dataKey="quantity" fill="#8884d8">
+              <LabelList
+                dataKey="quantity"
+                position="right"
+                formatter={(v: number) => `${v}`}
+              />
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
       )}
     </div>
   );

@@ -1,31 +1,25 @@
 "use client";
 
 import { useState } from "react";
-
 import FrecuenciaPorHora from "./FrecuenciaPorHora";
 import FrecuenciaPorSemana from "./FrecuenciaPorSemana";
 import FrecuenciaPorMes from "./FrecuenciaPorMes";
 import FrecuenciaPorAño from "./FrecuenciaPorAño";
 
-const Tabs = [
-  "Por hora del día",
-  "Por día de la semana",
-  "Por día del mes",
-  "Por mes del año",
-];
+const Tabs = ["Hora", "Semana", "Mes", "Año"];
 
-const FrecuenciaVentas = () => {
-  const [tab, setTab] = useState("Por hora del día");
+const IndexFrecuencia = () => {
+  const [tab, setTab] = useState("Hora");
 
   const renderTab = () => {
     switch (tab) {
-      case "Por hora del día":
+      case "Hora":
         return <FrecuenciaPorHora />;
-      case "Por día de la semana":
+      case "Semana":
         return <FrecuenciaPorSemana />;
-      case "Por día del mes":
+      case "Mes":
         return <FrecuenciaPorMes />;
-      case "Por mes del año":
+      case "Año":
         return <FrecuenciaPorAño />;
       default:
         return null;
@@ -33,16 +27,21 @@ const FrecuenciaVentas = () => {
   };
 
   return (
-    <div className="p-4 rounded-xl border shadow-sm bg-white">
-      <h2 className="text-xl font-semibold mb-4">Frecuencia de Ventas</h2>
+    <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
+      <h2 className="text-2xl font-bold mb-6 text-center">
+        Frecuencia de Ventas
+      </h2>
 
-      <div className="flex gap-2 mb-6 flex-wrap">
+      {/* Tabs */}
+      <div className="flex flex-wrap justify-center gap-2 mb-8">
         {Tabs.map((item) => (
           <button
             key={item}
             onClick={() => setTab(item)}
-            className={`px-4 py-2 rounded-full border ${
-              tab === item ? "bg-black text-white" : "bg-gray-100 text-black"
+            className={`px-4 py-2 rounded-full border transition ${
+              tab === item
+                ? "bg-black text-white shadow"
+                : "bg-gray-100 text-black hover:bg-gray-200"
             }`}
           >
             {item}
@@ -50,9 +49,10 @@ const FrecuenciaVentas = () => {
         ))}
       </div>
 
+      {/* Contenido */}
       <div>{renderTab()}</div>
     </div>
   );
 };
 
-export default FrecuenciaVentas;
+export default IndexFrecuencia;

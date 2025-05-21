@@ -1,9 +1,20 @@
 "use client";
+
 import { useEffect, useState } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  LabelList,
+} from "recharts";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 
 type PuntoHora = {
-  label: string; // "00"..."23"
+  label: string; // "13:00", "14:00", etc.
   count: number;
 };
 
@@ -17,23 +28,16 @@ const FrecuenciaPorHora = () => {
 
   useEffect(() => {
     if (!slug || !token) return;
-
     const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
     const fetchData = async () => {
       try {
         const res = await fetch(
           `${APIURL}/${slug}/reports/sales-frequency?group=hour`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         const json = await res.json();
-        if (Array.isArray(json)) {
-          setData(json);
-        } else {
-          setData([]);
-        }
+        setData(Array.isArray(json) ? json : []);
       } catch {
         setData([]);
       } finally {
@@ -45,29 +49,41 @@ const FrecuenciaPorHora = () => {
   }, [slug, token]);
 
   return (
-    <div>
+    <div className="bg-white p-4 rounded-xl border shadow-sm">
+      <h3 className="text-lg font-semibold mb-4">
+        Frecuencia por hora del día
+      </h3>
+
       {loading ? (
         <p>Cargando...</p>
       ) : data.length === 0 ? (
         <p>No hay datos de ventas por hora.</p>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border">
-            <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="px-4 py-2">Hora</th>
-                <th className="px-4 py-2">Cantidad de ventas</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((h, i) => (
-                <tr key={i} className="border-t">
-                  <td className="px-4 py-2">{h.label}:00</td>
-                  <td className="px-4 py-2">{h.count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="h-[400px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={data}
+              margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="label"
+                tick={{ fontSize: 11 }}
+                angle={-45}
+                textAnchor="end"
+                height={60}
+              />
+              <YAxis allowDecimals={false} />
+              <Tooltip formatter={(value: number) => [`${value}`, "Ventas"]} />
+              <Bar dataKey="count" fill="#8884d8">
+                <LabelList
+                  dataKey="count"
+                  position="top"
+                  formatter={(v: number) => `${v}`}
+                />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       )}
     </div>
