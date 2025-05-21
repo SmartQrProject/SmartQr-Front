@@ -130,3 +130,17 @@ export type ChatWindowProps = {
     setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
     close: () => void;
 };
+
+export interface IUserStaff {
+    id: string,
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  slug?: string;
+  role?: 'owner' | 'staff';
+}
+
+export interface MenuAdminProps {
+  role: 'owner' | 'staff';
+}
