@@ -8,7 +8,7 @@ const Home = () => {
   const { user } = useAuth();
   return (
     <div className='m-6'>
-      <h1 className='text-3xl font-bold mb-2'>Hi, Owner!</h1>
+      <h2 className='text-2xl font-bold flex gap-2'> <StoreIcon className=' text-blue-600'/> Welcome back, <span className='text-blue-600'>{`${user?.payload?.slug}`}</span></h2>
       <h2 className='text-xl font-semibold text-gray-600'>Today's Summary</h2>
 
       <div className='grid grid-cols-2 gap-4 mt-6 h-40'>
