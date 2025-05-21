@@ -3,34 +3,33 @@
 import { XIcon } from 'lucide-react';
 import { ReactNode } from 'react';
 
-type ProductFormWrapperProps = {
+type ProductModalProps = {
   open: boolean;
   onClose: () => void;
   children: ReactNode;
 };
 
-export default function ProductFormWrapper({
+export default function ProductModal({
   open,
   onClose,
   children,
-}: ProductFormWrapperProps) {
+}: ProductModalProps) {
   if (!open) return null;
 
   return (
-   <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 bg-black/60 overflow-y-auto  ">
-        <div className="relative w-full max-w-xl bg-black/1 rounded-xl p-6 mx-4 overflow-y-auto ">
-          <button
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-24  overflow-y-auto">
+      <div className="relative w-full max-w-xl rounded-xl p-6 mx-4 bg-gray-300 shadow-lg overflow-y-auto">
+    
+        <button
           onClick={onClose}
-          className="absolute top-3 right-1 text-default-100 hover:text-red-800 font-bold cursor-pointer"
+          className="absolute top-3 right-3 text-gray-900 hover:text-red-500 cursor-pointer"
           aria-label="Close"
-          >
-          <XIcon className="w-8 h-8" />
-          </button>
+        >
+          <XIcon className="w-6 h-6" />
+        </button>
 
-          {children}
-        </div>
+        {children}
+      </div>
     </div>
-
-
   );
 }

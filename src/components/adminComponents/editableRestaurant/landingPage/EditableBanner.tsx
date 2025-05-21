@@ -25,10 +25,9 @@ export default function EditableBannerCrop({ title }: { title: string }) {
     try {
       const rawBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
 
-      // Convert Blob to File for compression
       const file = new File([rawBlob], "cropped.jpg", { type: rawBlob.type });
       const compressedBlob = await imageCompression(file, {
-        maxSizeMB: 0.15, // Stay under 200 KB
+        maxSizeMB: 0.15,
         maxWidthOrHeight: 1200,
         useWebWorker: true,
       });
@@ -67,7 +66,6 @@ export default function EditableBannerCrop({ title }: { title: string }) {
     }
   };
 
-  // Load existing image on first mount
   useState(() => {
     handleLoadFromLocalStorage();
   });
@@ -86,7 +84,7 @@ export default function EditableBannerCrop({ title }: { title: string }) {
 
       <button
         onClick={() => inputRef.current?.click()}
-        className="absolute top-4 right-4 z-30 bg-white/80 text-sm md:text-base px-3 py-2 rounded-lg hover:bg-white flex items-center gap-2"
+        className="absolute top-4 right-4 z-30 bg-white/80 text-sm md:text-base px-3 py-2 rounded-lg hover:bg-white flex items-center gap-2 cursor-pointer"
       >
         <PencilIcon className="w-4 h-4" />
         Edit Banner

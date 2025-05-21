@@ -6,7 +6,10 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { useAuth } from '@/app/(admin)/login/adminLoginContext';
 import { getCategories } from '@/components/adminComponents/menu/menuHelpers/fetch/categories';
 import CardView from '@/components/adminComponents/menu/card/CardView';
+import ProductModal from '@/components/adminComponents/editableRestaurant/landingPage/ProducModal';
+import CreateMenuForm from '@/components/adminComponents/menu/forms/CreateProductForm';
 import { ICategoryWithProducts, IProducts } from '@/components/adminComponents/menu/menuTypes/menuTypes';
+import { ProductFormData } from '@/components/adminComponents/menu/menuHelpers/schemas/createProductSchema';
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -17,23 +20,23 @@ interface Props {
 export default function CategoryProductList({ slug }: Props) {
   const { user } = useAuth();
   const token = user?.token;
-
   const [categories, setCategories] = useState<ICategoryWithProducts[]>([]);
+  const [editProduct, setEditProduct] = useState<(ProductFormData & { id?: string; image_url?: string }) | null>(null);
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
+  const fetchCategories = async () => {
+    if (!slug || !token) return;
+    try {
+      const res = await getCategories(slug, token);
+      setCategories(res.categories);
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to load categories with products');
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (slug && token) {
-          const categoryRes = await getCategories(slug, token);
-          setCategories(categoryRes.categories);
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error('Failed to load categories with products');
-      }
-    };
-
-    if (slug && token) fetchData();
+    fetchCategories();
   }, [slug, token]);
 
   const handleDeleteProduct = async (productId: string) => {
@@ -46,9 +49,7 @@ export default function CategoryProductList({ slug }: Props) {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Re-fetch categories to update list
-      const categoryRes = await getCategories(slug, token!);
-      setCategories(categoryRes.categories);
+      await fetchCategories();
       toast.success('Product deleted');
     } catch (error) {
       console.error(error);
@@ -58,50 +59,93 @@ export default function CategoryProductList({ slug }: Props) {
 
   return (
     <section className="p-4">
-      <div className="space-y-8">
-        {categories.map((cat) => (
-          <div key={cat.id} className="bg-white shadow rounded-lg p-6">
-            <h3 className="text-xl font-bold mb-4 text-default-800">{cat.name}</h3>
+      <div className="space-y-10">
+        {categories.map((cat) => {
+          const filtered = cat.products?.filter(
+            (product) => (product as any).exist !== false && (product as any).category?.exist !== false
+          ) || [];
 
-            {cat.products && cat.products.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {cat.products.map((product) => (
-                  <div key={product.id} className="relative group">
-                    <CardView
-                      name={product.name}
-                      description={product.description}
-                      price={product.price}
-                      file={typeof product.image_url === 'string' ? product.image_url : ''}
-                      details={product.detail ?? []}
-                      is_available={product.available ?? false}
-                      categoryId={cat.id}
-                    />
+          return (
+            <div key={cat.id} className="bg-white shadow rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4 text-default-800">{cat.name}</h3>
 
-                    <div className="absolute top-2 right-2 flex gap-1">
-                      <button
-                        onClick={() => console.log("TODO: Edit product", product)}
-                        className="text-default-800 p-1  hover:text-default-700 text-sm cursor-pointer"
-                        title="Edit"
-                      >
-                        <Pencil/>
-                      </button>
-                      <button
-                        onClick={() => handleDeleteProduct(String(product.id))}
-                        className="text-default-800 p-1  hover:text-default-700 text-sm cursor-pointer"
-                        title="Delete"
-                      >
-                        <Trash2/>
-                      </button>
+              {filtered.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filtered.map((product) => (
+                    <div key={product.id} className="flex flex-col items-stretch gap-2">
+                      <CardView
+                        name={product.name}
+                        description={product.description}
+                        price={product.price}
+                        file={typeof product.image_url === 'string' ? product.image_url : ''}
+                        details={product.detail ?? []}
+                        is_available={product.available ?? false}
+                        categoryId={cat.id}
+                      />
+
+                      <div className="flex justify-around gap-3 px-1">
+                        <button
+                          onClick={() => {
+                            setEditProduct({
+                              id: product.id !== undefined ? String(product.id) : undefined,
+                              name: product.name,
+                              description: product.description,
+                              price: product.price,
+                              available: product.available ?? false,
+                              categoryId: cat.id,
+                              details: product.detail
+                                ? product.detail.map((d: any) =>
+                                    typeof d === 'string' ? d : d.name
+                                  )
+                                : [],
+                              image_url: typeof product.image_url === 'string' ? product.image_url : '',
+                            });
+                            setIsProductModalOpen(true);
+                          }}
+                          title="Edit"
+                          className="flex items-center justify-center gap-1 text-sm text-default-800 hover:text-sky-600 cursor-pointer"
+                        >
+                          <Pencil className="w-4 h-4" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProduct(String(product.id))}
+                          className="flex items-center justify-center gap-1 text-sm text-default-800 hover:text-red-600 cursor-pointer"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500 italic">No products in this category.</p>
-            )}
-          </div>
-        ))}
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500 italic">No products in this category.</p>
+              )}
+            </div>
+          );
+        })}
       </div>
+
+      {editProduct && (
+        <ProductModal
+          open={isProductModalOpen}
+          onClose={() => {
+            setEditProduct(null);
+            setIsProductModalOpen(false);
+          }}
+        >
+          <CreateMenuForm
+            initialData={editProduct}
+            mode="edit"
+            onSuccess={() => {
+              setEditProduct(null);
+              setIsProductModalOpen(false);
+              fetchCategories();
+            }}
+          />
+        </ProductModal>
+      )}
     </section>
   );
 }

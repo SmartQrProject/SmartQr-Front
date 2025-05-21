@@ -4,7 +4,6 @@ import { useAuth } from '@/app/(admin)/login/adminLoginContext';
 import RestaurantPageClient from '@/components/adminComponents/editableRestaurant/landingPage/RestaurantPageClient';
 import EditableCategories from '@/components/adminComponents/editableRestaurant/landingPage/EditableCategories';
 import { useState } from 'react';
-import ListProducts from '../../menu/views/ProductsView';
 import CategoryProductList from './CategoryProductList';
 
 export default function StorePageClient() {

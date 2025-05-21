@@ -7,7 +7,7 @@ export default function CategorySlug() {
   const { user } = useAuth();
   const slug = user?.payload?.slug || user?.payload?.slug || user?.payload?.slug;
 
-  if (!slug) return <p>Loading...</p>;
+  if (!slug) return <p>Store not found</p>;
 
   return <EditableCategories slug={slug} />;
 }
