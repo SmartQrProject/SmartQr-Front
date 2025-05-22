@@ -6,6 +6,7 @@ import PublicCategoryList from '../shared/categoryList';
 import PublicCategoryNav from '../shared/categoryNavBar';
 
 interface Product {
+  id: string;
   name: string;
   description: string;
   price: number;
@@ -26,16 +27,17 @@ interface StoreData {
 
 interface StorePageClientProps {
   data: StoreData;
+  slug: string;
 }
 
-export default function StorePageClient({ data }: StorePageClientProps) {
+export default function StorePageClient({ data, slug }: StorePageClientProps) {
   return (
    
     <>
      
       <BannerHero imageUrl={data.banner} title={data.name} />
       <PublicCategoryNav categories={data.categories} />
-      <PublicCategoryList categories={data.categories} />
+      <PublicCategoryList categories={data.categories} slug={slug} />
      
     </>
 

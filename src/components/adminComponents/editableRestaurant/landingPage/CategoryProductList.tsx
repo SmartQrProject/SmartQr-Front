@@ -73,7 +73,7 @@ export default function CategoryProductList({ slug }: Props) {
                       price={product.price}
                       file={typeof product.image_url === 'string' ? product.image_url : ''}
                       details={product.detail ?? []}
-                      is_available={product.available ?? false}
+                      is_available={product.is_available ?? false}
                       categoryId={cat.id}
                     />
 

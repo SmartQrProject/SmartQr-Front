@@ -1,12 +1,16 @@
 export interface IProducts{
-  id?: number;
+  id: string;
   name: string;
   description: string;
   price: number;
-  image_url: File;
+  image_url: string | File;
   detail?: string[];
-  available?: boolean;
+  is_available?: boolean;
   categoryId: string;
+}
+
+export interface ICartProduct extends IProducts {
+  quantity: number;
 }
 
 export interface ICategories {
