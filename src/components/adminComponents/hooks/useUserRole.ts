@@ -11,9 +11,7 @@ export const useUserRole = () => {
         const parsed = JSON.parse(stored);
         const userRole = parsed.payload?.roles || null;
         setRole(userRole);
-        console.log('User role from adminSession:', userRole);
       } catch (error) {
-        console.error('Error parsing adminSession:', error);
         setRole(null);
       }
     } else {

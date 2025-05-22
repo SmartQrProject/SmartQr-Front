@@ -1,51 +1,10 @@
 'use client';
 
-// import { useEffect, useState } from 'react';
-// import { getCategories } from '../menuHelpers/fetch/categories';
-// import { ICategories } from '../menuTypes/menuTypes';
 import { useCategories } from '../menuHelpers/hook/useCategories';
 
 
 const CategoriesList = () => {
   const { categories, error } = useCategories()
- 
- 
-  // const [categories, setCategories] = useState<ICategories[]>([]);
-  // const [error, setError] = useState<string | null>(null);
-  
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const session = localStorage.getItem("adminSession");
-
-  //     if (!session) {
-  //       setError("No session found");
-  //       return;
-  //     }
-  //     //ELIANA TANGARIFE
-      
-  //     const parsed = JSON.parse(session);
-  //     const token = parsed.token;
-
-  //     const payload = parsed.payload
-
-  //     const slug = payload?.slug;
-     
-      
-  //     if (!slug) {
-  //       setError("Slug not found in token");
-  //       return;
-  //     }
-      
-  //     try {
-  //       const data = await getCategories(slug, token);
-  //       setCategories(data.categories || []);
-  //     } catch (err: any) {
-  //       setError(err.message || "Error fetching categories");
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   return (
     <div className="space-y-4 w-full max-w-md p-6 rounded-md bg-neutral-100 shadow">
