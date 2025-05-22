@@ -6,7 +6,7 @@ import EditableCategories from '@/components/adminComponents/editableRestaurant/
 import { useState } from 'react';
 import CategoryProductList from './CategoryProductList';
 
-export default function StorePageClient() {
+export default function StorePageAdmin() {
   const { user } = useAuth();
   const slug = user?.payload?.slug;
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false); // starts closed
