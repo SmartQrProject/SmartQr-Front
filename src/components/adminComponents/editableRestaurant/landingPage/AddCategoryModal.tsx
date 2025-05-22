@@ -17,7 +17,7 @@ export default function AddCategoryModal({ open, onClose, onSave }: AddCategoryM
     onClose();
   };
 
-  // ✅ Do not render anything if `open` is false
+  
   if (!open) return null;
 
   return (

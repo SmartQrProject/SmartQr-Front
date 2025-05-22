@@ -7,7 +7,7 @@ import { useState } from "react";
 import ListProducts from "../../menu/views/ProductsView";
 import CategoryProductList from "./CategoryProductList";
 
-export default function StorePageClient() {
+export default function StorePageAdmin() {
   const { user } = useAuth();
   const slug = user?.payload?.slug;
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false); // starts closed
