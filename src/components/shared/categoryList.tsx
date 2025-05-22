@@ -46,7 +46,7 @@ export default function PublicCategoryList({ categories, slug }: Props) {
                 className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 cursor-pointer hover:scale-[1.02] transition-transform duration-200"
                 onClick={() =>
                   setSelectedProduct({
-                    id: product.id, // ✅ ahora correcto
+                    id: product.id, 
                     categoryId: cat.id ?? '',
                     name: product.name,
                     description: product.description,

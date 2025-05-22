@@ -1,4 +1,6 @@
 'use client'
+import AuthLinks from '@/components/auth0/AuthLinks';
+import { StoreIcon } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react'
 import { FiGift, FiShoppingBag } from 'react-icons/fi'
@@ -14,17 +16,18 @@ const NavbarCustomer = ({name, slug }: NavbarCustomerProps) => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   return (
-    <nav className="border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 relative z-10">
-      <div className="max-w-screen-2xl flex items-center justify-between mx-auto p-4">
-        <a href={`/menu/${slug}`} className="flex items-center space-x-3 rtl:space-x-reverse">
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+    <nav className="border-b border-gray-200 text-default-800 relative z-10">
+      <div className=" flex items-center justify-between  p-4">
+        <Link href={`/menu/${slug}`} className="flex items-center space-x-3 rtl:space-x-reverse">
+          <span className="self-center text-2xl font-semibold whitespace-nowrap flex items-center gap-2">
+            <StoreIcon className="w-6 h-6 text-sky-800" />
             {name}
           </span>
-        </a>
+        </Link>
 
         <div className="flex items-center gap-4">
           <Link href={`/menu/${slug}/cart`} className="cursor-pointer flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition">
-            <FiShoppingBag className="text-xl" />
+            <FiShoppingBag className="text-xl " />
           </Link>
 
           <button className="cursor-pointer flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition">
@@ -34,7 +37,7 @@ const NavbarCustomer = ({name, slug }: NavbarCustomerProps) => {
           <button
             onClick={toggleMenu}
             type="button"
-            className="cursor-pointer flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            className="cursor-pointer flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-gray-200"
             aria-controls="navbar-hamburger"
             aria-expanded={isMenuOpen}
           >
@@ -46,13 +49,15 @@ const NavbarCustomer = ({name, slug }: NavbarCustomerProps) => {
         </div>
 
         {isMenuOpen && (
-        <div id="navbar-hamburger" className="fixed top-0 right-0 h-full w-1/6 bg-white dark:bg-gray-800 shadow-lg z-20 p-4 flex flex-col justify-start">
+        <div id="navbar-hamburger" className="fixed top-0 right-0 h-full w-full max-w-xs bg-white shadow-lg z-20 p-4 flex flex-col justify-start">
+
           <div>
             <div className="flex items-center justify-between mt-3 pb-3 border-b border-gray-200">
-              <span className="text-xl font-semibold text-gray-800 dark:text-white">
+              <span className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                <StoreIcon className="w-6 h-6 text-sky-800" />
                 {name}
               </span>
-              <button onClick={() => setIsMenuOpen(false)} className="text-gray-500 hover:text-red-500 text-2xl"
+              <button onClick={() => setIsMenuOpen(false)} className="text-gray-800 hover:text-red-500 text-2xl"
                 aria-label="Close menu">&times;</button>
             </div>
 
@@ -71,13 +76,8 @@ const NavbarCustomer = ({name, slug }: NavbarCustomerProps) => {
             </div>
 
             <div className="flex flex-row gap-3 mt-auto mb-20">
-              <button onClick={() => setIsMenuOpen(false)} className="flex-1 px-4 py-2 rounded-lg border border-blue-600 text-blue-600 hover:bg-blue-100 transition">
-                Login
-              </button>
-
-              <button onClick={() => setIsMenuOpen(false)} className="flex-1 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
-                Sign Up
-              </button>
+              
+              <AuthLinks />
             </div>
           </div>
         )}

@@ -8,8 +8,8 @@ const CustomerProfilePage = () => {
     <>
  
     
-        <CustomerProfile/>
-        <ListProducts/>
+      <CustomerProfile/>
+       
     </>
   )
 }

@@ -1,19 +1,30 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "@/utils/cropImg";
 import { toast } from "react-hot-toast";
 import { PencilIcon } from "lucide-react";
 import imageCompression from "browser-image-compression";
+import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+import { getRestaurantWithMenu } from "@/helper/restaurantsSlugFetch";
 
-export default function EditableBannerCrop({ title }: { title: string }) {
+interface EditableBannerCropProps {
+  title: string;
+  initialBanner?: string;
+}
+
+export default function EditableBannerHero({ title, initialBanner }: EditableBannerCropProps) {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
-  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+  const [bannerUrl, setBannerUrl] = useState<string | null>(initialBanner ?? null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const { user } = useAuth();
+  const token = user?.token;
+  const slug = user?.payload?.slug;
 
   const onCropComplete = useCallback((_: any, croppedPixels: any) => {
     setCroppedAreaPixels(croppedPixels);
@@ -24,11 +35,9 @@ export default function EditableBannerCrop({ title }: { title: string }) {
 
     try {
       const rawBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
-
-      // Convert Blob to File for compression
       const file = new File([rawBlob], "cropped.jpg", { type: rawBlob.type });
       const compressedBlob = await imageCompression(file, {
-        maxSizeMB: 0.15, // Stay under 200 KB
+        maxSizeMB: 0.15,
         maxWidthOrHeight: 1200,
         useWebWorker: true,
       });
@@ -44,33 +53,43 @@ export default function EditableBannerCrop({ title }: { title: string }) {
         body: formData,
       });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText);
-      }
+      if (!res.ok) throw new Error(await res.text());
 
       const data = await res.json();
-      setBannerUrl(data.secure_url);
-      localStorage.setItem("restaurantBanner", data.secure_url);
-      toast.success("Image uploaded successfully!");
+
+      if (!token || !slug) throw new Error("User token or slug is missing");
+
+      const updateRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/restaurants/${slug}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          banner: data.secure_url,
+        }),
+      });
+
+      if (!updateRes.ok) throw new Error("Failed to update restaurant banner");
+
+      toast.success("Banner updated successfully!");
       setImageSrc(null);
+
+      const updated = await getRestaurantWithMenu(slug);
+      console.log("Refetched restaurant after update:", updated);
+      if (updated?.banner) {
+        setBannerUrl(updated.banner);
+      }
     } catch (err: any) {
       toast.error("Error uploading image: " + err.message);
     }
   };
 
-
-  const handleLoadFromLocalStorage = () => {
-    const saved = localStorage.getItem("restaurantBanner");
-    if (saved) {
-      setBannerUrl(saved);
+  useEffect(() => {
+    if (initialBanner) {
+      setBannerUrl(initialBanner);
     }
-  };
-
-  // Load existing image on first mount
-  useState(() => {
-    handleLoadFromLocalStorage();
-  });
+  }, [initialBanner]);
 
   return (
     <div className="relative w-full h-[33vh] sm:h-[40vh] md:h-[50vh] bg-gray-100 overflow-hidden">
@@ -109,7 +128,6 @@ export default function EditableBannerCrop({ title }: { title: string }) {
         }}
       />
 
-      
       {imageSrc && (
         <div className="absolute inset-0 z-40 bg-white/90 flex flex-col items-center justify-center">
           <div className="relative w-full h-[300px] bg-black/30">
