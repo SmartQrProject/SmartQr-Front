@@ -5,6 +5,7 @@ import { getRestaurant } from "@/helper/restaurantFetch";
 import { IRestaurant } from "@/types";
 import EditableBannerHero from "./EditableBanner";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+import { Store } from "lucide-react";
 import { getRestaurantWithMenu } from "@/helper/restaurantsSlugFetch";
 
 export default function RestaurantPageClient() {
@@ -29,7 +30,7 @@ export default function RestaurantPageClient() {
   }, [slug]);
 
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
-  if (!restaurant) return <div className="p-4">Loading...</div>;
+  if (!restaurant) return <div className="p-4">No restaurant found...</div>;
 
   return (
     <div className="mx-auto">

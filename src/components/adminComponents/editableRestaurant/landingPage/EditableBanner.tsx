@@ -105,7 +105,7 @@ export default function EditableBannerHero({ title, initialBanner }: EditableBan
 
       <button
         onClick={() => inputRef.current?.click()}
-        className="absolute top-4 right-4 z-30 bg-white/80 text-sm md:text-base px-3 py-2 rounded-lg hover:bg-white flex items-center gap-2"
+        className="absolute top-4 right-4 z-30 bg-white/80 text-sm md:text-base px-3 py-2 rounded-lg hover:bg-white flex items-center gap-2 cursor-pointer"
       >
         <PencilIcon className="w-4 h-4" />
         Edit Banner
