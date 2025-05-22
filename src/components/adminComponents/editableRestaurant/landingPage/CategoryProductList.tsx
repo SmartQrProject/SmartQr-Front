@@ -79,7 +79,7 @@ export default function CategoryProductList({ slug }: Props) {
                         price={product.price}
                         file={typeof product.image_url === 'string' ? product.image_url : ''}
                         details={Array.isArray(product.detail) ? product.detail : []}
-                        is_available={product.available ?? false}
+                        is_available={product.is_available ?? false}
                         categoryId={cat.id}
                       />
 
@@ -91,7 +91,7 @@ export default function CategoryProductList({ slug }: Props) {
                               name: product.name,
                               description: product.description,
                               price: product.price,
-                              available: product.available ?? true,
+                              available: product.is_available ?? true,
                               categoryId: cat.id,
                               details: product.detail
                                 ? product.detail.map((d: any) => typeof d === 'string' ? d : d.name)
