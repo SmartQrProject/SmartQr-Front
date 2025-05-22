@@ -10,7 +10,6 @@ export default function Page() {
         <div>
             <Navbar/>
             <Hero />
-            {/* <AuthLinks /> */}
             <Body />
             <RestaurantBanner />
             <Footer/>

@@ -23,13 +23,13 @@ export default function PublicCategoryNav({ categories }: Props) {
   };
 
   return (
-    <div className="flex gap-4 overflow-x-auto px-4 py-2 border-b">
+    <div className="flex gap-4 overflow-x-auto px-4 py-2 bg-white shadow-sm ">
       {visibleCategories.map((cat) => (
         <button
           key={cat.name}
           onClick={() => handleScroll(cat.name)}
-          className={`text-sm md:text-base font-semibold whitespace-nowrap pb-1 transition border-b-2 cursor-pointer ${
-            activeCategory === cat.name ? 'border-black text-black' : 'border-transparent text-gray-500 hover:text-black'
+          className={`text-sm md:text-base font-semibold whitespace-nowrap pb-1 transition border-b-2 cursor-pointer ml-8 ${
+            activeCategory === cat.name ? 'border-black text-black' : 'border-transparent text-gray-700 hover:text-black'
           }`}
         >
           {cat.name}
