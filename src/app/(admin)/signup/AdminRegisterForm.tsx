@@ -3,11 +3,12 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterFormInputs, AdminRegisterSchema } from "./authSchema";
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 import Link from "next/link";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary";
 import { useState } from "react";
+import PasswordInput from "@/components/adminComponents/sessionInputs/PaswordInput";
 
 export default function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +17,7 @@ export default function RegisterForm() {
 
   const {
     register,
-    handleSubmit, 
+    handleSubmit,
     formState: { errors, isSubmitting },
     reset,
   } = useForm<RegisterFormInputs>({
@@ -28,7 +29,9 @@ export default function RegisterForm() {
 
     try {
       // Slug validation first
-      const check = await fetch(`${APIURL}/restaurants?slug=${data.slug}`);
+      const check = await fetch(
+        `${APIURL}/restaurants/public?slug=${data.slug}`
+      );
       if (check.status === 200) {
         toast.error("This slug is already taken. Please choose another.");
         return;
@@ -48,7 +51,14 @@ export default function RegisterForm() {
       console.log("✅ Saved to localStorage:", restaurantData);
 
       // Redirect to Stripe
-      const res = await fetch(`${APIURL}/stripe/checkout-session`);
+      const res = await fetch(`${APIURL}/stripe/subscription-session`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ slug: restaurantData.slug }),
+      });
+
       if (!res.ok) {
         const errorText = await res.text();
         toast.error(`Stripe error ${res.status}: ${errorText}`);
@@ -59,7 +69,6 @@ export default function RegisterForm() {
       if (!url) throw new Error("No Stripe session returned");
 
       window.location.href = url;
-
     } catch (error: any) {
       toast.error(error?.message || "Something went wrong. Please try again.");
       console.error("Checkout error:", error);
@@ -73,38 +82,64 @@ export default function RegisterForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-sm">
         <div>
           <label>Name</label>
-          <input {...register("name")} className="w-full p-2 bg-white rounded-md" placeholder="John Smith" />
+          <input
+            {...register("name")}
+            className="w-full p-2 bg-white rounded-md"
+            placeholder="John Smith"
+          />
           {errors.name && <p className="text-red-500">{errors.name.message}</p>}
         </div>
 
         <div>
           <label>Email</label>
-          <input {...register("email")} className="w-full p-2 bg-white rounded-md" placeholder="johnSmith@mail.com" />
-          {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+          <input
+            {...register("email")}
+            className="w-full p-2 bg-white rounded-md"
+            placeholder="johnSmith@mail.com"
+          />
+          {errors.email && (
+            <p className="text-red-500">{errors.email.message}</p>
+          )}
         </div>
 
         <div>
           <label>Store Name</label>
-          <input {...register("storeName")} className="w-full p-2 bg-white rounded-md" placeholder="My Store" />
-          {errors.storeName && <p className="text-red-500">{errors.storeName.message}</p>}
+          <input
+            {...register("storeName")}
+            className="w-full p-2 bg-white rounded-md"
+            placeholder="My Store"
+          />
+          {errors.storeName && (
+            <p className="text-red-500">{errors.storeName.message}</p>
+          )}
         </div>
 
         <div>
           <label>Slug</label>
-          <input {...register("slug")} className="w-full p-2 bg-white rounded-md" placeholder="default-store" />
+          <input
+            {...register("slug")}
+            className="w-full p-2 bg-white rounded-md"
+            placeholder="default-store"
+          />
           {errors.slug && <p className="text-red-500">{errors.slug.message}</p>}
         </div>
 
         <div>
           <label>Password</label>
-          <input type="password" {...register("password")} className="w-full p-2 bg-white rounded-md" />
-          {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+          <PasswordInput
+            register={register}
+            name="password"
+            error={errors.password?.message}
+          />
         </div>
 
         <div>
           <label>Confirm Password</label>
-          <input type="password" {...register("confirmPassword")} className="w-full p-2 bg-white rounded-md" />
-          {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
+          <PasswordInput
+            register={register}
+            name="confirmPassword"
+            error={errors.confirmPassword?.message}
+          />
         </div>
 
         <ButtonPrimary type="submit" loading={isSubmitting || isLoading}>

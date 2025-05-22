@@ -5,6 +5,7 @@ import { getRestaurant } from "@/helper/restaurantFetch";
 import { IRestaurant } from "@/types";
 import EditableBannerHero from "./EditableBanner";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+import { getRestaurantWithMenu } from "@/helper/restaurantsSlugFetch";
 
 export default function RestaurantPageClient() {
   const { user } = useAuth(); 
@@ -19,8 +20,11 @@ export default function RestaurantPageClient() {
       return;
     }
 
-    getRestaurant(slug)
-      .then((res) => setRestaurant(res))
+    getRestaurantWithMenu(slug)
+      .then((res) => {
+        console.log("Fetched restaurant data:", res);
+        setRestaurant(res);
+      })
       .catch((err) => setError(err.message));
   }, [slug]);
 
@@ -29,7 +33,7 @@ export default function RestaurantPageClient() {
 
   return (
     <div className="mx-auto">
-      <EditableBannerHero title={restaurant.name} />
+      <EditableBannerHero title={restaurant.name} initialBanner={restaurant.banner ?? undefined} />
     </div>
   );
 }

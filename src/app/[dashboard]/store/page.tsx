@@ -1,5 +1,5 @@
 
-import StorePageClient from "@/components/adminComponents/editableRestaurant/landingPage/StorePageClient";
+import StorePageClient from "@/components/adminComponents/editableRestaurant/landingPage/StorePageAdmin";
 import ListProducts from "@/components/adminComponents/menu/views/ProductsView";
 import NavbarAdmin from "@/components/adminComponents/navbar/NavbarAdmin";
 import Footer from "@/components/subscribers/footer/Footer";
