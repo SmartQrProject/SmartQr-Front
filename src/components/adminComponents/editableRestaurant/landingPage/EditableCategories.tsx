@@ -97,7 +97,7 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
       }
 
       toast.success('Category updated');
-      await fetchAllCategories(); // Refresh list
+      await fetchAllCategories();
     } catch (err) {
       console.error(err);
       toast.error('Could not update category');

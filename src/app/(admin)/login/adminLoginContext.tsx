@@ -79,7 +79,7 @@ export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem("adminSession");
         Cookies.remove("adminSession");
         localStorage.removeItem("userSession");
-        // localStorage.removeItem("pendingRestaurant");
+        localStorage.removeItem("pendingRestaurant");
         localStorage.removeItem("cart");
         router.push("/");
     };

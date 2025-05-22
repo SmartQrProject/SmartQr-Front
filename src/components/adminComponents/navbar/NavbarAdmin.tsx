@@ -21,7 +21,8 @@ const NavbarAdmin = () => {
     
   const logOutHandler = () => {
     logoutAdmin()
-    toast.success("Sesión cerrada")
+    toast.success("Logout successful")
+
     router.push("/")
   }
 
