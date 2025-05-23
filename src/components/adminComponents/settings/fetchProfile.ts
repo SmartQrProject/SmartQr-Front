@@ -6,12 +6,10 @@ const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function updateProfile(token: string, data: UserProfileFormInputs, slug: string, userId: string) {
   try {
-    // Preparar los datos para enviar
     const updateData = {
       name: data.name,
       phone: data.phone,
       address: data.address,
-      // Solo incluir los campos de contraseña si se proporcionaron
       ...(data.password && {
         password: data.password,
         confirmPassword: data.confirmPassword
