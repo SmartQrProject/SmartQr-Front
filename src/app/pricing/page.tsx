@@ -1,14 +1,17 @@
-import Pricing from '@/components/gabriel/Pricing';
-import React from 'react'
+import Hero from "@/components/adminComponents/landingPage/heroComponent/Hero";
+import Pricing from "@/components/gabriel/Pricing";
+import Footer from "@/components/subscribers/footer/Footer";
+import Navbar from "@/components/subscribers/navbar/Navbar";
+import React from "react";
 
 const PricingPage = () => {
   return (
     <>
-        <div>PricingPage</div>
-        <Pricing/>
-
+      <Navbar />
+      <Pricing />
+      <Footer />
     </>
-  )
-}
+  );
+};
 
 export default PricingPage;
