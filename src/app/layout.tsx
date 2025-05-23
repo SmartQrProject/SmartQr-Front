@@ -6,7 +6,7 @@ import { AdminLoginProvider } from "./(admin)/login/adminLoginContext";
 import ChatBot from "@/components/chatbot/ChatBot";
 import Script from 'next/script';
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { CustomerAuthProvider } from "@/components/customers/context/customerContext";
+
 
 
 const lato = Lato({
@@ -45,14 +45,11 @@ export default function RootLayout({
                 
                 <Toaster position="top-center" />
                 <AdminLoginProvider>
-                    <CustomerAuthProvider>
-
                         <main className="flex-1">
                             {children}
                             <SpeedInsights />
                         </main>
                         <ChatBot />
-                    </CustomerAuthProvider>
                     
                 </AdminLoginProvider>
             

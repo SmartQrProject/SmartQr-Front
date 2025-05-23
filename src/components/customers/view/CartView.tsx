@@ -6,20 +6,24 @@ import { ICartProduct } from "@/components/adminComponents/menu/menuTypes/menuTy
 import { CreditCard, Receipt, ShoppingCart } from 'lucide-react';
 import { FaMoneyBill } from 'react-icons/fa';
 import toast from 'react-hot-toast';
-import { useCustomerAuth } from '../context/customerContext';
 
 const CartView = () => {
   const router = useRouter();
   const params = useParams();
   const slug = params?.slug ? String(params.slug) : 'default-slug';
-  const { customer } = useCustomerAuth();
-  const APIURL = process.env.NEXT_PUBLIC_API_URL; 
+  const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
+  const [customerId, setCustomerId] = useState<string | null>(null);
   const [totalCart, setTotalCart] = useState<number>(0);
   const [cart, setCart] = useState<ICartProduct[]>([]);
 
   useEffect(() => {
-  try {
+    const session = localStorage.getItem("customerSession");
+    if (session) {
+      const parsed = JSON.parse(session);
+      setCustomerId(parsed.payload?.id); 
+    }
+
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]") as ICartProduct[];
     const cartWithQuantity = storedCart.map((product) => ({
       ...product,
@@ -27,12 +31,7 @@ const CartView = () => {
     }));
     setCart(cartWithQuantity);
     recalculateTotal(cartWithQuantity);
-  } catch (err) {
-    console.error("Failed to load cart from localStorage:", err);
-    setCart([]);
-  }
   }, []);
-
 
   const recalculateTotal = (cartData: ICartProduct[]) => {
     const total = cartData.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
@@ -56,7 +55,7 @@ const CartView = () => {
   };
 
   const handleCheckout = async () => {
-    if (!customer?.payload?.id) {
+    if (!customerId) {
       toast.error("You must be logged in to checkout.");
       return;
     }
@@ -68,8 +67,8 @@ const CartView = () => {
       }));
 
       const pendingOrder = {
-        customerId: customer.payload.id,
-        code: "T07", 
+        customerId,
+        code: "T07",
         products: productsForOrder,
         slug,
       };
@@ -79,11 +78,10 @@ const CartView = () => {
       const res = await fetch(`${APIURL}/stripe/checkout-session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ total: totalCart * 100 }), 
+        body: JSON.stringify({ total: totalCart }),
       });
 
       const data = await res.json();
-
       if (!data.url) throw new Error("Stripe session creation failed");
       window.location.href = data.url;
     } catch (error) {
@@ -91,6 +89,7 @@ const CartView = () => {
       toast.error("Could not start checkout. Please try again.");
     }
   };
+
 
   return (
     <div className="p-4 md:min-h-screen bg-gray-50">

@@ -1,50 +1,67 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+
+const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function SuccessOrderPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const pendingOrderRaw = localStorage.getItem('pendingOrder');
+    const pendingOrder = localStorage.getItem("pendingOrder");
+    const session = localStorage.getItem("customerSession");
 
-    if (!pendingOrderRaw) {
-      toast.error('❌ No order found. Please try again.');
-      router.push('/');
+    if (!pendingOrder || !session) {
+      toast.error("❌ Missing data. Please try again.");
+      router.push("/");
       return;
     }
 
-    const { customerId, code, products, slug } = JSON.parse(pendingOrderRaw);
+    const sessionData = JSON.parse(session);
+    const token = sessionData?.token;
 
-    if (!customerId || !slug || !products?.length) {
-      toast.error('⚠️ Incomplete order data. Please try again.');
-      localStorage.removeItem('pendingOrder');
-      router.push('/');
+    const { customerId, code, products, slug } = JSON.parse(pendingOrder);
+    console.log("✅ Pending order data:", { customerId, code, products, slug });
+    console.log("✅ Customer session:", sessionData);
+
+    if (!customerId || !slug || !products?.length || !token) {
+      console.error("❌ Invalid order data:", { customerId, slug, products, token });
+      toast.error("⚠️ Invalid order data.");
+      localStorage.removeItem("pendingOrder");
+      router.push("/");
       return;
     }
 
     const sendOrder = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/orders`, {
-          method: 'POST',
+        const orderRes = await fetch(`${APIURL}/${slug}/orders`, {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ customerId, code, products }),
+          body: JSON.stringify({
+            customerId,
+            code,
+            products: products.map((p: any) => ({
+              id: p.id,
+              quantity: p.quantity,
+            })),
+          }),
         });
 
-        if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
+        if (!orderRes.ok) throw new Error(`Order creation failed (${orderRes.status})`);
 
-        localStorage.removeItem('pendingOrder');
-        localStorage.setItem('cart', '[]');
-        toast.success('✅ Order placed successfully!');
+        localStorage.removeItem("pendingOrder");
+        localStorage.setItem("cart", "[]");
 
+        toast.success("✅ Order sent to kitchen!");
         router.push(`/menu/${slug}/confirmation`);
       } catch (err) {
-        console.error('❌ Error sending order:', err);
-        toast.error('Could not submit order. Please contact staff.');
+        console.error("❌ Order error:", err);
+        toast.error("Could not send order. Please notify staff.");
         router.push(`/menu/${slug}/cart`);
       }
     };
