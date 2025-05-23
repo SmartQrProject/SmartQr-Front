@@ -105,18 +105,18 @@ export interface ITables {
     exist: boolean;
 }
 
-export interface IOrder {
-    id: string;
-    status: string;
-    payStatus: string;
-    order_type: string;
-    total_price: number;
-    created_at: String;
-    tableId: string;
-    customerId: string;
-    restaurantId: string;
-    exist: boolean;
-}
+// export interface IOrder {
+//     id: string;
+//     status: string;
+//     payStatus: string;
+//     order_type: string;
+//     total_price: number;
+//     created_at: string;
+//     tableId: string;
+//     customerId: string;
+//     restaurantId: string;
+//     exist: boolean;
+// }
 
 // Chat bot
 
@@ -132,15 +132,39 @@ export type ChatWindowProps = {
 };
 
 export interface IUserStaff {
-    id: string,
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  slug?: string;
-  role?: 'owner' | 'staff';
+    id: string;
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    slug?: string;
+    role?: "owner" | "staff";
 }
 
 export interface MenuAdminProps {
-  role: 'owner' | 'staff';
+    role: "owner" | "staff";
+}
+
+// Type orders
+export interface IOrderItem {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    quantity: number;
+}
+
+export interface IOrder {
+    id: string;
+    status: string; // usar string si el mock no tiene literal types
+    order_type: string;
+    tableId: string;
+    restaurantId: string;
+    userId: string;
+    created_at: string;
+    payStatus?: string;
+    total_price: number;
+    customerId?: string;
+    exist?: boolean;
+    items: IOrderItem[];
 }
