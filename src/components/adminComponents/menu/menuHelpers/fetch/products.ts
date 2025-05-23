@@ -16,6 +16,23 @@ export async function getProducts(slug: string, token: string) {
     }
 }
 
+export async function getProductsById(slug: string, token: string) {
+    try {
+        const response = await fetch(`${APIURL}/${slug}/products`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+
+        return response.json();
+    } catch (error: any) {
+        throw new Error(error.message || "Error fetching products");
+    }
+}
+
+
 export async function uploadImage(file: File, token: string): Promise<string> {
     const formData = new FormData();
     formData.append("file", file);

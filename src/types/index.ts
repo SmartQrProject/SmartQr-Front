@@ -54,6 +54,7 @@ export interface IRestaurant {
     owner_email: string;
     is_active: boolean;
     categories: ICategory[];
+    banner: string;
 }
 export interface IProduct {
     id: string;

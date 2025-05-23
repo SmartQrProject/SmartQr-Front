@@ -2,12 +2,13 @@ import React from 'react'
 import RegisterForm from './AdminRegisterForm'
 
 const AdminRegisterPage = () => {
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-default-100">
      
       <div className="w-full md:w-[70%] h-64 md:h-auto">
         <img
-          src="/register-img.jpg"
+          src={`https://res.cloudinary.com/${cloudName}/image/upload/lzbnhd8s0445epswfwim.jpg`}
           alt="Admin registration"
           className="object-cover w-full h-full"
         />
