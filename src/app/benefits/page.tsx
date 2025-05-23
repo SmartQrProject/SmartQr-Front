@@ -1,15 +1,16 @@
-import Benefits from '@/components/gabriel/Benefits';
-import React from 'react'
+import Benefits from "@/components/gabriel/Benefits";
+import Footer from "@/components/subscribers/footer/Footer";
+import Navbar from "@/components/subscribers/navbar/Navbar";
+import React from "react";
 
 const benefitsPage = () => {
   return (
-
-    <> 
-      <div>Benefits</div>
-      <Benefits/>
-    
+    <>
+      <Navbar />
+      <Benefits />
+      <Footer />
     </>
-  )
-}
+  );
+};
 
 export default benefitsPage;
