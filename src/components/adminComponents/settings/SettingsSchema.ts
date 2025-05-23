@@ -19,7 +19,7 @@ export const UserProfileSchema = z.object({
   password: z.string().optional(),
   confirmPassword: z.string().optional(),
 }).refine((data) => {
-  // Si se proporciona una contraseña, debe coincidir con la confirmación
+  
   if (data.password && !data.confirmPassword) {
     return false;
   }

@@ -42,7 +42,6 @@ const Settings = () => {
                 setValue("name", userData.name || '');
                 setValue("phone", userData.phone || '');
                 setValue("address", userData.address || '');
-                // Limpiar campos de contraseña
                 setValue("password", '');
                 setValue("confirmPassword", '');
             }
