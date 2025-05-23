@@ -33,7 +33,7 @@ export async function updateProfile(token: string, data: UserProfileFormInputs, 
 
 export async function getProfile(token: string, slug: string, userId: string) {
   try {
-    // Usamos el endpoint GET /users/staff con el slug como query parameter
+    
     const response = await fetch(`${APIURL}/users/staff?slug=${slug}&limit=100`, {
       method: "GET",
       headers: {
@@ -48,7 +48,7 @@ export async function getProfile(token: string, slug: string, userId: string) {
       throw new Error(result.message || "Failed to fetch profile");
     }
 
-    // Buscamos el usuario específico en la lista de staff
+
     const user = result.data.find((u: any) => u.id === userId);
     if (!user) {
       throw new Error("User not found in staff list");

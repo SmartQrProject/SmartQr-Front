@@ -36,7 +36,7 @@ const Settings = () => {
     const fetchProfileData = async () => {
         try {
             setIsLoadingProfile(true);
-            // Por ahora usamos la información del token
+            
             const userData = user?.payload;
             if (userData) {
                 setValue("name", userData.name || '');
@@ -56,13 +56,13 @@ const Settings = () => {
             const result = await updateProfile(token!, data, slug!, userId!);
             if (result.success) {
                 toast.success('Profile updated successfully');
-                // Limpiamos los campos del formulario
+                
                 reset({
                     name: '',
                     phone: '',
                     address: ''
                 });
-                // Volvemos a cargar los datos actualizados
+               
                 fetchProfileData();
             } else {
                 toast.error(result.message || 'Failed to update profile');
