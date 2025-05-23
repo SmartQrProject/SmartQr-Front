@@ -16,6 +16,23 @@ export const UserProfileSchema = z.object({
     .string()
     .max(200, "Address must be at most 200 characters")
     .optional(),
+  password: z.string().optional(),
+  confirmPassword: z.string().optional(),
+}).refine((data) => {
+  // Si se proporciona una contraseña, debe coincidir con la confirmación
+  if (data.password && !data.confirmPassword) {
+    return false;
+  }
+  if (data.confirmPassword && !data.password) {
+    return false;
+  }
+  if (data.password && data.password !== data.confirmPassword) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Passwords must match",
+  path: ["confirmPassword"]
 });
 
 export type UserProfileFormInputs = z.infer<typeof UserProfileSchema>; 

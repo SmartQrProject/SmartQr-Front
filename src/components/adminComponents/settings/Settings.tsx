@@ -7,6 +7,7 @@ import { updateProfile, getProfile } from './fetchProfile';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import ButtonPrimary from '@/components/buttons/ButtonPrimary';
+import PasswordInput from '@/components/adminComponents/sessionInputs/PaswordInput';
 
 const Settings = () => {
     const { user } = useAuth();
@@ -36,12 +37,14 @@ const Settings = () => {
     const fetchProfileData = async () => {
         try {
             setIsLoadingProfile(true);
-            
             const userData = user?.payload;
             if (userData) {
                 setValue("name", userData.name || '');
                 setValue("phone", userData.phone || '');
                 setValue("address", userData.address || '');
+                // Limpiar campos de contraseña
+                setValue("password", '');
+                setValue("confirmPassword", '');
             }
         } catch (error: any) {
             toast.error(error.message || 'Error fetching profile');
@@ -56,13 +59,13 @@ const Settings = () => {
             const result = await updateProfile(token!, data, slug!, userId!);
             if (result.success) {
                 toast.success('Profile updated successfully');
-                
                 reset({
                     name: '',
                     phone: '',
-                    address: ''
+                    address: '',
+                    password: '',
+                    confirmPassword: '',
                 });
-               
                 fetchProfileData();
             } else {
                 toast.error(result.message || 'Failed to update profile');
@@ -122,7 +125,6 @@ const Settings = () => {
                         {errors.phone && (
                             <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
                         )}
-                        <p className="text-sm text-gray-500 mt-1">Optional - Include country code (e.g., +1 for US)</p>
                     </div>
 
                     <div>
@@ -135,7 +137,34 @@ const Settings = () => {
                         {errors.address && (
                             <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>
                         )}
-                        <p className="text-sm text-gray-500 mt-1">Optional - Maximum 200 characters</p>
+                    </div>
+
+                    <div className="border-t pt-6 mt-6">
+                        <div className="mb-4">
+                            <h2 className="text-lg font-semibold">Password Settings <span className="text-gray-500 font-normal">(Optional)</span></h2>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">New Password</label>
+                                <PasswordInput
+                                    register={register}
+                                    name="password"
+                                    error={errors.password?.message}
+                                    placeholder="Enter your new password"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Confirm Password</label>
+                                <PasswordInput
+                                    register={register}
+                                    name="confirmPassword"
+                                    error={errors.confirmPassword?.message}
+                                    placeholder="Enter your confirmed password"
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     <div className="pt-4">
@@ -161,4 +190,4 @@ const Settings = () => {
     );
 }
 
-export default Settings
+export default Settings;
