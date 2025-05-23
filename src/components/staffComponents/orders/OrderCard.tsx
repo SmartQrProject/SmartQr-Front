@@ -2,16 +2,21 @@
 
 import React, { useEffect, useState } from "react";
 import { IOrder, IOrderItem } from "@/types";
+import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+import toast from "react-hot-toast";
 
 interface Props {
     order: IOrder;
-    onAdvanceStatus: (orderId: string) => void;
-    onRetreatStatus: (orderId: string) => void;
+    onAdvanceStatus: (orderId: string, newStatus: string) => void;
+    onRetreatStatus: (orderId: string, newStatus: string) => void;
     onStatusChange?: () => void;
 }
 
 const OrderCard: React.FC<Props> = ({ order, onAdvanceStatus, onRetreatStatus, onStatusChange }) => {
     const [timeElapsed, setTimeElapsed] = useState(0);
+    const { user } = useAuth();
+    const slug = user?.payload?.slug;
+    const token = user?.token;
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -57,20 +62,36 @@ const OrderCard: React.FC<Props> = ({ order, onAdvanceStatus, onRetreatStatus, o
         }
     };
 
+    const updateStatusOnServer = async (newStatus: string, direction: "advance" | "retreat") => {
+        if (!slug || !token) return;
+
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/orders/${order.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status: newStatus }),
+            });
+
+            if (!res.ok) throw new Error("Error al actualizar estado");
+
+            if (direction === "advance") onAdvanceStatus(order.id, newStatus);
+            else onRetreatStatus(order.id, newStatus);
+
+            toast.success(`Order updated to ${newStatus}`);
+            if (onStatusChange) onStatusChange();
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to update order status");
+        }
+    };
+
     const total = Array.isArray(order.items) ? order.items.reduce((acc: number, item: IOrderItem) => acc + item.price * item.quantity, 0) : 0;
 
     const nextStatus = getNextStatus(order.status);
     const prevStatus = getPrevStatus(order.status);
-
-    const handleAdvance = () => {
-        onAdvanceStatus(order.id);
-        if (onStatusChange) onStatusChange();
-    };
-
-    const handleRetreat = () => {
-        onRetreatStatus(order.id);
-        if (onStatusChange) onStatusChange();
-    };
 
     return (
         <div className="bg-white border border-gray-300 rounded-xl p-4 shadow-md">
@@ -95,12 +116,18 @@ const OrderCard: React.FC<Props> = ({ order, onAdvanceStatus, onRetreatStatus, o
 
             <div className="flex gap-2 flex-wrap">
                 {prevStatus && (
-                    <button onClick={handleRetreat} className="mt-2 px-3 py-1 bg-yellow-500 text-white rounded-lg text-sm hover:bg-yellow-600 transition">
+                    <button
+                        onClick={() => updateStatusOnServer(prevStatus, "retreat")}
+                        className="mt-2 px-3 py-1 bg-yellow-500 text-white rounded-lg text-sm hover:bg-yellow-600 transition"
+                    >
                         Back to: {prevStatus}
                     </button>
                 )}
                 {nextStatus ? (
-                    <button onClick={handleAdvance} className="mt-2 px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition">
+                    <button
+                        onClick={() => updateStatusOnServer(nextStatus, "advance")}
+                        className="mt-2 px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition"
+                    >
                         Advance to: {nextStatus}
                     </button>
                 ) : (
