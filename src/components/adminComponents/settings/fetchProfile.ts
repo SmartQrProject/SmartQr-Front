@@ -1,16 +1,28 @@
 import { UserProfileFormInputs } from "./SettingsSchema";
 
+
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
+
 
 export async function updateProfile(token: string, data: UserProfileFormInputs, slug: string, userId: string) {
   try {
+    const updateData = {
+      name: data.name,
+      phone: data.phone,
+      address: data.address,
+      ...(data.password && {
+        password: data.password,
+        confirmPassword: data.confirmPassword
+      })
+    };
+
     const response = await fetch(`${APIURL}/users/${slug}/${userId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(updateData),
     });
 
     const result = await response.json();
@@ -33,7 +45,6 @@ export async function updateProfile(token: string, data: UserProfileFormInputs, 
 
 export async function getProfile(token: string, slug: string, userId: string) {
   try {
-    
     const response = await fetch(`${APIURL}/users/staff?slug=${slug}&limit=100`, {
       method: "GET",
       headers: {
@@ -47,7 +58,6 @@ export async function getProfile(token: string, slug: string, userId: string) {
     if (!response.ok) {
       throw new Error(result.message || "Failed to fetch profile");
     }
-
 
     const user = result.data.find((u: any) => u.id === userId);
     if (!user) {
