@@ -1,51 +1,84 @@
 "use client";
 import { useUser, getAccessToken } from "@auth0/nextjs-auth0";
 import { useEffect } from "react";
+import Dashboard from "./view/Dashboard";
+import { useParams } from "next/navigation";
+
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
+
+
 export default function CustomerProfile() {
-    const { user, isLoading } = useUser();
+  const { user, isLoading } = useUser();
+  const params = useParams();
 
-    useEffect(() => {
-        const syncUser = async () => {
-            if (!user) return;
+  const storedSlug = typeof window !== "undefined" ? localStorage.getItem("slug") : null;
+  const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug || storedSlug;
 
-            try {
-                const tokenResponse = await getAccessToken();
-                const token = tokenResponse.accessToken;
+  if (!slug) {
+    console.error("❌ Slug no encontrado ni en URL ni en localStorage.");
+    return <p>Error: Slug no disponible</p>;
+  }
 
-                const res = await fetch(`${APIURL}/customers/sincronizar`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        name: user.name,
-                        email: user.email,
-                        sub: user.sub,
-                        picture: user.picture,
-                    }),
-                });
+  useEffect(() => {
+    const syncUser = async () => {
+      if (!user) return;
 
-                if (!res.ok) throw new Error("Sync failed");
-                console.log("✅ Usuario sincronizado con token");
-            } catch (err) {
-                console.error("❌ Error al sincronizar usuario:", err);
-            }
+      try {
+        const tokenResponse = await getAccessToken();
+        const token = tokenResponse.accessToken;
+
+        console.log("SLUG MATI",slug);
+        
+
+        const res = await fetch(`${APIURL}/${slug}/customers/sincronizar`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: user.name,
+            email: user.email,
+            sub: user.sub,
+            picture: user.picture,
+          }),
+        });
+        const data = await res.json()
+
+        console.log("Response:", data);
+
+        const customerSession = {
+          token: data?.auth0Id,
+          payload: {
+            id: data?.id,
+            
+          },
         };
 
-        syncUser();
-    }, [user]);
+        console.log("customerSession:", customerSession);
+        
 
-    if (isLoading) return <p>Cargando...</p>;
-    if (!user) return <p>No autenticado</p>;
+        if (!res.ok) throw new Error("Sync failed");
+      } catch (err) {
+        console.error("❌ Error al sincronizar usuario:", err);
+      }
+    };
 
-    return (
-        <div className="text-center mt-20">
-            <img src={user.picture ?? ""} alt="Foto" className="rounded-full w-20 h-20 mx-auto" />
-            <h2 className="text-xl font-bold">{user.name}</h2>
-            <p>{user.email}</p>
-        </div>
-    );
+    syncUser();
+  }, [user, slug]);
+
+  if (isLoading) return <p>Cargando...</p>;
+  if (!user) return <p>No autenticado</p>;
+
+  return (
+    <>
+      <div className="text-center mt-20">
+        <img src={user.picture ?? ""} alt="Foto" className="rounded-full w-20 h-20 mx-auto" />
+        <h2 className="text-xl font-bold">{user.name}</h2>
+        <p>{user.email}</p>
+      </div>
+      <Dashboard user={user} />
+    </>
+  );
 }
