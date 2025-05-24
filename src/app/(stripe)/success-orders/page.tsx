@@ -58,7 +58,7 @@ export default function SuccessOrderPage() {
         localStorage.setItem("cart", "[]");
 
         toast.success("✅ Order sent to kitchen!");
-        router.push(`/menu/${slug}/confirmation`);
+        router.push(`/menu/${slug}`);
       } catch (err) {
         console.error("❌ Order error:", err);
         toast.error("Could not send order. Please notify staff.");

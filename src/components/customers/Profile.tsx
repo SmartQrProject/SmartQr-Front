@@ -23,14 +23,21 @@ export default function CustomerProfile() {
 
   useEffect(() => {
     const syncUser = async () => {
-      if (!user) return;
+      if (!user || !slug) return;
 
-      try {
-        const token = await getAccessToken();
-        console.log("🔍 Token:", token);
+    const existingSessionRaw = localStorage.getItem("customerSession") || "{}";
+    const existingSession = existingSessionRaw ? JSON.parse(existingSessionRaw) : null
+    if (existingSession?.payload?.id) {
+      console.log("✅ Already synced, skipping...");
+      return;
+    }
 
-        const res = await fetch(`${APIURL}/${slug}/customers/sincronizar`, {
-          method: "POST",
+    try {
+      const token = await getAccessToken();
+      console.log("🔍 Token:", token);
+
+      const res = await fetch(`${APIURL}/${slug}/customers/sincronizar`, {
+        method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -38,7 +45,7 @@ export default function CustomerProfile() {
           body: JSON.stringify({
             name: user.name,
             email: user.email,
-            sub: user.sub,
+            auth0Id: user.sub,
             picture: user.picture,
           }),
         });
@@ -53,9 +60,6 @@ export default function CustomerProfile() {
           },
         };
         localStorage.setItem("customerSession", JSON.stringify(customerSession)); 
-
-        
-
         console.log("customerSession:", customerSession);
 
         if (!res.ok) throw new Error("Sync failed");

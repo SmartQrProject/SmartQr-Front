@@ -14,6 +14,7 @@ const CartView = () => {
   const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
   const [customerId, setCustomerId] = useState<string | null>(null);
+  const [loadingSession, setLoadingSession] = useState(true);
   const [totalCart, setTotalCart] = useState<number>(0);
   const [cart, setCart] = useState<ICartProduct[]>([]);
 
@@ -23,6 +24,7 @@ const CartView = () => {
       const parsed = JSON.parse(session);
       setCustomerId(parsed.payload?.id); 
     }
+    setLoadingSession(false);
 
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]") as ICartProduct[];
     const cartWithQuantity = storedCart.map((product) => ({
@@ -55,6 +57,11 @@ const CartView = () => {
   };
 
   const handleCheckout = async () => {
+    if (loadingSession) {
+      toast.loading("Checking login...");
+      return;
+    }
+
     if (!customerId) {
       toast.error("You must be logged in to checkout.");
       return;
@@ -161,9 +168,9 @@ const CartView = () => {
               >
                 <CreditCard className='h-6 w-6' /> Proceed to Checkout
               </button>
-              <button className="text-sky-700 hover:bg-sky-600 hover:text-white border border-sky-700 py-2 rounded-lg font-semibold flex items-center justify-center gap-2">
+              {/* <button className="text-sky-700 hover:bg-sky-600 hover:text-white border border-sky-700 py-2 rounded-lg font-semibold flex items-center justify-center gap-2">
                 <FaMoneyBill className='h-6 w-6' /> Pay at the Table
-              </button>
+              </button> */}
             </div>
           )}
         </div>
