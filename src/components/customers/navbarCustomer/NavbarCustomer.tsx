@@ -1,43 +1,98 @@
-'use client'
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import AuthLinks from '@/components/auth0/AuthLinks';
 import { StoreIcon } from 'lucide-react';
 import Link from 'next/link';
-import React, { useState } from 'react'
-import { FiGift, FiShoppingBag } from 'react-icons/fi'
+import { FiShoppingBag } from 'react-icons/fi';
+import { HiOutlineUser } from 'react-icons/hi';
 
-interface NavbarCustomerProps {
-  slug: string;
-  name: string;
-}
+type NavbarCustomerProps = {
+  slug?: string;
+  name?: string;
+};
 
-const NavbarCustomer = ({name, slug }: NavbarCustomerProps) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [localSlug, setLocalSlug] = useState('');
+  const [localName, setLocalName] = useState('');
+  const [customerProfileImg, setCustomerProfileImg] = useState<string | null>(null);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  // Cargar slug y nombre desde localStorage si no vienen por props
+  useEffect(() => {
+    if (!slug || !name) {
+      const storedSlug = localStorage.getItem('slug') || '';
+      const storedName = localStorage.getItem('storeName') || '';
+      setLocalSlug(storedSlug);
+      setLocalName(storedName);
+    }
+  }, [slug, name]);
+
+  // Cargar imagen de perfil desde localStorage + escuchar cambios
+  useEffect(() => {
+    const loadSession = () => {
+      const session = localStorage.getItem('customerSession');
+      if (session) {
+        try {
+          const sessionObj = JSON.parse(session);
+          const picture = sessionObj?.payload?.picture;
+          if (picture) {
+            setCustomerProfileImg(picture);
+          } else {
+            setCustomerProfileImg(null);
+          }
+        } catch (error) {
+          console.error('Error parsing customerSession from localStorage', error);
+        }
+      }
+    };
+
+    loadSession();
+
+    // Escuchar evento personalizado
+    window.addEventListener('customerSessionUpdated', loadSession);
+
+    return () => {
+      window.removeEventListener('customerSessionUpdated', loadSession);
+    };
+  }, []);
+
+  const displaySlug = slug || localSlug;
+  const displayName = name || localName;
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <nav className="border-b border-gray-200 text-default-800 relative z-10">
-      <div className=" flex items-center justify-between  p-4">
-        <Link href={`/menu/${slug}`} className="flex items-center space-x-3 rtl:space-x-reverse">
+    <nav className="border-b border-gray-200 text-default-800 relative">
+      <div className="flex items-center justify-between p-4">
+        <Link href={`/menu/${displaySlug}`} className="flex items-center space-x-3 rtl:space-x-reverse">
           <span className="self-center text-2xl font-semibold whitespace-nowrap flex items-center gap-2">
             <StoreIcon className="w-6 h-6 text-sky-800" />
-            {name}
+            {displayName || 'Store'}
           </span>
         </Link>
 
         <div className="flex items-center gap-4">
-          <Link href={`/menu/${slug}/cart`} className="cursor-pointer flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition">
-            <FiShoppingBag className="text-xl " />
+          {/* Profile */}
+          <Link href={`/customer/dashboard`} className="cursor-pointer flex items-center justify-center w-10 h-10 rounded-lg bg-transparent transition overflow-hidden">
+            {customerProfileImg ? (
+              <img src={customerProfileImg} alt="Profile" className="w-9 h-9 rounded-full object-cover" />
+            ) : (
+              <div className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition">
+                <HiOutlineUser className="text-xl text-black" />
+              </div>
+            )}
           </Link>
 
-          <button className="cursor-pointer flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition">
-            <FiGift className="text-xl text-black" />
-          </button>
+          {/* Cart */}
+          <Link href={`/menu/${displaySlug}/cart`} className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition">
+            <FiShoppingBag className="text-xl" />
+          </Link>
 
+          {/* Menú hamburguesa */}
           <button
             onClick={toggleMenu}
             type="button"
-            className="cursor-pointer flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-gray-200"
             aria-controls="navbar-hamburger"
             aria-expanded={isMenuOpen}
           >
@@ -49,41 +104,30 @@ const NavbarCustomer = ({name, slug }: NavbarCustomerProps) => {
         </div>
 
         {isMenuOpen && (
-        <div id="navbar-hamburger" className="fixed top-0 right-0 h-full w-full max-w-xs bg-white shadow-lg z-20 p-4 flex flex-col justify-start">
-
-          <div>
-            <div className="flex items-center justify-between mt-3 pb-3 border-b border-gray-200">
-              <span className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                <StoreIcon className="w-6 h-6 text-sky-800" />
-                {name}
-              </span>
-              <button onClick={() => setIsMenuOpen(false)} className="text-gray-800 hover:text-red-500 text-2xl"
-                aria-label="Close menu">&times;</button>
-            </div>
+          <div id="navbar-hamburger" className="fixed top-0 right-0 h-full w-full max-w-xs bg-white shadow-lg z-20 p-4 flex flex-col justify-start">
+            <div>
+              <div className="flex items-center justify-between mt-3 pb-3 border-b border-gray-200">
+                <span className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                  <StoreIcon className="w-6 h-6 text-sky-800" />
+                  {displayName || 'Store'}
+                </span>
+                <button onClick={() => setIsMenuOpen(false)} className="text-gray-800 hover:text-red-500 text-2xl" aria-label="Close menu">&times;</button>
+              </div>
 
               <ul className="flex flex-col font-medium space-y-4 mt-8">
-                <li>
-                  <a href="#" onClick={() => setIsMenuOpen(false)} className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-300">
-                    Store Info
-                  </a>
-                </li>
-                <li>
-                  <a href="#" onClick={() => setIsMenuOpen(false)} className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-300">
-                    Rewards
-                  </a>
-                </li>
+                <li><a href="#" onClick={() => setIsMenuOpen(false)} className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-300">Store Info</a></li>
+                <li><a href="#" onClick={() => setIsMenuOpen(false)} className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-300">Rewards</a></li>
               </ul>
             </div>
 
             <div className="flex flex-row gap-3 mt-auto mb-20">
-              
               <AuthLinks />
             </div>
           </div>
         )}
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default NavbarCustomer
+export default NavbarCustomer;

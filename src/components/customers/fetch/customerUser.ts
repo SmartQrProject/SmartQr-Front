@@ -3,11 +3,10 @@ const APIURL = process.env.NEXT_PUBLIC_API_URL
 interface CustomerData {
   name?: string;
   email?: string;
-  phone?: string;
+  phone?: number;
   password?: string;
   reward?: number;
 }
-
 
 export async function modifyCustomersData(
   slug: string,
@@ -17,7 +16,7 @@ export async function modifyCustomersData(
 ) {
   try {
     const response = await fetch(`${APIURL}/${slug}/customers/${id}`, {
-      method: "PUT",
+      method: "PUT", // Mantener PUT porque backend no soporta PATCH
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -34,8 +33,7 @@ export async function modifyCustomersData(
       };
     }
 
-    return { success: true, data: result }; 
-
+    return { success: true, data: result };
   } catch (error: any) {
     return { success: false, message: error?.message || "Unexpected error occurred" };
   }
@@ -58,9 +56,11 @@ export async function getCustomerById(token: string, slug: string, id: string) {
       throw new Error(errorResponse?.message || `Failed to fetch customer (status: ${response.status})`);
     }
 
-    return await response.json();
+    console.log("🧠 Customer fetched successfully:", response);
+    const data = await response.json();
+    console.log("ELI RESPONSE", data);
+    return data;
 
   } catch (error: any) {
-    throw new Error(error?.message || "Unexpected error occurred");
   }
 }

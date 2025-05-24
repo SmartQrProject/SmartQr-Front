@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { HiOutlineHome, HiOutlineShoppingBag, HiOutlineBuildingStorefront, HiOutlineCog6Tooth, HiOutlineChartBar, HiOutlineUserGroup } from "react-icons/hi2";
+import { HiOutlineHome, HiOutlineShoppingBag, HiOutlineBuildingStorefront, HiOutlineCog6Tooth, HiOutlineChartBar, HiOutlineUserGroup, HiOutlineClipboardDocumentList, HiOutlineCheckCircle } from "react-icons/hi2";
 import { GiKnifeFork } from "react-icons/gi";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useUserRole } from "../hooks/useUserRole";
@@ -74,17 +74,17 @@ const MenuAdmin = () => {
 
                         {role === "owner" && (
                             <>
-                                <Link href="/dashboard/staffcreation" onClick={handleLinkClick} className={linkClasses("/dashboard/staffcreation")}>
-                                    {pathname === "/dashboard/staffcreation" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                                    <HiOutlineUserGroup />
-                                    User Creation
-                                </Link>
-
                                 <Link href="/dashboard/store" onClick={handleLinkClick} className={linkClasses("/dashboard/store")}>
                                     {" "}
                                     {pathname === "/dashboard/store" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
                                     <HiOutlineBuildingStorefront /> Stores
                                 </Link>
+
+                                <Link href="/dashboard/staffcreation" onClick={handleLinkClick} className={linkClasses("/dashboard/staffcreation")}>
+                                    {pathname === "/dashboard/staffcreation" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
+                                    <HiOutlineUserGroup />
+                                    User Creation
+                                </Link>                                
 
                                 <Link href="/dashboard/menu/createcategory" onClick={handleLinkClick} className={linkClasses("/dashboard/menu/createcategory")}>
                                     {" "}
@@ -102,20 +102,20 @@ const MenuAdmin = () => {
 
                         {/* Visible para owner y staff */}
 
-                        <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/tables")}>
-                            {pathname === "/dashboard/tables" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />} <HiOutlineShoppingBag /> Tables
-                        </Link>
-
                         <Link href="/dashboard/orders" onClick={handleLinkClick} className={linkClasses("/dashboard/orders")}>
                             {" "}
                             {pathname === "/dashboard/orders" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                            <HiOutlineCog6Tooth /> Orders
+                            <HiOutlineClipboardDocumentList /> Orders
                         </Link>
 
                         <Link href="/dashboard/completed" onClick={handleLinkClick} className={linkClasses("/dashboard/completed")}>
                             {" "}
                             {pathname === "/dashboard/completed" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                            <HiOutlineCog6Tooth /> Orders Completed
+                            <HiOutlineCheckCircle /> Orders Completed
+                        </Link>
+
+                        <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/tables")}>
+                            {pathname === "/dashboard/tables" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />} <HiOutlineShoppingBag /> Tables
                         </Link>
 
                         <Link href="/dashboard/settings" onClick={handleLinkClick} className={linkClasses("/dashboard/settings")}>

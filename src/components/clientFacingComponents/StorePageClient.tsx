@@ -36,8 +36,10 @@ export default function StorePageClient({ data, slug }: StorePageClientProps) {
     useEffect(() => {
     if (slug) {
       localStorage.setItem("slug", slug);
+    }if (data.name) {
+      localStorage.setItem('storeName', data.name);
     }
-  }, [slug]);
+  }, [slug, data.name]);
   return (
    
     <>

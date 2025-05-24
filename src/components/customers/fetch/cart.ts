@@ -32,15 +32,15 @@ export async function createOrder(token: string, products: { id: string; quantit
   }
 }
 
-export async function getOrders (token: string) {
+export async function getOrdersById (token: string, id: string, slug: string) {
     try {
-        const response = await fetch(`${APIURL}/users/orders`,{
-            method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: token
-              }
-        })
+        const response = await fetch(`${APIURL}/${slug}/customers/${id}`,{
+         method: "GET",
+         headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, 
+        },
+      });
         return response.json()
         
     } catch (error: any) {
