@@ -1,8 +1,8 @@
 'use client';
 
 import { useUser } from '@auth0/nextjs-auth0';
-import { LogIn, LogInIcon, LogOut, User, UserCircle } from 'lucide-react';
-import { FiLogIn } from 'react-icons/fi';
+import { LogIn,LogOut } from 'lucide-react';
+
 
 export default function AuthLinks() {
   const { user, isLoading } = useUser();
