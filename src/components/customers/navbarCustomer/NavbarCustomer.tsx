@@ -16,7 +16,7 @@ const NavbarCustomer = ({name, slug }: NavbarCustomerProps) => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   return (
-    <nav className="border-b border-gray-200 text-default-800 relative z-10">
+    <nav className="border-b border-gray-200 text-default-800 relative">
       <div className=" flex items-center justify-between  p-4">
         <Link href={`/menu/${slug}`} className="flex items-center space-x-3 rtl:space-x-reverse">
           <span className="self-center text-2xl font-semibold whitespace-nowrap flex items-center gap-2">
