@@ -20,6 +20,7 @@ export default function CustomerProfile() {
   const [sessionReady, setSessionReady] = useState(false);
 
   useEffect(() => {
+<<<<<<< HEAD
     const storedSlug = localStorage.getItem("slug");
     const paramSlug = Array.isArray(params?.slug)
       ? params.slug[0]
@@ -29,11 +30,42 @@ export default function CustomerProfile() {
     setMounted(true);
   }, [params?.slug]);
 
+=======
+    const syncUser = async () => {
+      if (!user || !slug) return;
+
+    const existingSessionRaw = localStorage.getItem("customerSession") || "{}";
+    const existingSession = existingSessionRaw ? JSON.parse(existingSessionRaw) : null
+    if (existingSession?.payload?.id) {
+      console.log("✅ Already synced, skipping...");
+      return;
+    }
+
+    try {
+      const token = await getAccessToken();
+      console.log("🔍 Token:", token);
+
+      const res = await fetch(`${APIURL}/${slug}/customers/sincronizar`, {
+        method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: user.name,
+            email: user.email,
+            auth0Id: user.sub,
+            picture: user.picture,
+          }),
+        });
+        const data = await res.json();
+>>>>>>> bfd1a71ff2ccba4f262a5c4223442b6bba60f23f
 
 useEffect(() => {
   const syncUser = async () => {
     if (!user || !slug) return;
 
+<<<<<<< HEAD
     try {
       const token = await getAccessToken();
       console.log("🔐 Token obtenido:", token);
@@ -60,6 +92,16 @@ useEffect(() => {
           id: data?.id,
         },
       };
+=======
+        const customerSession = {
+          token: token,
+          payload: {
+            id: data?.id,
+          },
+        };
+        localStorage.setItem("customerSession", JSON.stringify(customerSession)); 
+        console.log("customerSession:", customerSession);
+>>>>>>> bfd1a71ff2ccba4f262a5c4223442b6bba60f23f
 
       localStorage.setItem("customerSession", JSON.stringify(customerSession));
       window.dispatchEvent(new Event('customerSessionUpdated'));

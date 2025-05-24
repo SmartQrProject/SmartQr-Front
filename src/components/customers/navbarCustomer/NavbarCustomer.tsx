@@ -63,8 +63,13 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
 
   return (
     <nav className="border-b border-gray-200 text-default-800 relative">
+<<<<<<< HEAD
       <div className="flex items-center justify-between p-4">
         <Link href={`/menu/${displaySlug}`} className="flex items-center space-x-3 rtl:space-x-reverse">
+=======
+      <div className=" flex items-center justify-between  p-4">
+        <Link href={`/menu/${slug}`} className="flex items-center space-x-3 rtl:space-x-reverse">
+>>>>>>> bfd1a71ff2ccba4f262a5c4223442b6bba60f23f
           <span className="self-center text-2xl font-semibold whitespace-nowrap flex items-center gap-2">
             <StoreIcon className="w-6 h-6 text-sky-800" />
             {displayName || 'Store'}
