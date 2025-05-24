@@ -47,11 +47,14 @@ export default function CustomerProfile() {
         console.log("Response:", data);
 
         const customerSession = {
-          token: data?.auth0Id,
+          token: token,
           payload: {
             id: data?.id,
           },
         };
+        localStorage.setItem("customerSession", JSON.stringify(customerSession)); 
+
+        
 
         console.log("customerSession:", customerSession);
 
