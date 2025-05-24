@@ -14,7 +14,7 @@ export async function createOrder(token: string, products: { id: string; quantit
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: token,
+        Authorization: `Bearer ${token}`, 
       },
       body: JSON.stringify(body),
     });
