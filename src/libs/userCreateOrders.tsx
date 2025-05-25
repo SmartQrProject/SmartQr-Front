@@ -5,13 +5,12 @@ export const useCreateOrder = () => {
     customerId,
     code,
     products,
-    rewardCode,
 
   }: {
     customerId: string;
     code: string;
     products: { id: string; quantity: number }[];
-    rewardCode: string | undefined;
+ 
   }) => {
     const APIURL = process.env.NEXT_PUBLIC_API_URL;
     const session = localStorage.getItem("customerSession");
@@ -26,9 +25,9 @@ export const useCreateOrder = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ customerId, code, products, rewardCode }),
+        body: JSON.stringify({ customerId, code, products }),
       });
-      console.log("🔍 Order creation response:", { customerId, code, products, rewardCode });
+      console.log("🔍 Order creation response:", { customerId, code, products } );
       console.log(token);
 
       const data = await res.json();

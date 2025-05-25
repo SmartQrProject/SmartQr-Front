@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ICartProduct } from "@/components/adminComponents/menu/menuTypes/menuTypes";
-import { CreditCard, Receipt, ShoppingCart, Trash2 } from 'lucide-react';
+import { CreditCard, MinusCircle, PlusCircle, Receipt, ShoppingCart, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const CartView = () => {
@@ -16,7 +16,6 @@ const CartView = () => {
   const [loadingSession, setLoadingSession] = useState(true);
   const [totalCart, setTotalCart] = useState<number>(0);
   const [cart, setCart] = useState<ICartProduct[]>([]);
-
   const [promoCode, setPromoCode] = useState('');
   const [isPromoValid, setIsPromoValid] = useState(false);
   const [promoPercentage, setPromoPercentage] = useState<number | null>(null);
@@ -72,8 +71,6 @@ const CartView = () => {
       const res = await fetch(`${APIURL}/${slug}/reward-codes/code/${promoCode.trim()}`);
 
       if (res.status === 404) {
-        setIsPromoValid(false);
-        setPromoPercentage(null);
         toast.error("Invalid or expired promo code.");
         return;
       }
@@ -82,13 +79,7 @@ const CartView = () => {
         throw new Error("Failed to validate promo code");
       }
 
-      const text = await res.text();
-      if (!text) {
-        throw new Error("Empty response from server");
-      }
-
-      const matchedCode = JSON.parse(text);
-
+      const matchedCode = await res.json();
       setIsPromoValid(true);
       setPromoPercentage(matchedCode.percentage);
       toast.success(`Promo applied! ${matchedCode.percentage}% discount.`);
@@ -98,63 +89,62 @@ const CartView = () => {
     }
   };
 
-
   const handleCheckout = async () => {
-  if (loadingSession) {
-    toast.loading("Checking login...");
-    return;
-  }
+    if (loadingSession) {
+      toast.loading("Checking login...");
+      return;
+    }
 
-  if (!customerId) {
-    toast.error("You must be logged in to checkout.");
-    return;
-  }
+    if (!customerId) {
+      toast.error("You must be logged in to checkout.");
+      return;
+    }
 
-  try {
+    try {
       const productsForOrder = cart.map((product) => ({
         id: product.id,
-        name: product.name,
-        price: product.price,
         quantity: product.quantity,
       }));
 
-      const pendingOrder = {
+      const orderPayload = {
         customerId,
         code: "T07",
         rewardCode: isPromoValid ? promoCode.trim() : undefined,
         products: productsForOrder,
-        slug,
-        total: finalTotal,
       };
 
-      localStorage.setItem("pendingOrder", JSON.stringify(pendingOrder));
+      const session = localStorage.getItem("customerSession");
+      const token = session ? JSON.parse(session).token : null;
 
-      const res = await fetch(`${APIURL}/stripe/checkout-session`, {
+      if (!token) throw new Error("Missing auth token");
+
+      const res = await fetch(`${APIURL}/${slug}/orders`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(pendingOrder),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(orderPayload),
       });
 
-      console.log("🔍 Checkout response:", { pendingOrder });
+      const data = await res.json();
 
-      if (res.status === 409 || res.status === 400) {
-        const error = await res.json();
-        setPromoPercentage(null);
-        setPromoCode('');
-        toast.error(error.message || "This promo code has already been used.");
+      if (!res.ok) {
+        toast.error(data.message || "Order creation failed");
         return;
       }
 
-      const data = await res.json();
-      if (!data.url) throw new Error("Stripe session creation failed");
+      localStorage.setItem("cart", "[]");
+      toast.success("✅ Order created. Redirecting to payment...");
 
-      window.location.href = data.url;
-    } catch (error) {
+      if (!data.stripeSession) throw new Error("Missing Stripe session URL");
+
+      window.location.href = data.stripeSession;
+    } catch (error: any) {
       console.error("Checkout error:", error);
-      toast.error("Could not start checkout. Please try again.");
+      toast.error(error.message || "Checkout failed.");
     }
   };
-
 
   return (
     <div className="p-4 md:min-h-screen bg-gray-50">
@@ -177,16 +167,16 @@ const CartView = () => {
                       <button
                         onClick={() => updateQuantity(product.id, product.quantity - 1)}
                         disabled={product.quantity <= 1}
-                        className="w-8 h-8 rounded-full bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
+                        className=" disabled:opacity-50 cursor-pointer"
                       >
-                        -
+                        <MinusCircle className="h-6 w-6 text-sky-700 hover:text-sky-500" />
                       </button>
-                      <span>{product.quantity}</span>
+                      <span className='font-semibold'>{product.quantity}</span>
                       <button
                         onClick={() => updateQuantity(product.id, product.quantity + 1)}
-                        className="w-8 h-8 rounded-full bg-gray-300 hover:bg-gray-400"
+                        className="cursor-pointer"
                       >
-                        +
+                        <PlusCircle className="h-6 w-6 text-sky-700 hover:text-sky-500" />
                       </button>
                     </div>
                   </div>
@@ -242,7 +232,7 @@ const CartView = () => {
               />
               <button
                 onClick={applyPromoCode}
-                className="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-sky-600 font-semibold"
+                className="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-sky-600 font-semibold cursor-pointer"
               >
                 Apply
               </button>
@@ -272,14 +262,14 @@ const CartView = () => {
             <div className="mt-6 flex flex-col gap-2">
               <button
                 onClick={handleCheckout}
-                className="bg-sky-700 hover:bg-sky-600 text-white py-2 rounded-lg font-semibold flex items-center justify-center gap-2"
+                className="bg-sky-700 hover:bg-sky-600 text-white py-2 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-pointer"
               >
                 <CreditCard className='h-6 w-6' /> Proceed to Checkout
               </button>
 
               <button
                 onClick={() => router.push(`/menu/${slug}`)}
-                className="text-sky-700 hover:bg-sky-600 border-2 border-sky-700 py-2 rounded-lg font-semibold flex items-center justify-center gap-2"
+                className="text-sky-700 hover:bg-sky-600 hover:text-white hover:border-0 border-2 border-sky-700 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-pointer"
               >
                 <ShoppingCart className="h-6 w-6" /> Continue Shopping
               </button>
