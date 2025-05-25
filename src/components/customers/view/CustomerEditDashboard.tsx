@@ -128,7 +128,7 @@ return (
     <div className="flex-1 p-4 flex flex-col items-center justify-center">
       <div className="w-full mb-4 text-left">
         <Link
-          href={`/menu/${slug}/dashboard`}
+          href={`/customer/dashboard`}
           className="flex items-center gap-1 text-blue-500 text-md hover:underline"
         >
           <FiArrowLeft className="w-5 h-5" />
@@ -144,13 +144,13 @@ return (
         <p className="text-center text-red-500">Error: customer not found.</p>
       ) : (
         <div className="max-w-md mx-auto m10 p-6 bg-default-50 rounded-xl w-full">
+          <h1 className="text-center text-2xl font-bold mb-4 flex justify-center items-center gap-2"><FiUser className="w-6 h-6 text-gray-600" /> My Profile</h1>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <h2 className="text-center text-2xl ">Hello, {customer.name}</h2>
+            <h2 className="text-center text-xl ">Hello, {customer.name}</h2>
             <div className="relative w-20 h-20 mx-auto mt-4 mb-6">
             <img src={customer.picture ?? ""} alt="Foto" className="rounded-full w-20 h-20 object-cover"/>
         </div>
 
-          <h1 className="text-center text-3xl font-bold mb-8 flex justify-center items-center gap-2"><FiUser className="w-6 h-6 text-gray-600" /> My Profile</h1>
 
           <span className="text-center block mb-2 text-sm font-medium text-gray-500"> {customer.email}</span>
 

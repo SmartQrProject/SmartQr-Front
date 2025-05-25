@@ -1,6 +1,6 @@
+'use client'
 import React, { useEffect, useState } from 'react'
 import { getOrdersById } from '../fetch/cart'
-import { ClipboardList } from 'lucide-react'
 
 interface Table {
   id: string
@@ -8,6 +8,13 @@ interface Table {
   is_active: boolean
   exist: boolean
   created_at: string
+}
+
+interface OrderItem {
+  product: {
+    name: string
+  }
+  quantity: number
 }
 
 interface Order {
@@ -19,8 +26,9 @@ interface Order {
   payment_method: string | null
   discount_applied: number
   served_at: string | null
-   created_at: string
+  created_at: string
   table?: Table
+  items: OrderItem[]
 }
 
 const OrderHistory: React.FC = () => {
@@ -53,10 +61,17 @@ const OrderHistory: React.FC = () => {
       setLoading(false)
     }
   }
+ 
 
   useEffect(() => {
+  handleGetOrders()
+
+  const intervalId = setInterval(() => {
     handleGetOrders()
-  }, [])
+  }, 10000)
+
+  return () => clearInterval(intervalId)
+}, [])
 
   if (loading) return <p className="text-center text-gray-600 mt-10">Loading orders...</p>
   if (error) return <p className="text-center text-red-500 mt-10">{error}</p>
@@ -64,9 +79,9 @@ const OrderHistory: React.FC = () => {
   return (
     <div className="p-4 md:min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-center text-3xl font-bold mb-8 flex justify-center items-center gap-2">
+        {/* <h1 className="text-center text-2xl font-bold mb-4 flex justify-center items-center gap-2">
           <ClipboardList className="h-7 w-7 text-sky-700" /> My Orders
-        </h1>
+        </h1> */}
 
         {orders.length === 0 ? (
           <div className="bg-white text-center text-gray-600 text-xl font-semibold p-10 rounded-md shadow-md">
@@ -99,32 +114,44 @@ const OrderHistory: React.FC = () => {
                   </span>
                 </p>
 
-                <p className="text-lg font-semibold text-gray-800 flex justify-between">
+                <p className="text-lg font-semibold text-gray-800 flex justify-between"> 
                   Payment Status:
-                  <span className="text-gray-600">{order.payStatus}</span>
+                  <span className="text-gray-600">
+                    {order.payStatus === "unpaid" ? "Paid" : "Not Paid"}
+                  </span>
                 </p>
 
-                <p className="text-lg font-semibold text-gray-800 flex justify-between">
-                  Order Date:
-                  <span className="text-gray-600">
-                    {new Date(order.created_at).toLocaleString()}
-                  </span>
+                <p className="text-lg font-semibold text-gray-800 flex justify-between"> 
+                  Order Date: 
+                  <span className="text-gray-600"> {new Date(order.created_at).toLocaleString()}</span>
                 </p>
 
                 <p className="text-lg font-semibold text-gray-800 flex justify-between">
                   Total Price:
                   <span className="text-gray-600">${order.total_price}</span>
                 </p>
-
-                <p className="text-lg font-semibold text-gray-800 flex justify-between">
+                
+                <div className="mt-3">
+                  <p className="text-lg font-semibold text-gray-800 mb-2">Items:</p>
+                  <ul className="divide-y divide-gray-200 border border-gray-200 rounded-md">
+                    {order.items.map((item, index) => (
+                      <li key={index} className="flex justify-between px-4 py-2 text-gray-700">
+                        <span>{item.product.name}</span>
+                        <span className="font-semibold">x{item.quantity}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                {/* <p className="text-lg font-semibold text-gray-800 flex justify-between">
                   Order Type:
                   <span className="text-gray-600">{order.order_type}</span>
-                </p>
+                </p> */}
 
-                <p className="text-lg font-semibold text-gray-800 flex justify-between">
+                {/* <p className="text-lg font-semibold text-gray-800 flex justify-between">
                   Table:
                   <span className="text-gray-600">{order.table?.code || 'N/A'}</span>
-                </p>
+                </p> */}
               </div>
             ))}
           </div>

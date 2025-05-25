@@ -75,7 +75,7 @@ const CartView = () => {
 
       const pendingOrder = {
         customerId,
-        code: "T07",
+        code: "T07", // Mesa o identificador provisional
         products: productsForOrder,
         slug,
       };
@@ -96,7 +96,6 @@ const CartView = () => {
       toast.error("Could not start checkout. Please try again.");
     }
   };
-
 
   return (
     <div className="p-4 md:min-h-screen bg-gray-50">
@@ -147,7 +146,6 @@ const CartView = () => {
           </div>
         </div>
 
-        
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-center text-2xl font-bold mb-4 flex gap-2 justify-center items-center">
             <Receipt className='h-6 w-6 text-sky-600' /> Order Summary
