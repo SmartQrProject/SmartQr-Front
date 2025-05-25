@@ -1,11 +1,16 @@
-import FooterAdmin from '@/components/adminComponents/footer/Footer'
-import NavbarCustomer from '@/components/customers/navbarCustomer/NavbarCustomer'
-import CartView from '@/components/customers/view/CartView'
-import { getRestaurantWithMenu } from '@/helper/restaurantsSlugFetch'
-import { notFound } from 'next/navigation'
-import React from 'react'
+import React from 'react';
+import { notFound } from 'next/navigation';
 
-export default async function Cart({ params }: { params: Promise<{ slug: string }> }) {
+import FooterAdmin from '@/components/adminComponents/footer/Footer';
+import NavbarCustomer from '@/components/customers/navbarCustomer/NavbarCustomer';
+import CartView from '@/components/customers/view/CartView';
+import { getRestaurantWithMenu } from '@/helper/restaurantsSlugFetch';
+
+interface CartProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function Cart({ params }: CartProps) {
   const { slug } = await params;
   const data = await getRestaurantWithMenu(slug);
 
@@ -14,14 +19,12 @@ export default async function Cart({ params }: { params: Promise<{ slug: string 
   return (
     <div className="min-h-screen flex flex-col">
       <NavbarCustomer slug={slug} name={data.name} />
-      
-      <div className="flex flex-1 flex-col lg:flex-row">
-        <div className="flex-1 p-4">
-          <h2 className="text-2xl mb-4">Shopping Cart</h2>
-          <CartView />
-        </div>
-      </div>
-      
+
+      <main className="flex-grow p-4">
+        <h2 className="text-2xl mb-4 text-center font-semibold">Shopping Cart</h2>
+        <CartView />
+      </main>
+
       <FooterAdmin />
     </div>
   );

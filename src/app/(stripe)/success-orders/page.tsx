@@ -14,7 +14,7 @@ export default function SuccessOrderPage() {
 
     const slug = localStorage.getItem("slug") || "";
     setTimeout(() => {
-      router.push(`/customers/dashboard`);
+      router.push(`/customer/dashboard`);
     }, 2000);
   }, [router]);
 
