@@ -17,7 +17,7 @@ export default async function Cart({ params }: { params: Promise<{ slug: string 
       
       <div className="flex flex-1 flex-col lg:flex-row">
         <div className="flex-1 p-4">
-          <h1 className="text-2xl mb-4">Shopping Cart</h1>
+          <h2 className="text-2xl mb-4">Shopping Cart</h2>
           <CartView />
         </div>
       </div>
