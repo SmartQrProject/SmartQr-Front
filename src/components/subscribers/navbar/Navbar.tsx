@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 
 const Navbar = () => {
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_NAME;
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
     const [open, setOpen] = useState(false)
 
     return (

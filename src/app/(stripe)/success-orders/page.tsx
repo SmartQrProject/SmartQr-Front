@@ -22,7 +22,7 @@ export default function SuccessOrderPage() {
     const sessionData = JSON.parse(session);
     const token = sessionData?.token;
 
-    const { customerId, code, products, slug } = JSON.parse(pendingOrder);
+    const { customerId, code, products, slug,rewardCode } = JSON.parse(pendingOrder);
     console.log("✅ Pending order data:", { customerId, code, products, slug });
     console.log("✅ Customer session:", sessionData);
 
@@ -45,6 +45,7 @@ export default function SuccessOrderPage() {
           body: JSON.stringify({
             customerId,
             code,
+            rewardCode,
             products: products.map((p: any) => ({
               id: p.id,
               quantity: p.quantity,
@@ -52,7 +53,11 @@ export default function SuccessOrderPage() {
           }),
         });
 
-        if (!orderRes.ok) throw new Error(`Order creation failed (${orderRes.status})`);
+        if (!orderRes.ok) {
+          const errJson = await orderRes.json().catch(() => ({}));
+          throw new Error(errJson?.message || `Order creation failed (${orderRes.status})`);
+        }
+
 
         localStorage.removeItem("pendingOrder");
         localStorage.setItem("cart", "[]");

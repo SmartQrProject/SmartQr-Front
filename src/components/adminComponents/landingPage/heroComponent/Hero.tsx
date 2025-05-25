@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 export default function Hero() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  
 
   useEffect(() => {
     const checkScreenSize = () => setIsSmallScreen(window.innerWidth < 768);
