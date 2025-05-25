@@ -10,19 +10,19 @@ import { toast } from 'react-hot-toast'
 import { useUserRole } from '../hooks/useUserRole'
 
 const NavbarAdmin = () => {
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const [open, setOpen] = useState(false)
   const { logoutAdmin } = useAuth()
   const router = useRouter()
-  
   const role = useUserRole();
   const validRoles = ["owner", "staff"] as const;
   if (role === undefined) return <div>Loading...</div>;
   if (!validRoles.includes(role as any)) return <div>No autorizado</div>;
-    
+  
   const logOutHandler = () => {
     logoutAdmin()
     toast.success("Logout successful")
-
+    
     router.push("/")
   }
 
@@ -30,8 +30,7 @@ const NavbarAdmin = () => {
     <div>
       <nav className='m-5'>
         <div className='flex justify-between items-center'>
-          <Link className='text-[#6494ED] font-bold text-xl' href={'/'}>SmartQR</Link>
-          
+          <Link className='text-[#6494ED] font-bold text-xl ' href={'/'}><><img src={`https://res.cloudinary.com/${cloudName}/image/upload/logo2_jzvw9b.png`} alt="SmartQR" className='h-16 inline-block rounded-lg' /></></Link>
           <button className='sm:hidden text-2xl' onClick={() => setOpen(true)}>☰</button>
 
           <div className='hidden sm:flex items-center space-x-4'>
