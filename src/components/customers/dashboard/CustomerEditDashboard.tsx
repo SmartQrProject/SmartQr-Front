@@ -59,8 +59,7 @@ const CustomerEditDashboard = () => {
           getRestaurantWithMenu(slugFromSession),
           getCustomerById(token, slugFromSession, id),
         ]);
-console.log('🧠 Customer from DB:', customerData);
-console.log('🧠 Name from customerData:', customerData.name);
+
 
         setRestaurantData(restaurant);
         setCustomer(customerData);
@@ -72,7 +71,7 @@ console.log('🧠 Name from customerData:', customerData.name);
           confirmPassword: '',
         });
       } catch (error) {
-        console.error('❌ Error fetching data:', error);
+        // console.error('❌ Error fetching data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -93,7 +92,7 @@ const onSubmit = async (data: UserProfileData) => {
       throw new Error('Missing session or customer data');
     
   const phoneNumber = Number(data.phone);
-
+console.log("ELI", storedSession, slug, id, token, customer);
     if (isNaN(phoneNumber)) {
       throw new Error('The phone number must be a valid number');
     }

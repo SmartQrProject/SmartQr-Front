@@ -61,6 +61,7 @@ const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
               <div>
                 <p className="font-semibold">{user.name}</p>
                 <p className="text-sm text-gray-500">{user.email}</p>
+                <p className="text-sm text-gray-400">Phone: {user.phone}</p>
                 <p className="text-sm text-gray-400 italic">{user.role}</p>
               </div>
               <button onClick={() => openConfirmDialog(user.id)} className="text-red-500 hover:text-red-700 font-bold text-sm">Delete</button>

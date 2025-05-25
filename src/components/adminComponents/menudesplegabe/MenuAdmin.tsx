@@ -2,10 +2,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { HiOutlineHome, HiOutlineShoppingBag, HiOutlineBuildingStorefront, HiOutlineCog6Tooth, HiOutlineChartBar, HiOutlineUserGroup, HiOutlineClipboardDocumentList, HiOutlineCheckCircle } from "react-icons/hi2";
-import { GiKnifeFork } from "react-icons/gi";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { HiOutlineHome, HiOutlineBuildingStorefront, HiOutlineCog6Tooth, HiOutlineChartBar, HiOutlineUserGroup, HiOutlineClipboardDocumentList, HiOutlineCheckCircle } from "react-icons/hi2";
+
+import { MdOutlineTableBar } from "react-icons/md";
 import { useUserRole } from "../hooks/useUserRole";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+
 
 const MenuAdmin = () => {
     const pathname = usePathname();
@@ -52,82 +54,83 @@ const MenuAdmin = () => {
         return `flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-gray-300 relative ${isActive ? "font-semibold" : ""}`;
     };
 
-    return (
-        <div className="w-full sm:w-64 p-4 bg-white shadow-md rounded-md">
-            <div className="flex flex-col space-y-2">
-                <div className={`flex justify-between items-center cursor-pointer ${isMobile ? "" : "pointer-events-none"}`} onClick={() => isMobile && setIsOpen(!isOpen)}>
-                    <div>
-                        <h1 className="font-semibold text-lg">{restaurantName}</h1>
-                        <span className="text-sm text-gray-500">Restaurant</span>
-                    </div>
+return (
+  <div
+    className={`h-screen bg-white shadow-md transition-all duration-300 ${
+      isOpen ? 'w-64' : 'w-16'
+    }`}
+  >
 
-                    {isMobile && (isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />)}
-                </div>
+    <div className="flex justify-end p-2">
+      <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-black transition-transform text-xl" > {isOpen ? <IoChevronBack /> : <IoChevronForward />}
+      </button>
+    </div>
 
-                {isOpen && (
-                    <div className="flex flex-col space-y-2 pt-2">
-                        <Link href="/dashboard" onClick={handleLinkClick} className={linkClasses("/dashboard")}>
-                            {pathname === "/dashboard" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                            <HiOutlineHome />
-                            Home
-                        </Link>
+    <div className="flex flex-col space-y-2 px-2">
+     
+      {isOpen && (
+        <div className="px-2 mb-2">
+          <h1 className="font-semibold text-lg truncate">{restaurantName}</h1>
+          <span className="text-sm text-gray-500">Restaurant</span>
+        </div>
+      )}
 
-                        {role === "owner" && (
-                            <>
-                                <Link href="/dashboard/store" onClick={handleLinkClick} className={linkClasses("/dashboard/store")}>
-                                    {" "}
-                                    {pathname === "/dashboard/store" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                                    <HiOutlineBuildingStorefront /> Stores
-                                </Link>
+      <Link href="/dashboard" onClick={handleLinkClick} className={linkClasses("/dashboard")}>
+        <HiOutlineHome />
+        {isOpen && <span>Home</span>}
+      </Link>
 
-                                <Link href="/dashboard/staffcreation" onClick={handleLinkClick} className={linkClasses("/dashboard/staffcreation")}>
-                                    {pathname === "/dashboard/staffcreation" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                                    <HiOutlineUserGroup />
-                                    User Creation
-                                </Link>                                
+      {role === "owner" && (
+        <>
+          <Link href="/dashboard/store" onClick={handleLinkClick} className={linkClasses("/dashboard/store")}>
+            <HiOutlineBuildingStorefront />
+            {isOpen && <span>Stores</span>}
+          </Link>
 
-                                <Link href="/dashboard/menu/createcategory" onClick={handleLinkClick} className={linkClasses("/dashboard/menu/createcategory")}>
+          <Link href="/dashboard/staffcreation" onClick={handleLinkClick} className={linkClasses("/dashboard/staffcreation")}>
+            <HiOutlineUserGroup />
+            {isOpen && <span>Staff Creation</span>}
+          </Link>
+
+          <Link href="/dashboard/menu/createcategory" onClick={handleLinkClick} className={linkClasses("/dashboard/menu/createcategory")}>
                                     {" "}
                                     {pathname === "/dashboard/menu/createcategory" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                                    <GiKnifeFork /> Menu
+                                    Menu
                                 </Link>
 
-                                <Link href="/dashboard/reports" onClick={handleLinkClick} className={linkClasses("/dashboard/reports")}>
-                                    {" "}
-                                    {pathname === "/dashboard/reports" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                                    <HiOutlineChartBar /> Reports
-                                </Link>
-                            </>
-                        )}
+          <Link href="/dashboard/reports" onClick={handleLinkClick} className={linkClasses("/dashboard/reports")}>
+            <HiOutlineChartBar />
+            {isOpen && <span>Reports</span>}
+          </Link>
+        </>
+      )}
 
-                        {/* Visible para owner y staff */}
+      <Link href="/dashboard/orders" onClick={handleLinkClick} className={linkClasses("/dashboard/orders")}>
+        <HiOutlineClipboardDocumentList />
+        {isOpen && <span>Orders</span>}
+      </Link>
 
-                        <Link href="/dashboard/orders" onClick={handleLinkClick} className={linkClasses("/dashboard/orders")}>
-                            {" "}
-                            {pathname === "/dashboard/orders" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                            <HiOutlineClipboardDocumentList /> Orders
-                        </Link>
+      <Link href="/dashboard/completed" onClick={handleLinkClick} className={linkClasses("/dashboard/completed")}>
+        <HiOutlineCheckCircle />
+        {isOpen && <span>Orders Completed</span>}
+      </Link>
 
-                        <Link href="/dashboard/completed" onClick={handleLinkClick} className={linkClasses("/dashboard/completed")}>
-                            {" "}
-                            {pathname === "/dashboard/completed" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                            <HiOutlineCheckCircle /> Orders Completed
-                        </Link>
+      <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/tables")}>
+        <MdOutlineTableBar      />
+        {isOpen && <span>Tables</span>}
+      </Link>
 
-                        <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/tables")}>
-                            {pathname === "/dashboard/tables" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />} <HiOutlineShoppingBag /> Tables
-                        </Link>
+      <Link href="/dashboard/settings" onClick={handleLinkClick} className={linkClasses("/dashboard/settings")}>
+        <HiOutlineCog6Tooth />
+        {isOpen && <span>Settings</span>}
+      </Link>
+    </div>
+  </div>
+);
 
-                        <Link href="/dashboard/settings" onClick={handleLinkClick} className={linkClasses("/dashboard/settings")}>
-                            {" "}
-                            {pathname === "/dashboard/settings" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                            <HiOutlineCog6Tooth /> Settings
-                        </Link>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
 };
 
 export default MenuAdmin;
+
+
+ 

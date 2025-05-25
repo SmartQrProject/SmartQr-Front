@@ -117,7 +117,7 @@ const OrderHistory: React.FC = () => {
                 <p className="text-lg font-semibold text-gray-800 flex justify-between"> 
                   Payment Status:
                   <span className="text-gray-600">
-                    {order.payStatus === "unpaid" ? "Paid" : "Not Paid"}
+                    {order.payStatus}
                   </span>
                 </p>
 

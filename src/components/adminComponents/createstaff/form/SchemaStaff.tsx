@@ -18,6 +18,11 @@ export const StaffRegisterSchema = z
       .nonempty({ message: "Email is required" })
       .email("Please enter a valid email address"),
 
+    phone: z
+    .string()
+    .regex(/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number")
+    .optional(),
+
     slug: z
       .string()
       .optional(),

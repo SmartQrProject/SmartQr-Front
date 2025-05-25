@@ -1,6 +1,7 @@
 
 import StorePageClient from "@/components/adminComponents/editableRestaurant/landingPage/StorePageAdmin";
-import ListProducts from "@/components/adminComponents/menu/views/ProductsView";
+import MenuAdmin from "@/components/adminComponents/menudesplegabe/MenuAdmin";
+
 import NavbarAdmin from "@/components/adminComponents/navbar/NavbarAdmin";
 import Footer from "@/components/subscribers/footer/Footer";
 
@@ -9,10 +10,13 @@ export default function StorePage() {
     <div className="flex flex-col min-h-screen">
       <NavbarAdmin />
       
-    
-      <div className="flex-1">
-        <StorePageClient />
-       
+      
+      <div className="flex flex-1">
+          <MenuAdmin />
+           
+              <StorePageClient />
+         
+
       </div>
 
       <Footer />
