@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Pencil, Trash2, Plus } from 'lucide-react';
-import { useAuth } from '@/app/(admin)/login/adminLoginContext';
-import toast from 'react-hot-toast';
-import { ICategory } from '@/types/index';
-import { getCategories } from '@/components/adminComponents/menu/menuHelpers/fetch/categories';
-import { userCreateCategory } from '@/libs/hooks/userCreateCategory';
-import AddCategoryModal from '@/components/adminComponents/editableRestaurant/landingPage/AddCategoryModal';
-import CreateMenuForm from '../../menu/forms/CreateProductForm';
-import ProductModal from '@/components/adminComponents/editableRestaurant/landingPage/ProducModal';
+import { useState, useEffect } from "react";
+import { Pencil, Trash2, Plus } from "lucide-react";
+import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+import toast from "react-hot-toast";
+import { ICategory } from "@/types/index";
+import { getCategories } from "@/components/adminComponents/menu/menuHelpers/fetch/categories";
+import { userCreateCategory } from "@/libs/hooks/userCreateCategory";
+import AddCategoryModal from "@/components/adminComponents/editableRestaurant/landingPage/AddCategoryModal";
+import CreateMenuForm from "../../menu/forms/CreateProductForm";
+import ProductModal from "@/components/adminComponents/editableRestaurant/landingPage/ProducModal";
 
 interface EditableCategoriesProps {
   slug: string;
@@ -17,7 +17,9 @@ interface EditableCategoriesProps {
 
 export default function EditableCategories({ slug }: EditableCategoriesProps) {
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
+    null
+  );
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 
@@ -28,10 +30,10 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
   const fetchAllCategories = async () => {
     try {
       const res = await getCategories(slug, token!);
-      setCategories(res.categories);
+      setCategories(Array.isArray(res.categories) ? res.categories : []);
     } catch (err) {
-      console.error('Error loading categories:', err);
-      toast.error('Error loading categories');
+      console.error("Error loading categories:", err);
+      toast.error("Error loading categories");
     }
   };
 
@@ -46,64 +48,68 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
     if (!newCategory) return;
 
     await fetchAllCategories();
-    toast.success('Category added');
+    toast.success("Category added");
   };
 
   const handleDeleteCategory = async (id: string) => {
-  const confirmed = confirm('Delete this category?');
-  if (!confirmed) return;
-
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${id}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!res.ok) {
-      throw new Error('Failed to delete category');
-    }
-
-    toast.success('Category deleted');
-    await fetchAllCategories(); 
-  } catch (error) {
-    console.error(error);
-    toast.error('Could not delete category');
-  }
-};
-
-
-    const handleEditCategory = async (id: string) => {
-    const current = categories.find((c) => String(c.id) === String(id));
-    if (!current) return;
-
-    const newName = prompt('Edit category name:', current.name);
-    if (!newName || newName.trim() === current.name.trim()) return;
+    const confirmed = confirm("Delete this category?");
+    if (!confirmed) return;
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${id}`, {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: newName }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!res.ok) {
-        throw new Error('Failed to update category');
+        throw new Error("Failed to delete category");
       }
 
-      toast.success('Category updated');
+      toast.success("Category deleted");
       await fetchAllCategories();
-    } catch (err) {
-      console.error(err);
-      toast.error('Could not update category');
+    } catch (error) {
+      console.error(error);
+      toast.error("Could not delete category");
     }
   };
 
+  const handleEditCategory = async (id: string) => {
+    const current = categories.find((c) => String(c.id) === String(id));
+    if (!current) return;
+
+    const newName = prompt("Edit category name:", current.name);
+    if (!newName || newName.trim() === current.name.trim()) return;
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: newName }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to update category");
+      }
+
+      toast.success("Category updated");
+      await fetchAllCategories();
+    } catch (err) {
+      console.error(err);
+      toast.error("Could not update category");
+    }
+  };
 
   return (
     <section className="p-4">
@@ -141,7 +147,9 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
           className="min-w-[240px] h-[100px] flex flex-col justify-center items-center border border-dashed border-gray-400 rounded-lg cursor-pointer hover:bg-default-100"
         >
           <Plus className="w-6 h-6 mb-1 text-gray-600" />
-          <span className="text-sm font-medium text-gray-600">Add Category</span>
+          <span className="text-sm font-medium text-gray-600">
+            Add Category
+          </span>
         </div>
       </div>
 
@@ -151,7 +159,10 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
         onSave={handleCreateCategory}
       />
 
-      <ProductModal open={isProductModalOpen} onClose={() => setIsProductModalOpen(false)}>
+      <ProductModal
+        open={isProductModalOpen}
+        onClose={() => setIsProductModalOpen(false)}
+      >
         <CreateMenuForm />
       </ProductModal>
     </section>
