@@ -33,6 +33,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    // matcher: ["/auth/:path*", "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"],
     matcher: ["/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"],
 };
+// "/auth/:path*",

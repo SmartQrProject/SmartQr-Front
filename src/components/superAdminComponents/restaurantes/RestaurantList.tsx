@@ -57,7 +57,7 @@ export default function RestaurantList() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                 },
-                body: JSON.stringify({ is_active: !currentStatus, exist: !currentStatus }),
+                body: JSON.stringify({ is_active: !currentStatus }), // Solo modifica is_active
             });
 
             if (!res.ok) throw new Error("Failed to update restaurant status");
