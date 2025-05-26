@@ -17,7 +17,7 @@ export default function AuthLinks() {
         <div className="w-full mr-4 mt-4">
             {!user ? (
                 <a
-                    href="/api/auth/login?returnTo=/customer/dashboard"
+                    href="/auth/login?returnTo=/customer/dashboard"
                     className="block text-white font-semibold bg-default-700 px-4 py-2 rounded-md hover:bg-default-600 transition w-full text-center"
                 >
                     <LogIn className="inline-block mr-2" />
