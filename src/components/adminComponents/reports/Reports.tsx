@@ -18,27 +18,27 @@ const Reports = () => {
   return (
     <>
       <div className="p-4 grid gap-6">
-        <ReportBlock title="Ventas">
+        <ReportBlock title="Sales">
           <IndexVentas />
         </ReportBlock>
 
-        <ReportBlock title="Top productos vendidos">
+        <ReportBlock title="Top Selling Products">
           <TopProductos />
         </ReportBlock>
 
-        <ReportBlock title="Ctegorias más vendidas">
+        <ReportBlock title="Top Categories">
           <Categorias />
         </ReportBlock>
 
-        <ReportBlock title="Frecuencia de ventas">
+        <ReportBlock title="Sales Frequency">
           <FrecuenciaVentas />
         </ReportBlock>
 
-        <ReportBlock title="Clientes más frecuentes">
+        <ReportBlock title="Most Frequent Customers">
           <Customers />
         </ReportBlock>
 
-        <ReportBlock title="Clientes nuevos vs recurrentes">
+        <ReportBlock title="New vs Recurring Customers">
           <ClientesNuevosVsRecurrentes />
         </ReportBlock>
       </div>

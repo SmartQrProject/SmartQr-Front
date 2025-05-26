@@ -137,6 +137,7 @@ export interface IUserStaff {
     name: string;
     email: string;
     password: string;
+    phone: string;
     confirmPassword: string;
     slug?: string;
     role?: "owner" | "staff";

@@ -51,7 +51,7 @@ const VentasPorDia = ({
         const json = await res.json();
         setData([{ name: today, total: json.total || 0 }]);
       } catch (err) {
-        console.error("Error al obtener ventas por día:", err);
+        console.error("Error fetching daily sales:", err);
         setData([]);
       } finally {
         setLoading(false);
@@ -63,16 +63,16 @@ const VentasPorDia = ({
 
   return (
     <div ref={chartRef} className="bg-white p-4 rounded-xl border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Ventas del día</h3>
+      <h3 className="text-lg font-semibold mb-4">Daily Sales</h3>
       <p className="text-sm mb-2">
-        Desde el <strong>{today}</strong> hasta el <strong>{today}</strong>
+        From <strong>{today}</strong> to <strong>{today}</strong>
       </p>
 
-      {/* 🎯 Input + info complementaria */}
+      {/* Target input + complementary info */}
       <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:gap-6">
         <div>
           <label className="block text-sm font-medium mb-1">
-            Meta diaria provisional ($):
+            Provisional daily target ($):
           </label>
           <input
             type="number"
@@ -82,17 +82,17 @@ const VentasPorDia = ({
           />
         </div>
 
-        {/* 🔢 Info de cuánto falta y % completado */}
+        {/* Progress info */}
         {data.length > 0 && (
           <div className="mt-2 sm:mt-6 text-sm text-gray-700">
             <p>
-              Falta:{" "}
+              Remaining:{" "}
               <strong>
                 ${Math.max(metaDiaria - data[0].total, 0).toFixed(2)}
               </strong>
             </p>
             <p>
-              Progreso:{" "}
+              Progress:{" "}
               <strong
                 className={
                   data[0].total >= metaDiaria
@@ -127,9 +127,9 @@ const VentasPorDia = ({
       */}
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : data.length === 0 ? (
-        <p>No se registraron ventas hoy.</p>
+        <p>No sales recorded today.</p>
       ) : (
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
@@ -145,7 +145,7 @@ const VentasPorDia = ({
             <XAxis dataKey="name" />
             <YAxis domain={[0, Math.max(metaDiaria, data[0].total) + 50]} />
             <Tooltip
-              formatter={(value: number) => [`$${value.toFixed(2)}`, "Ventas"]}
+              formatter={(value: number) => [`$${value.toFixed(2)}`, "Sales"]}
             />
 
             <ReferenceLine
@@ -153,7 +153,7 @@ const VentasPorDia = ({
               stroke="red"
               strokeDasharray="4 4"
               label={{
-                value: `Meta: $${metaDiaria}`,
+                value: `Target: $${metaDiaria}`,
                 position: "top",
                 fill: "red",
                 fontSize: 12,

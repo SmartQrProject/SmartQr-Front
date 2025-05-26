@@ -14,7 +14,7 @@ import {
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 
 type PuntoSemana = {
-  label: string; // "Lunes", "Martes", etc.
+  label: string; // "Monday", "Tuesday", etc.
   count: number;
 };
 
@@ -51,13 +51,13 @@ const FrecuenciaPorSemana = () => {
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
       <h3 className="text-lg font-semibold mb-4">
-        Frecuencia por día de la semana
+        Weekly Sales Frequency
       </h3>
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : data.length === 0 ? (
-        <p>No hay datos de ventas por día de la semana.</p>
+        <p>No sales data by day of week.</p>
       ) : (
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -68,7 +68,7 @@ const FrecuenciaPorSemana = () => {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="label" tick={{ fontSize: 12 }} />
               <YAxis allowDecimals={false} />
-              <Tooltip formatter={(value: number) => [`${value}`, "Ventas"]} />
+              <Tooltip formatter={(value: number) => [`${value}`, "Sales"]} />
               <Bar dataKey="count" fill="#8884d8">
                 <LabelList
                   dataKey="count"

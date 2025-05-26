@@ -1,4 +1,4 @@
-import OrderHistory from '@/components/customers/view/OrderHistoryCustomer'
+import OrderHistory from '@/components/customers/historyOrder/OrderHistoryCustomer'
 import React from 'react'
 
 const page = () => {

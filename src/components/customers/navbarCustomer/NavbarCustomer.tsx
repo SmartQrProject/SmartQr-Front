@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import AuthLinks from '@/components/auth0/AuthLinks';
 import { StoreIcon } from 'lucide-react';
 import Link from 'next/link';
-import { FiShoppingBag, FiShoppingCart } from 'react-icons/fi';
+import { FiShoppingCart } from 'react-icons/fi';
 import { HiOutlineUser } from 'react-icons/hi';
 
 interface NavbarCustomerProps {
@@ -17,6 +17,7 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
   const [localSlug, setLocalSlug] = useState('');
   const [localName, setLocalName] = useState('');
   const [customerProfileImg, setCustomerProfileImg] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     if (!slug || !name) {
@@ -25,6 +26,8 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
       setLocalSlug(storedSlug);
       setLocalName(storedName);
     }
+    const session = localStorage.getItem('customerSession');
+    setIsLoggedIn(!!session);
   }, [slug, name]);
 
   useEffect(() => {
@@ -38,6 +41,8 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
         } catch (error) {
           console.error('Error parsing customerSession from localStorage', error);
         }
+      } else {
+        setCustomerProfileImg(null);
       }
     };
 
@@ -64,8 +69,14 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
         </Link>
 
         <div className="flex items-center gap-4">
-          {/* Perfil cliente */}
-          <Link href={`/customer/dashboard`} className="cursor-pointer flex items-center justify-center w-10 h-10 rounded-lg bg-transparent transition overflow-hidden">
+          <Link
+            href={isLoggedIn ? `/customer/dashboard` : '#'}
+            className={`cursor-pointer flex items-center justify-center w-10 h-10 rounded-lg bg-transparent transition overflow-hidden
+              ${!isLoggedIn ? 'opacity-50 pointer-events-none' : ''}
+            `}
+            aria-disabled={!isLoggedIn}
+            tabIndex={isLoggedIn ? 0 : -1}
+          >
             {customerProfileImg ? (
               <img src={customerProfileImg} alt="Profile" className="w-9 h-9 rounded-full object-cover" />
             ) : (
@@ -75,12 +86,13 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
             )}
           </Link>
 
-          {/* Carrito */}
-          <Link href={`/menu/${displaySlug}/cart`} className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition">
+          <Link
+            href={`/menu/${displaySlug}/cart`}
+            className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition"
+          >
             <FiShoppingCart className="text-xl text-black" />
           </Link>
 
-          {/* Menú hamburguesa */}
           <button
             onClick={toggleMenu}
             type="button"
@@ -96,19 +108,28 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
         </div>
 
         {isMenuOpen && (
-          <div id="navbar-hamburger" className="fixed top-0 right-0 h-full w-full max-w-xs bg-white shadow-lg z-20 p-4 flex flex-col justify-start">
+          <div
+            id="navbar-hamburger"
+            className="fixed top-0 right-0 h-full w-full max-w-xs bg-white shadow-lg z-20 p-4 flex flex-col justify-start"
+          >
             <div>
               <div className="flex items-center justify-between mt-3 pb-3 border-b border-gray-200">
                 <span className="text-xl font-semibold text-gray-800 flex items-center gap-2">
                   <StoreIcon className="w-6 h-6 text-sky-800" />
                   {displayName || 'Store'}
                 </span>
-                <button onClick={() => setIsMenuOpen(false)} className="text-gray-800 hover:text-red-500 text-2xl" aria-label="Close menu">&times;</button>
+                <button onClick={() => setIsMenuOpen(false)} className="text-gray-800 hover:text-red-500 text-2xl" aria-label="Close menu">
+                  &times;
+                </button>
               </div>
 
               <ul className="flex flex-col font-medium space-y-4 mt-8">
-                <li><a href="#" onClick={() => setIsMenuOpen(false)} className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-300">Store Info</a></li>
-                <li><a href="/customer/dashboard/edit" onClick={() => setIsMenuOpen(false)} className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-300">Rewards</a></li>
+                <li>
+                  <a href="#" onClick={() => setIsMenuOpen(false)} className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-300">
+                    Store Info
+                  </a>
+                </li>
+                {/* <li><a href="/customer/dashboard/edit" onClick={() => setIsMenuOpen(false)} className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-300">Rewards</a></li> */}
               </ul>
             </div>
 

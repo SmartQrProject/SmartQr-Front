@@ -61,7 +61,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
     }
 
     localStorage.setItem('cart', JSON.stringify(cart))
-    router.push(`/menu/${slug}/cart`)
+    router.push(`/menu/${slug}`)
   }
 
   return (

@@ -42,7 +42,7 @@ const TopClientesPorTicket = () => {
         const json = await res.json();
         setData(Array.isArray(json.data) ? json.data : []);
       } catch (err) {
-        console.error("Error al obtener top clientes por ticket:", err);
+        console.error("Error fetching top customers by ticket:", err);
         setData([]);
       } finally {
         setLoading(false);
@@ -55,13 +55,13 @@ const TopClientesPorTicket = () => {
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
       <h3 className="text-lg font-semibold mb-4">
-        Top 10 clientes por ticket promedio
+        Top 10 customers by average ticket
       </h3>
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : data.length === 0 ? (
-        <p>No hay datos disponibles.</p>
+        <p>No data available.</p>
       ) : (
         <div className="h-[500px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -76,8 +76,8 @@ const TopClientesPorTicket = () => {
               <Tooltip
                 formatter={(value: number, name: string) =>
                   name === "averageOrder"
-                    ? [`$${value.toFixed(2)}`, "Promedio por orden"]
-                    : [`${value}`, "Órdenes"]
+                    ? [`$${value.toFixed(2)}`, "Average per order"]
+                    : [`${value}`, "Orders"]
                 }
               />
               <Bar dataKey="averageOrder" fill="#ffc658">

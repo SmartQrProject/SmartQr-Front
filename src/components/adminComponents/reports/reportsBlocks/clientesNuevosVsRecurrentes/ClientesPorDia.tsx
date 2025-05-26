@@ -38,14 +38,14 @@ const ClientesPorDia = () => {
         );
 
         console.log(res);
-        if (!res.ok) throw new Error("Error en la respuesta del servidor");
+        if (!res.ok) throw new Error("Server response error");
 
         const result = await res.json();
         setData(result);
         setError(false);
       } catch (err) {
         setError(true);
-        console.error("Error al obtener datos de clientes:", err);
+        console.error("Error fetching customer data:", err);
       } finally {
         setLoading(false);
       }
@@ -54,18 +54,18 @@ const ClientesPorDia = () => {
     fetchData();
   }, [slug, token]);
 
-  if (loading) return <p>Cargando...</p>;
-  if (error || !data) return <p>Hubo un problema al cargar los datos.</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error || !data) return <p>There was a problem loading the data.</p>;
   if (data.newCustomers + data.returningCustomers === 0)
-    return <p>No hubo clientes en este día.</p>;
+    return <p>No customers today.</p>;
 
   const chartData = [
     {
-      name: "Nuevos",
+      name: "New",
       value: data.newCustomers,
     },
     {
-      name: "Recurrentes",
+      name: "Returning",
       value: data.returningCustomers,
     },
   ];
@@ -103,12 +103,12 @@ const ClientesPorDia = () => {
       {/* Cuadros de valores */}
       <div className="grid grid-cols-2 gap-4">
         <div className="p-4 border rounded-lg text-center">
-          <h3 className="text-lg font-semibold">Clientes Nuevos</h3>
+          <h3 className="text-lg font-semibold">New Customers</h3>
           <p className="text-2xl">{data.newCustomers}</p>
           <p className="text-gray-500">{data.newPercentage.toFixed(1)}%</p>
         </div>
         <div className="p-4 border rounded-lg text-center">
-          <h3 className="text-lg font-semibold">Clientes Recurrentes</h3>
+          <h3 className="text-lg font-semibold">Returning Customers</h3>
           <p className="text-2xl">{data.returningCustomers}</p>
           <p className="text-gray-500">
             {data.returningPercentage.toFixed(1)}%

@@ -107,7 +107,7 @@ const CartView = () => {
 
       const orderPayload = {
         customerId,
-        code: "T07",
+        code: "T-01",
         rewardCode: isPromoValid ? promoCode.trim() : undefined,
         products: productsForOrder,
       };
