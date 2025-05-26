@@ -18,7 +18,7 @@ export default function ChatWindow({ messages, setMessages, close }: ChatWindowP
         socket.on("bot_reply", handleReply);
 
         socket.on("connect_error", () => {
-            setMessages((prev) => [...prev, { sender: "bot", text: "❌ Error de conexión al servidor." }]);
+            setMessages((prev) => [...prev, { sender: "bot", text: "❌ Server connection error." }]);
         });
 
         return () => {
@@ -47,11 +47,11 @@ export default function ChatWindow({ messages, setMessages, close }: ChatWindowP
             </div>
             <div className="flex-1 overflow-y-auto p-2 space-y-2">
                 {messages.map((m, i) => {
-                    console.log("🧾 Mensaje recibido:", m); // debug opcional
+                    console.log("🧾 Received message:", m); // optional debug
                     return (
                         <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
                             <div className={`${m.sender === "user" ? "chatbot-message-user" : "chatbot-message-bot"}`}>
-                                {typeof m.text === "string" && m.text.trim() ? m.text : "[Mensaje vacío]"}
+                                {typeof m.text === "string" && m.text.trim() ? m.text : "[Empty message]"}
                             </div>
                         </div>
                     );
@@ -63,11 +63,11 @@ export default function ChatWindow({ messages, setMessages, close }: ChatWindowP
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                    placeholder="Escribe algo..."
+                    placeholder="Type something..."
                     className="chatbot-input"
                 />
                 <button onClick={sendMessage} disabled={loading} className="chatbot-send-button">
-                    {loading ? "..." : "Enviar"}
+                    {loading ? "..." : "Send"}
                 </button>
             </div>
         </div>

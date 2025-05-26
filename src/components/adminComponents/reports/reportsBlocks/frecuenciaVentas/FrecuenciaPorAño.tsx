@@ -14,7 +14,7 @@ import {
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 
 type PuntoAño = {
-  label: string; // "Enero", "Febrero", etc.
+  label: string; // "January", "February", etc.
   count: number;
 };
 
@@ -52,12 +52,12 @@ const FrecuenciaPorAño = () => {
 
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Frecuencia por mes del año</h3>
+      <h3 className="text-lg font-semibold mb-4">Yearly Sales Frequency</h3>
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : data.length === 0 ? (
-        <p>No hay datos de ventas por mes del año.</p>
+        <p>No sales data by month of year.</p>
       ) : (
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -69,7 +69,7 @@ const FrecuenciaPorAño = () => {
               <XAxis dataKey="label" angle={-45} textAnchor="end" height={60} />
               <YAxis allowDecimals={false} />
               <Tooltip
-                formatter={(value: number) => [`${value} ventas`, "Cantidad"]}
+                formatter={(value: number) => [`${value} sales`, "Quantity"]}
               />
               <Bar dataKey="count" fill="#8884d8">
                 <LabelList

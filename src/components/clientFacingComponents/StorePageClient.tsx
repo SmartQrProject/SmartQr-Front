@@ -1,6 +1,7 @@
 'use client';
 
 
+import { useEffect } from 'react';
 import BannerHero from '../shared/bannerHero';
 import PublicCategoryList from '../shared/categoryList';
 import PublicCategoryNav from '../shared/categoryNavBar';
@@ -31,6 +32,14 @@ interface StorePageClientProps {
 }
 
 export default function StorePageClient({ data, slug }: StorePageClientProps) {
+
+    useEffect(() => {
+    if (slug) {
+      localStorage.setItem("slug", slug);
+    }if (data.name) {
+      localStorage.setItem('storeName', data.name);
+    }
+  }, [slug, data.name]);
   return (
    
     <>

@@ -83,6 +83,11 @@ const StaffRegisterForm = ({ setUsers }: { setUsers: (u: IUserStaff[]) => void }
                 </div>
 
                 <div>
+                  <label>Phone</label>
+                  <input type="number" {...register('phone')} className="w-full p-2 bg-white rounded-md"/>{errors.phone && ( <p className="text-red-500 text-sm">{errors.phone.message}</p> )}
+               </div>
+
+                <div>
                     <label>Password</label>
                     <PasswordInput register={register} name="password" error={errors.password?.message} />
                 </div>

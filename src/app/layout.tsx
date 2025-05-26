@@ -5,9 +5,9 @@ import { Toaster } from "react-hot-toast";
 import { AdminLoginProvider } from "./(admin)/login/adminLoginContext";
 import ChatBot from "@/components/chatbot/ChatBot";
 import Script from 'next/script';
-import Footer from "@/components/subscribers/footer/Footer";
-
 import { SpeedInsights } from "@vercel/speed-insights/next"
+
+
 
 const lato = Lato({
     subsets: ["latin"],
@@ -25,6 +25,9 @@ const openSans = Open_Sans({
 export const metadata: Metadata = {
     title: "SmartQR",
     description: "SmartQR is a self-ordering menu system using QR codes and modern tech to help restaurants improve service, efficiency, and sales.",
+    icons: {
+        icon: "/sqr.ico",
+    }
 };
 
 export default function RootLayout({
@@ -45,11 +48,12 @@ export default function RootLayout({
                 
                 <Toaster position="top-center" />
                 <AdminLoginProvider>
-                <main className="flex-1">
-                    {children}
-                    <SpeedInsights />
-                </main>
-                <ChatBot />
+                        <main className="flex-1">
+                            {children}
+                            <SpeedInsights />
+                        </main>
+                        <ChatBot />
+                    
                 </AdminLoginProvider>
             
             </body>

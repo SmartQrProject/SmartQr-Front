@@ -43,9 +43,9 @@ const VentasPorSemana = () => {
         );
         const result = await res.json();
         const total = result.total ?? 0;
-        setData([{ name: "Semana actual", total }]);
+        setData([{ name: "Current Week", total }]);
       } catch (err) {
-        console.error("Error al obtener ventas de la semana:", err);
+        console.error("Error fetching weekly sales:", err);
         setData([]);
       } finally {
         setLoading(false);
@@ -57,16 +57,16 @@ const VentasPorSemana = () => {
 
   return (
     <div ref={chartRef} className="bg-white p-4 rounded-xl border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Ventas de la semana</h3>
+      <h3 className="text-lg font-semibold mb-4">Weekly Sales</h3>
       <p className="text-sm mb-2">
-        Desde el <strong>{start}</strong> hasta el <strong>{end}</strong>
+        From <strong>{start}</strong> to <strong>{end}</strong>
       </p>
 
-      {/* 🎯 Input + info complementaria */}
+      {/* Target input + complementary info */}
       <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:gap-6">
         <div>
           <label className="block text-sm font-medium mb-1">
-            Meta semanal provisional ($):
+            Provisional weekly target ($):
           </label>
           <input
             type="number"
@@ -76,17 +76,17 @@ const VentasPorSemana = () => {
           />
         </div>
 
-        {/* 🔢 Info de cuánto falta y % completado */}
+        {/* Progress info */}
         {data.length > 0 && (
           <div className="mt-2 sm:mt-6 text-sm text-gray-700">
             <p>
-              Falta:{" "}
+              Remaining:{" "}
               <strong>
                 ${Math.max(metaSemanal - data[0].total, 0).toFixed(2)}
               </strong>
             </p>
             <p>
-              Progreso:{" "}
+              Progress:{" "}
               <strong
                 className={
                   data[0].total >= metaSemanal
@@ -107,24 +107,12 @@ const VentasPorSemana = () => {
         )}
       </div>
 
-      {/* 🔒 Futuro: este input se completará automáticamente con el fetch al restaurante */}
-      {/*
-      useEffect(() => {
-        const fetchMeta = async () => {
-          const res = await fetch(`${APIURL}/restaurants?slug=test-cafe`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const json = await res.json();
-          setMetaSemanal(json.meta_semanal); // <-- aquí seteás la meta desde el back
-        };
-        fetchMeta();
-      }, []);
-      */}
+      {/* Future: load from backend */}
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : data.length === 0 ? (
-        <p>No hubo ventas esta semana.</p>
+        <p>No sales this week.</p>
       ) : (
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
@@ -140,7 +128,7 @@ const VentasPorSemana = () => {
             <XAxis dataKey="name" />
             <YAxis domain={[0, Math.max(metaSemanal, data[0].total) + 50]} />
             <Tooltip
-              formatter={(value: number) => [`$${value.toFixed(2)}`, "Ventas"]}
+              formatter={(value: number) => [`$${value.toFixed(2)}`, "Sales"]}
             />
 
             <ReferenceLine
@@ -148,7 +136,7 @@ const VentasPorSemana = () => {
               stroke="red"
               strokeDasharray="4 4"
               label={{
-                value: `Meta: $${metaSemanal}`,
+                value: `Target: $${metaSemanal}`,
                 position: "top",
                 fill: "red",
                 fontSize: 12,
@@ -164,7 +152,7 @@ const VentasPorSemana = () => {
               />
             )}
 
-            <Bar dataKey="total" fill="#82ca9d" animationDuration={700}>
+            <Bar dataKey="total" fill="#8884d8" animationDuration={700}>
               <LabelList
                 dataKey="total"
                 position="top"

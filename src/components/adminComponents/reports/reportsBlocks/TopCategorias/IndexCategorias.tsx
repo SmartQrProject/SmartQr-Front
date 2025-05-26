@@ -7,20 +7,20 @@ import CategoriaPorMes from "./CategoriaPorMes";
 import CategoriaPorAño from "./CategoriaPorAño";
 import CategoriaCustom from "./CategoriaCustom";
 
-const Tabs = ["Día", "Semana", "Mes", "Año", "Custom"];
+const Tabs = ["Day", "Week", "Month", "Year", "Custom"];
 
 const IndexCategorias = () => {
-  const [tab, setTab] = useState("Día");
+  const [tab, setTab] = useState("Day");
 
   const renderTab = () => {
     switch (tab) {
-      case "Día":
+      case "Day":
         return <CategoriaPorDia />;
-      case "Semana":
+      case "Week":
         return <CategoriaPorSemana />;
-      case "Mes":
+      case "Month":
         return <CategoriaPorMes />;
-      case "Año":
+      case "Year":
         return <CategoriaPorAño />;
       case "Custom":
         return <CategoriaCustom />;
@@ -32,7 +32,7 @@ const IndexCategorias = () => {
   return (
     <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center">
-        Ventas por categoría
+        Sales by Category
       </h2>
 
       {/* Tabs */}
@@ -52,7 +52,7 @@ const IndexCategorias = () => {
         ))}
       </div>
 
-      {/* Contenido */}
+      {/* Content */}
       <div>{renderTab()}</div>
     </div>
   );

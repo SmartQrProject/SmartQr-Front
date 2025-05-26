@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 export default function Hero() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  
 
   useEffect(() => {
     const checkScreenSize = () => setIsSmallScreen(window.innerWidth < 768);
@@ -70,7 +71,7 @@ export default function Hero() {
         >
           <Link
             href="/signup"
-            className="bg-default-100 text-[#4285F4] text-lg font-bold px-6 py-3 rounded-lg hover:bg-sky-700 hover:text-white transition"
+            className="bg-default-50 text-[#4285F4] text-lg font-bold px-6 py-3 rounded-full hover:bg-blue-400 hover:text-white transition"
           >
             Create Account
           </Link>

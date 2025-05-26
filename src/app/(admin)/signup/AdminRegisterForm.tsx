@@ -28,7 +28,7 @@ export default function RegisterForm() {
     setIsLoading(true);
 
     try {
-      // Slug validation first
+
       const check = await fetch(
         `${APIURL}/restaurants/public?slug=${data.slug}`
       );
@@ -39,8 +39,6 @@ export default function RegisterForm() {
         toast.error("Unable to validate slug. Please try again.");
         return;
       }
-
-      // Save all required info for SuccessPage
       const restaurantData = {
         name: data.name,
         email: data.email,
@@ -148,7 +146,7 @@ export default function RegisterForm() {
 
         <p className="text-sm text-gray-700">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-500 hover:underline">
+          <Link href="/login" className="text-blue-500 hover:underline font-semibold">
             Login
           </Link>
         </p>

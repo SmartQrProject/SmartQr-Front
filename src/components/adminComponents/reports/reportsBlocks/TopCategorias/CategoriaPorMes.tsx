@@ -96,31 +96,31 @@ const CategoriaPorMes = () => {
 
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Ventas por categoría (Mes)</h3>
+      <h3 className="text-lg font-semibold mb-4">Sales by Category (Month)</h3>
       <p className="text-sm mb-6">
-        Desde <strong>{start}</strong> hasta <strong>{end}</strong>
+        From <strong>{start}</strong> to <strong>{end}</strong>
       </p>
 
-      {/* Orden */}
+      {/* Order */}
       <div className="mb-6">
-        <label className="font-medium mr-2">Orden:</label>
+        <label className="font-medium mr-2">Order:</label>
         <select
           className="border px-2 py-1 rounded"
           value={sort}
           onChange={(e) => setSort(e.target.value as "asc" | "desc")}
         >
-          <option value="desc">Más vendidas</option>
-          <option value="asc">Menos vendidas</option>
+          <option value="desc">Best Sellers</option>
+          <option value="asc">Least Sold</option>
         </select>
       </div>
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : categorias.length === 0 ? (
-        <p>No hubo ventas por categoría en este mes.</p>
+        <p>No sales by category this month.</p>
       ) : (
         <>
-          {/* Gráficos */}
+          {/* Charts */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             {/* BarChart */}
             <div className="h-[400px]">
@@ -141,8 +141,8 @@ const CategoriaPorMes = () => {
                   <Tooltip
                     formatter={(value: number, name: string) => {
                       if (name === "total")
-                        return [`$${value.toFixed(2)}`, "Total vendido"];
-                      if (name === "quantity") return [`${value}`, "Cantidad"];
+                        return [`$${value.toFixed(2)}`, "Total sold"];
+                      if (name === "quantity") return [`${value}`, "Quantity"];
                       return [value, name];
                     }}
                   />
@@ -150,7 +150,7 @@ const CategoriaPorMes = () => {
                     <LabelList
                       dataKey="quantity"
                       position="right"
-                      formatter={(v: number) => `${v} uds`}
+                      formatter={(v: number) => `${v} units`}
                     />
                   </Bar>
                 </BarChart>
@@ -182,7 +182,7 @@ const CategoriaPorMes = () => {
                   <Tooltip
                     formatter={(value: number) => [
                       `${value.toFixed(1)}%`,
-                      "Porcentaje",
+                      "Percentage",
                     ]}
                   />
                   <Legend verticalAlign="bottom" height={36} />
@@ -191,16 +191,16 @@ const CategoriaPorMes = () => {
             </div>
           </div>
 
-          {/* Tabla detallada */}
+          {/* Detailed table */}
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm border">
               <thead>
                 <tr className="bg-gray-100 text-left">
-                  <th className="px-4 py-2">Categoría</th>
-                  <th className="px-4 py-2">Total vendido</th>
-                  <th className="px-4 py-2">% del total</th>
-                  <th className="px-4 py-2">Cantidad</th>
-                  <th className="px-4 py-2">Promedio</th>
+                  <th className="px-4 py-2">Category</th>
+                  <th className="px-4 py-2">Total Sold</th>
+                  <th className="px-4 py-2">% of Total</th>
+                  <th className="px-4 py-2">Quantity</th>
+                  <th className="px-4 py-2">Average</th>
                 </tr>
               </thead>
               <tbody>

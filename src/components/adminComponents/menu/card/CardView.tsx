@@ -27,34 +27,44 @@ const CardView: React.FC<CardViewProps> = ({
 
   return (
     <div className="w-full max-w-[600px] mx-auto">
-      <div className="flex flex-row gap-6 p-4 bg-white rounded-2xl">
-       
-        <div className="flex flex-col justify-between w-2/3 gap-2">
-          <h2 className="text-xl font-semibold text-gray-900">{name}</h2>
-          <p className="text-sm text-gray-700 line-clamp-3">{description}</p>
-          <p className="text-lg font-bold text-default-800">${Number(price).toFixed(2)}</p>
-          <p className="text-xs text-gray-600">Available: {is_available ? 'Yes' : 'No'}</p>
-          {details.length > 0 && (
-            <ul className="text-sm text-default-700 mt-2 italic">
-              {details.map((item, idx) => (
-                <li key={idx}>{item}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <div className="w-1/3 flex items-center justify-center">
+      <div className="flex flex-row gap-4 p-4 bg-white rounded-2xl h-[160px]">
+        {/* Image section */}
+        <div className="w-1/3 h-full ">
           {imageUrl ? (
             <img
               src={imageUrl}
               alt="Product preview"
-              className="w-[120px] h-[120px] object-cover rounded-lg border border-gray-200"
+              className="w-full h-full object-cover rounded-xl border border-gray-200"
             />
           ) : (
-            <div className="w-[120px] h-[120px] bg-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-500">
+            <div className="w-full h-full bg-gray-200 rounded-xl flex items-center justify-center text-xs text-gray-500">
               No image
             </div>
           )}
+        </div>
+
+        {/* Text section */}
+        <div className="w-2/3 flex flex-col justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 line-clamp-1">{name}</h2>
+            <p className="text-sm text-gray-700 line-clamp-2">{description}</p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-default-700 italic mt-2">
+            {details.map((item, idx) => (
+              <span key={idx} className="bg-gray-100 px-2 py-1 rounded-full">
+                {item}
+              </span>
+            ))}
+          </div>
+
+          <div className="text-sm text-gray-600">
+            Available: {is_available ? 'Yes' : 'No'}
+          </div>
+
+          <div className="text-base font-bold text-default-800">
+            ${Number(price).toFixed(2)}
+          </div>
         </div>
       </div>
     </div>

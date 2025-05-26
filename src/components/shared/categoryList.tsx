@@ -25,7 +25,7 @@ interface Props {
 }
 
 export default function PublicCategoryList({ categories, slug }: Props) {
-  const [selectedProduct, setSelectedProduct] = useState<IProducts | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<IProducts | null>(null);
 
   const visibleCategories = categories.filter(
     (cat) => cat.products && cat.products.length > 0
@@ -35,9 +35,7 @@ export default function PublicCategoryList({ categories, slug }: Props) {
     <section className="px-4 py-8">
       {visibleCategories.map((cat) => (
         <div key={cat.name} id={cat.name} className="mb-16">
-          <h3 className="text-2xl font-bold mb-6 text-default-800">
-            {cat.name}
-          </h3>
+          <h3 className="text-2xl font-bold mb-6 text-default-800">{cat.name}</h3>
 
           <div className="flex flex-wrap justify-start gap-6">
             {cat.products.map((product) => (
@@ -46,7 +44,7 @@ export default function PublicCategoryList({ categories, slug }: Props) {
                 className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 cursor-pointer hover:scale-[1.02] transition-transform duration-200"
                 onClick={() =>
                   setSelectedProduct({
-                    id: product.id, 
+                    id: product.id,
                     categoryId: cat.id ?? '',
                     name: product.name,
                     description: product.description,
@@ -71,21 +69,12 @@ export default function PublicCategoryList({ categories, slug }: Props) {
           </div>
 
           {selectedProduct && (
-            <div className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50 bg-black/10">
-              <div className="bg-white p-6 rounded-xl w-1/4 h-4/5 relative shadow-xl overflow-auto">
-                <button
-                  onClick={() => setSelectedProduct(null)}
-                  className="z-50 cursor-pointer w-8 h-8 border border-gray-300 rounded-full absolute top-2 right-2 text-gray-600 hover:text-black flex items-center justify-center shadow font-bold bg-white"
-                >
-                  ✕
-                </button>
-
-                <ProductDetail
-                  {...selectedProduct}
-                  slug={slug}
-                  onCancel={() => setSelectedProduct(null)}
-                />
-              </div>
+            <div className="fixed inset-0 bg-black/10 z-50 flex items-center justify-center px-4">
+              <ProductDetail
+                {...selectedProduct}
+                slug={slug}
+                onCancel={() => setSelectedProduct(null)}
+              />
             </div>
           )}
         </div>
