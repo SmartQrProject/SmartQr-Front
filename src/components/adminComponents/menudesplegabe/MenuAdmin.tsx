@@ -14,7 +14,7 @@ const MenuAdmin = () => {
     const [restaurantName, setRestaurantName] = useState("Restaurant");
 
     const role = useUserRole();
-    const validRoles = ["owner", "staff"] as const;
+    const validRoles = ["owner", "staff", "superAdmin"] as const;
 
     useEffect(() => {
         const checkMobile = () => {
@@ -29,7 +29,7 @@ const MenuAdmin = () => {
         if (session) {
             try {
                 const parsed = JSON.parse(session);
-                setRestaurantName(parsed.payload.restaurant.name || "Restaurant");
+                setRestaurantName(parsed.payload?.restaurant?.name || "Restaurant");
             } catch {
                 setRestaurantName("Restaurant");
             }
@@ -40,7 +40,7 @@ const MenuAdmin = () => {
 
     if (role === undefined) return <div>Loading...</div>;
 
-    if (!validRoles.includes(role as any)) return <div>No autorizado</div>;
+    if (!validRoles.includes(role as any)) return <div>Unauthorized</div>;
 
     const handleLinkClick = () => {
         if (isMobile) setIsOpen(false);
@@ -60,7 +60,6 @@ const MenuAdmin = () => {
                         <h1 className="font-semibold text-lg">{restaurantName}</h1>
                         <span className="text-sm text-gray-500">Restaurant</span>
                     </div>
-
                     {isMobile && (isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />)}
                 </div>
 
@@ -68,32 +67,36 @@ const MenuAdmin = () => {
                     <div className="flex flex-col space-y-2 pt-2">
                         <Link href="/dashboard" onClick={handleLinkClick} className={linkClasses("/dashboard")}>
                             {pathname === "/dashboard" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                            <HiOutlineHome />
-                            Home
+                            <HiOutlineHome /> Home
                         </Link>
 
+                        {role === "superAdmin" && (
+                            <>
+                                {/* SUPERADMIN LINKS HERE */}
+                                <Link href="/dashboard/restaurants" onClick={handleLinkClick} className={linkClasses("/dashboard/restaurants")}>
+                                    {pathname === "/dashboard/restaurants" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
+                                    <HiOutlineCog6Tooth /> Restaurants
+                                </Link>
+                            </>
+                        )}
                         {role === "owner" && (
                             <>
                                 <Link href="/dashboard/staffcreation" onClick={handleLinkClick} className={linkClasses("/dashboard/staffcreation")}>
                                     {pathname === "/dashboard/staffcreation" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                                    <HiOutlineUserGroup />
-                                    User Creation
+                                    <HiOutlineUserGroup /> User Creation
                                 </Link>
 
                                 <Link href="/dashboard/store" onClick={handleLinkClick} className={linkClasses("/dashboard/store")}>
-                                    {" "}
                                     {pathname === "/dashboard/store" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
                                     <HiOutlineBuildingStorefront /> Stores
                                 </Link>
 
                                 <Link href="/dashboard/menu/createcategory" onClick={handleLinkClick} className={linkClasses("/dashboard/menu/createcategory")}>
-                                    {" "}
                                     {pathname === "/dashboard/menu/createcategory" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
                                     <GiKnifeFork /> Menu
                                 </Link>
 
                                 <Link href="/dashboard/reports" onClick={handleLinkClick} className={linkClasses("/dashboard/reports")}>
-                                    {" "}
                                     {pathname === "/dashboard/reports" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
                                     <HiOutlineChartBar /> Reports
                                 </Link>
@@ -101,25 +104,22 @@ const MenuAdmin = () => {
                         )}
 
                         {/* Visible para owner y staff */}
-
                         <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/tables")}>
-                            {pathname === "/dashboard/tables" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />} <HiOutlineShoppingBag /> Tables
+                            {pathname === "/dashboard/tables" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
+                            <HiOutlineShoppingBag /> Tables
                         </Link>
 
                         <Link href="/dashboard/orders" onClick={handleLinkClick} className={linkClasses("/dashboard/orders")}>
-                            {" "}
                             {pathname === "/dashboard/orders" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
                             <HiOutlineCog6Tooth /> Orders
                         </Link>
 
                         <Link href="/dashboard/completed" onClick={handleLinkClick} className={linkClasses("/dashboard/completed")}>
-                            {" "}
                             {pathname === "/dashboard/completed" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
                             <HiOutlineCog6Tooth /> Orders Completed
                         </Link>
 
                         <Link href="/dashboard/settings" onClick={handleLinkClick} className={linkClasses("/dashboard/settings")}>
-                            {" "}
                             {pathname === "/dashboard/settings" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
                             <HiOutlineCog6Tooth /> Settings
                         </Link>
