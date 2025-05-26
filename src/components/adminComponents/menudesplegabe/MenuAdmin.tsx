@@ -11,7 +11,7 @@ import {
     HiOutlineClipboardDocumentList,
     HiOutlineCheckCircle,
 } from "react-icons/hi2";
-import { GiKnifeFork } from "react-icons/gi";
+import { GiHamburgerMenu, GiKnifeFork } from "react-icons/gi";
 import { MdOutlineTableBar } from "react-icons/md";
 import { useUserRole } from "../hooks/useUserRole";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
@@ -40,7 +40,7 @@ const MenuAdmin = () => {
         if (session) {
             try {
                 const parsed = JSON.parse(session);
-                setRestaurantName(parsed.payload?.restaurant?.name || "Restaurant");
+                setRestaurantName(parsed.payload.restaurant.name || "Restaurant");
             } catch {
                 setRestaurantName("Restaurant");
             }
@@ -51,7 +51,7 @@ const MenuAdmin = () => {
 
     if (role === undefined) return <div>Loading...</div>;
 
-    if (!validRoles.includes(role as any)) return <div>Unauthorized</div>;
+    if (!validRoles.includes(role as any)) return <div>No autorizado</div>;
 
     const handleLinkClick = () => {
         if (isMobile) setIsOpen(false);
@@ -114,28 +114,48 @@ const MenuAdmin = () => {
                     </>
                 )}
 
-                <Link href="/dashboard/orders" onClick={handleLinkClick} className={linkClasses("/dashboard/orders")}>
-                    <HiOutlineClipboardDocumentList />
-                    {isOpen && <span>Orders</span>}
-                </Link>
+                {(role === "owner" || role === "staff") && (
+                    <>
+                        <Link href="/dashboard/orders" onClick={handleLinkClick} className={linkClasses("/dashboard/orders")}>
+                            <HiOutlineClipboardDocumentList />
+                            {isOpen && <span>Orders</span>}
+                        </Link>
 
-                <Link href="/dashboard/completed" onClick={handleLinkClick} className={linkClasses("/dashboard/completed")}>
-                    <HiOutlineCheckCircle />
-                    {isOpen && <span>Orders Completed</span>}
-                </Link>
+                        <Link href="/dashboard/completed" onClick={handleLinkClick} className={linkClasses("/dashboard/completed")}>
+                            <HiOutlineCheckCircle />
+                            {isOpen && <span>Orders Completed</span>}
+                        </Link>
 
-                <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/tables")}>
-                    <MdOutlineTableBar />
-                    {isOpen && <span>Tables</span>}
-                </Link>
+                        <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/tables")}>
+                            <MdOutlineTableBar />
+                            {isOpen && <span>Tables</span>}
+                        </Link>
 
-                <Link href="/dashboard/settings" onClick={handleLinkClick} className={linkClasses("/dashboard/settings")}>
-                    <HiOutlineCog6Tooth />
-                    {isOpen && <span>Settings</span>}
-                </Link>
+                        <Link href="/dashboard/settings" onClick={handleLinkClick} className={linkClasses("/dashboard/settings")}>
+                            <HiOutlineCog6Tooth />
+                            {isOpen && <span>Settings</span>}
+                        </Link>
+                    </>
+                )}
+
+                {role === "superAdmin" && (
+                    <>
+                        <Link href="/dashboard/restaurants" onClick={handleLinkClick} className={linkClasses("/dashboard/restaurants")}>
+                            <GiHamburgerMenu />
+                            {isOpen && <span>Restaurant</span>}
+                        </Link>
+                    </>
+                )}
             </div>
         </div>
     );
 };
 
 export default MenuAdmin;
+
+{
+    /* <Link href="/dashboard/menu/createcategory" onClick={handleLinkClick} className={linkClasses("/dashboard/menu/createcategory")}>
+          <GiKnifeFork />
+          {isOpen && <span>Menu</span>}
+          </Link> */
+}

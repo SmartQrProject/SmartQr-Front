@@ -15,7 +15,7 @@ const NavbarAdmin = () => {
     const { logoutAdmin } = useAuth();
     const router = useRouter();
     const role = useUserRole();
-    const validRoles = ["owner", "staff"] as const;
+    const validRoles = ["owner", "staff", "superAdmin"] as const;
     if (role === undefined) return <div>Loading...</div>;
     if (!validRoles.includes(role as any)) return <div>No autorizado</div>;
 
