@@ -18,18 +18,38 @@ export const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children }) 
     );
 };
 
-export const DialogContent = ({ children }: { children: React.ReactNode }) => {
-    return <div>{children}</div>;
+interface BaseProps extends React.HTMLAttributes<HTMLDivElement> {
+    children: React.ReactNode;
+}
+
+export const DialogContent: React.FC<BaseProps> = ({ children, className = "", ...props }) => {
+    return (
+        <div className={className} {...props}>
+            {children}
+        </div>
+    );
 };
 
-export const DialogHeader = ({ children }: { children: React.ReactNode }) => {
-    return <div className="mb-4">{children}</div>;
+export const DialogHeader: React.FC<BaseProps> = ({ children, className = "", ...props }) => {
+    return (
+        <div className={`mb-4 ${className}`} {...props}>
+            {children}
+        </div>
+    );
 };
 
-export const DialogTitle = ({ children }: { children: React.ReactNode }) => {
-    return <h2 className="text-lg font-semibold">{children}</h2>;
+export const DialogTitle: React.FC<BaseProps> = ({ children, className = "", ...props }) => {
+    return (
+        <h2 className={`text-lg font-semibold ${className}`} {...props}>
+            {children}
+        </h2>
+    );
 };
 
-export const DialogFooter = ({ children }: { children: React.ReactNode }) => {
-    return <div className="mt-4 flex justify-end gap-2">{children}</div>;
+export const DialogFooter: React.FC<BaseProps> = ({ children, className = "", ...props }) => {
+    return (
+        <div className={`mt-4 flex justify-end gap-2 ${className}`} {...props}>
+            {children}
+        </div>
+    );
 };
