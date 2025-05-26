@@ -13,8 +13,8 @@ import {
 } from "recharts";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import dayjs from "dayjs";
-import "dayjs/locale/es";
-dayjs.locale("es");
+import "dayjs/locale/en";
+dayjs.locale("en");
 
 type Cliente = {
   id: string;
@@ -22,7 +22,7 @@ type Cliente = {
 };
 
 type ClienteNuevoPorMes = {
-  month: string; // Ej: "mayo 2025"
+  month: string; // Example: "May 2025"
   count: number;
 };
 
@@ -50,7 +50,7 @@ const ClientesNuevosPorMes = () => {
         const json = await res.json();
         const clientes: Cliente[] = json.data || [];
 
-        // Agrupar por mes (ej: "mayo 2025")
+        // Group by month (e.g., "May 2025")
         const grouped: Record<string, number> = {};
 
         clientes.forEach((cliente) => {
@@ -69,7 +69,7 @@ const ClientesNuevosPorMes = () => {
 
         setData(formatted);
       } catch (err) {
-        console.error("Error al obtener clientes nuevos por mes:", err);
+        console.error("Error fetching new customers by month:", err);
         setData([]);
       } finally {
         setLoading(false);
@@ -81,12 +81,12 @@ const ClientesNuevosPorMes = () => {
 
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Clientes nuevos por mes</h3>
+      <h3 className="text-lg font-semibold mb-4">New monthly customers</h3>
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : data.length === 0 ? (
-        <p>No hay registros de clientes nuevos.</p>
+        <p>No new customer records found.</p>
       ) : (
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -104,7 +104,7 @@ const ClientesNuevosPorMes = () => {
               />
               <YAxis allowDecimals={false} />
               <Tooltip
-                formatter={(value: number) => [`${value}`, "Clientes nuevos"]}
+                formatter={(value: number) => [`${value}`, "New Customers"]}
               />
               <Line
                 type="monotone"

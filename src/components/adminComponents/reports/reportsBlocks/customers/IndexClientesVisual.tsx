@@ -7,24 +7,24 @@ import TopClientesPorTicket from "./TopClientesPorTicket";
 import ClientesNuevosPorMes from "./ClientesNuevosPorMes";
 
 const tabs = [
-  "Más órdenes",
-  "Más gasto",
-  "Mejor ticket promedio",
-  "Nuevos por mes",
+  "Most Orders",
+  "Highest Spending",
+  "Best Average Ticket",
+  "New by Month",
 ];
 
 const IndexClientesVisual = () => {
-  const [tab, setTab] = useState("Más órdenes");
+  const [tab, setTab] = useState("Most Orders");
 
   const renderTab = () => {
     switch (tab) {
-      case "Más órdenes":
+      case "Most Orders":
         return <TopClientesPorOrden />;
-      case "Más gasto":
+      case "Highest Spending":
         return <TopClientesPorGasto />;
-      case "Mejor ticket promedio":
+      case "Best Average Ticket":
         return <TopClientesPorTicket />;
-      case "Nuevos por mes":
+      case "New by Month":
         return <ClientesNuevosPorMes />;
       default:
         return null;
@@ -34,7 +34,7 @@ const IndexClientesVisual = () => {
   return (
     <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center">
-        Visualización de Clientes
+        Customer Visualization
       </h2>
 
       <div className="flex flex-wrap justify-center gap-2 mb-8">

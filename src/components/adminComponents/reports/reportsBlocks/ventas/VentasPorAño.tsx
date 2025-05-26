@@ -57,16 +57,16 @@ const VentasPorAño = () => {
 
   return (
     <div ref={chartRef} className="bg-white p-4 rounded-xl border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Ventas del año</h3>
+      <h3 className="text-lg font-semibold mb-4">Yearly Sales</h3>
       <p className="text-sm mb-2">
-        Desde el <strong>{start}</strong> hasta el <strong>{end}</strong>
+        From <strong>{start}</strong> to <strong>{end}</strong>
       </p>
 
-      {/* 🎯 Input + info complementaria */}
+      {/* Target input + complementary info */}
       <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:gap-6">
         <div>
           <label className="block text-sm font-medium mb-1">
-            Meta anual provisional ($):
+            Provisional yearly target ($):
           </label>
           <input
             type="number"
@@ -76,17 +76,17 @@ const VentasPorAño = () => {
           />
         </div>
 
-        {/* 🔢 Info de cuánto falta y % completado */}
+        {/* Progress info */}
         {data.length > 0 && (
           <div className="mt-2 sm:mt-6 text-sm text-gray-700">
             <p>
-              Falta:{" "}
+              Remaining:{" "}
               <strong>
                 ${Math.max(metaAnual - data[0].total, 0).toFixed(2)}
               </strong>
             </p>
             <p>
-              Progreso:{" "}
+              Progress:{" "}
               <strong
                 className={
                   data[0].total >= metaAnual
@@ -106,24 +106,12 @@ const VentasPorAño = () => {
         )}
       </div>
 
-      {/* 🔒 Futuro: carga desde backend */}
-      {/*
-      useEffect(() => {
-        const fetchMeta = async () => {
-          const res = await fetch(`${APIURL}/restaurants?slug=test-cafe`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const json = await res.json();
-          setMetaAnual(json.meta_anual); // <-- cargar desde backend
-        };
-        fetchMeta();
-      }, []);
-      */}
+      {/* Future: load from backend */}
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : data.length === 0 ? (
-        <p>No hubo ventas este año.</p>
+        <p>No sales this year.</p>
       ) : (
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
@@ -139,7 +127,7 @@ const VentasPorAño = () => {
             <XAxis dataKey="name" />
             <YAxis domain={[0, Math.max(metaAnual, data[0].total) + 1500]} />
             <Tooltip
-              formatter={(value: number) => [`$${value.toFixed(2)}`, "Ventas"]}
+              formatter={(value: number) => [`$${value.toFixed(2)}`, "Sales"]}
             />
 
             <ReferenceLine
@@ -147,7 +135,7 @@ const VentasPorAño = () => {
               stroke="red"
               strokeDasharray="4 4"
               label={{
-                value: `Meta: $${metaAnual}`,
+                value: `Target: $${metaAnual}`,
                 position: "top",
                 fill: "red",
                 fontSize: 12,

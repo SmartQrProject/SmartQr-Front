@@ -45,7 +45,7 @@ const TopClientesPorOrden = () => {
         const json = await res.json();
         setData(Array.isArray(json?.data) ? json.data : []);
       } catch (err) {
-        console.error("Error al obtener top clientes:", err);
+        console.error("Error fetching top customers:", err);
         setData([]);
       } finally {
         setLoading(false);
@@ -58,13 +58,13 @@ const TopClientesPorOrden = () => {
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
       <h3 className="text-lg font-semibold mb-4">
-        Top 10 clientes por cantidad de órdenes
+        Top 10 customers by number of orders
       </h3>
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : data.length === 0 ? (
-        <p>No hay datos disponibles.</p>
+        <p>No data available.</p>
       ) : (
         <div className="h-[500px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -84,8 +84,8 @@ const TopClientesPorOrden = () => {
               <Tooltip
                 formatter={(value: number, name: string) =>
                   name === "orders"
-                    ? [`${value}`, "Órdenes"]
-                    : [`$${value.toFixed(2)}`, "Total gastado"]
+                    ? [`${value}`, "Orders"]
+                    : [`$${value.toFixed(2)}`, "Total spent"]
                 }
               />
               <Bar dataKey="orders" fill="#8884d8">

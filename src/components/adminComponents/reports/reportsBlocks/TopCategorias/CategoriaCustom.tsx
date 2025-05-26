@@ -82,13 +82,13 @@ const CategoriaCustom = () => {
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
       <h3 className="text-lg font-semibold mb-4">
-        Ventas por categoría (Custom)
+        Sales by Category (Custom)
       </h3>
 
-      {/* Filtros */}
+      {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-6">
         <div>
-          <label className="mr-2">Desde:</label>
+          <label className="mr-2">From:</label>
           <input
             type="date"
             value={from}
@@ -97,7 +97,7 @@ const CategoriaCustom = () => {
           />
         </div>
         <div>
-          <label className="mr-2">Hasta:</label>
+          <label className="mr-2">To:</label>
           <input
             type="date"
             value={to}
@@ -106,26 +106,26 @@ const CategoriaCustom = () => {
           />
         </div>
         <div>
-          <label className="mr-2">Orden:</label>
+          <label className="mr-2">Order:</label>
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as "asc" | "desc")}
             className="border px-2 py-1 rounded"
           >
-            <option value="desc">Más vendidas</option>
-            <option value="asc">Menos vendidas</option>
+            <option value="desc">Best Sellers</option>
+            <option value="asc">Least Sold</option>
           </select>
         </div>
       </div>
 
-      {/* Resultados */}
+      {/* Results */}
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : categorias.length === 0 && from && to ? (
-        <p>No hubo ventas en ese rango.</p>
+        <p>No sales in this range.</p>
       ) : (
         <>
-          {/* Gráficos */}
+          {/* Charts */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             {/* BarChart */}
             <div className="h-[400px]">
@@ -146,8 +146,8 @@ const CategoriaCustom = () => {
                   <Tooltip
                     formatter={(value: number, name: string) => {
                       if (name === "total")
-                        return [`$${value.toFixed(2)}`, "Total vendido"];
-                      if (name === "quantity") return [`${value}`, "Cantidad"];
+                        return [`$${value.toFixed(2)}`, "Total sold"];
+                      if (name === "quantity") return [`${value}`, "Quantity"];
                       return [value, name];
                     }}
                   />
@@ -155,7 +155,7 @@ const CategoriaCustom = () => {
                     <LabelList
                       dataKey="quantity"
                       position="right"
-                      formatter={(v: number) => `${v} uds`}
+                      formatter={(v: number) => `${v} units`}
                     />
                   </Bar>
                 </BarChart>
@@ -187,7 +187,7 @@ const CategoriaCustom = () => {
                   <Tooltip
                     formatter={(value: number) => [
                       `${value.toFixed(1)}%`,
-                      "Porcentaje",
+                      "Percentage",
                     ]}
                   />
                   <Legend verticalAlign="bottom" height={36} />
@@ -196,16 +196,16 @@ const CategoriaCustom = () => {
             </div>
           </div>
 
-          {/* Tabla */}
+          {/* Detailed table */}
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm border">
               <thead>
                 <tr className="bg-gray-100 text-left">
-                  <th className="px-4 py-2">Categoría</th>
-                  <th className="px-4 py-2">Total vendido</th>
-                  <th className="px-4 py-2">% del total</th>
-                  <th className="px-4 py-2">Cantidad</th>
-                  <th className="px-4 py-2">Promedio</th>
+                  <th className="px-4 py-2">Category</th>
+                  <th className="px-4 py-2">Total Sold</th>
+                  <th className="px-4 py-2">% of Total</th>
+                  <th className="px-4 py-2">Quantity</th>
+                  <th className="px-4 py-2">Average</th>
                 </tr>
               </thead>
               <tbody>

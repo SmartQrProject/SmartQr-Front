@@ -46,7 +46,7 @@ const Customers = () => {
           setTotal(0);
         }
       } catch (err) {
-        console.error("Error al obtener clientes:", err);
+        console.error("Error fetching customers:", err);
         setCustomers([]);
         setTotal(0);
       } finally {
@@ -70,14 +70,14 @@ const Customers = () => {
 
   return (
     <div className="p-4 rounded-xl border shadow-sm bg-white">
-      <h2 className="text-xl font-semibold mb-4">Clientes</h2>
+      <h2 className="text-xl font-semibold mb-4">Customers</h2>
       <div className="mb-8">
         <IndexClientesVisual />
       </div>
 
-      {/* Filtro de cantidad por página */}
+      {/* Items per page filter */}
       <div className="mb-4">
-        <label className="mr-2">Clientes por página:</label>
+        <label className="mr-2">Customers per page:</label>
         <select
           value={limit}
           onChange={(e) => {
@@ -95,23 +95,23 @@ const Customers = () => {
       </div>
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : customers.length === 0 ? (
-        <p>No hay clientes para mostrar.</p>
+        <p>No customers to display.</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm border">
             <thead>
               <tr className="bg-gray-100 text-left">
                 {[
-                  ["Nombre", "name"],
+                  ["Name", "name"],
                   ["Email", "email"],
-                  ["Órdenes", "orders"],
+                  ["Orders", "orders"],
                   ["Total", "totalSpent"],
-                  ["Promedio", "averageOrder"],
-                  ["Desde", "createdAt"],
-                  ["Última visita", "lastVisit"],
-                  ["Días sin visita", "daysSince"],
+                  ["Average", "averageOrder"],
+                  ["Since", "createdAt"],
+                  ["Last Visit", "lastVisit"],
+                  ["Days Since Visit", "daysSince"],
                 ].map(([label, key]) => (
                   <th
                     key={key}
@@ -138,7 +138,7 @@ const Customers = () => {
                   <td className="px-4 py-2">
                     {dayjs(c.lastVisit).format("YYYY-MM-DD")}
                   </td>
-                  <td className="px-4 py-2">{c.daysSince} días</td>
+                  <td className="px-4 py-2">{c.daysSince} days</td>
                 </tr>
               ))}
             </tbody>
@@ -146,24 +146,24 @@ const Customers = () => {
         </div>
       )}
 
-      {/* Paginación */}
+      {/* Pagination */}
       <div className="mt-4 flex items-center gap-4">
         <button
           className="px-3 py-1 border rounded disabled:opacity-50"
           disabled={page === 1}
           onClick={() => setPage((p) => p - 1)}
         >
-          Anterior
+          Previous
         </button>
         <span>
-          Página {page} de {totalPages}
+          Page {page} of {totalPages}
         </span>
         <button
           className="px-3 py-1 border rounded disabled:opacity-50"
           disabled={page === totalPages}
           onClick={() => setPage((p) => p + 1)}
         >
-          Siguiente
+          Next
         </button>
       </div>
     </div>

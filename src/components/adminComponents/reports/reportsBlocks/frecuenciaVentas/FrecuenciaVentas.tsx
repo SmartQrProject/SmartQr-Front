@@ -6,20 +6,20 @@ import FrecuenciaPorSemana from "./FrecuenciaPorSemana";
 import FrecuenciaPorMes from "./FrecuenciaPorMes";
 import FrecuenciaPorAño from "./FrecuenciaPorAño";
 
-const Tabs = ["Hora", "Semana", "Mes", "Año"];
+const Tabs = ["Hour", "Week", "Month", "Year"];
 
 const IndexFrecuencia = () => {
-  const [tab, setTab] = useState("Hora");
+  const [tab, setTab] = useState("Hour");
 
   const renderTab = () => {
     switch (tab) {
-      case "Hora":
+      case "Hour":
         return <FrecuenciaPorHora />;
-      case "Semana":
+      case "Week":
         return <FrecuenciaPorSemana />;
-      case "Mes":
+      case "Month":
         return <FrecuenciaPorMes />;
-      case "Año":
+      case "Year":
         return <FrecuenciaPorAño />;
       default:
         return null;
@@ -29,7 +29,7 @@ const IndexFrecuencia = () => {
   return (
     <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center">
-        Frecuencia de Ventas
+        Sales Frequency
       </h2>
 
       {/* Tabs */}
@@ -49,7 +49,7 @@ const IndexFrecuencia = () => {
         ))}
       </div>
 
-      {/* Contenido */}
+      {/* Content */}
       <div>{renderTab()}</div>
     </div>
   );
