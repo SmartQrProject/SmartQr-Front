@@ -6,8 +6,7 @@ import { ICartProduct } from "@/components/adminComponents/menu/menuTypes/menuTy
 import { CreditCard, MinusCircle, PlusCircle, Receipt, ShoppingCart, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { CgClose } from 'react-icons/cg';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
+
 
 const CartView = () => {
   const router = useRouter();
