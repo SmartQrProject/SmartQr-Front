@@ -6,20 +6,20 @@ import ClientesPorSemana from "./ClientesPorSemana";
 import ClientesPorMes from "./ClientesPorMes";
 import ClientesPorAño from "./ClientesPorAño";
 
-const tabs = ["Semana", "Mes", "Año"]; // Día está desactivado
+const tabs = ["Week", "Month", "Year"]; // Day is disabled
 
 const ClientesNuevosVsRecurrentes = () => {
-  const [tab, setTab] = useState("Semana");
+  const [tab, setTab] = useState("Week");
 
   const renderTab = () => {
     switch (tab) {
-      // case "Día":
+      // case "Day":
       //   return <ClientesPorDia />;
-      case "Semana":
+      case "Week":
         return <ClientesPorSemana />;
-      case "Mes":
+      case "Month":
         return <ClientesPorMes />;
-      case "Año":
+      case "Year":
         return <ClientesPorAño />;
       default:
         return null;
@@ -29,7 +29,7 @@ const ClientesNuevosVsRecurrentes = () => {
   return (
     <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center">
-        Clientes Nuevos vs Recurrentes
+        New vs Recurring Customers
       </h2>
 
       {/* Tabs */}
@@ -49,7 +49,7 @@ const ClientesNuevosVsRecurrentes = () => {
         ))}
       </div>
 
-      {/* Contenido */}
+      {/* Content */}
       <div>{renderTab()}</div>
     </div>
   );

@@ -50,12 +50,12 @@ const FrecuenciaPorMes = () => {
 
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Frecuencia por día del mes</h3>
+      <h3 className="text-lg font-semibold mb-4">Monthly Sales Frequency</h3>
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : data.length === 0 ? (
-        <p>No hay datos de ventas por día del mes.</p>
+        <p>No sales data by day of month.</p>
       ) : (
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -72,7 +72,7 @@ const FrecuenciaPorMes = () => {
                 height={60}
               />
               <YAxis allowDecimals={false} />
-              <Tooltip formatter={(value: number) => [`${value}`, "Ventas"]} />
+              <Tooltip formatter={(value: number) => [`${value}`, "Sales"]} />
               <Line
                 type="monotone"
                 dataKey="count"

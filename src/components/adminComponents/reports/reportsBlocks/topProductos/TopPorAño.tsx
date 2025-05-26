@@ -42,7 +42,7 @@ const TopPorAño = () => {
         const data = await res.json();
         setProductos(data);
       } catch (err) {
-        console.error("Error al obtener top productos del año:", err);
+        console.error("Error fetching top products of the year:", err);
       } finally {
         setLoading(false);
       }
@@ -53,27 +53,27 @@ const TopPorAño = () => {
 
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Top productos del año</h3>
+      <h3 className="text-lg font-semibold mb-4">Top products of the year</h3>
       <p className="text-sm mb-2">
-        Desde el <strong>{start}</strong> hasta el <strong>{end}</strong>
+        From <strong>{start}</strong> to <strong>{end}</strong>
       </p>
 
       <div className="mb-4">
-        <label className="font-medium mr-2">Orden:</label>
+        <label className="font-medium mr-2">Order:</label>
         <select
           className="border px-2 py-1 rounded"
           value={sort}
           onChange={(e) => setSort(e.target.value as "asc" | "desc")}
         >
-          <option value="desc">Más vendidos</option>
-          <option value="asc">Menos vendidos</option>
+          <option value="desc">Best Sellers</option>
+          <option value="asc">Least Sold</option>
         </select>
       </div>
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : productos.length === 0 ? (
-        <p>No hubo productos vendidos este año.</p>
+        <p>No products sold this year.</p>
       ) : (
         <ResponsiveContainer width="100%" height={50 * productos.length}>
           <BarChart
@@ -89,7 +89,7 @@ const TopPorAño = () => {
               width={150}
               tick={{ fontSize: 12 }}
             />
-            <Tooltip formatter={(value: number) => [`${value}`, "Vendidos"]} />
+            <Tooltip formatter={(value: number) => [`${value}`, "Sold"]} />
             <Bar dataKey="quantity" fill="#8884d8">
               <LabelList
                 dataKey="quantity"

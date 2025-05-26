@@ -7,20 +7,20 @@ import TopPorMes from "./TopPorMes";
 import TopPorAño from "./TopPorAño";
 import TopCustom from "./TopCustom";
 
-const Tabs = ["Día", "Semana", "Mes", "Año", "Custom"];
+const Tabs = ["Day", "Week", "Month", "Year", "Custom"];
 
 const IndexTopProductos = () => {
-  const [tab, setTab] = useState("Día");
+  const [tab, setTab] = useState("Day");
 
   const renderTab = () => {
     switch (tab) {
-      case "Día":
+      case "Day":
         return <TopPorDia />;
-      case "Semana":
+      case "Week":
         return <TopPorSemana />;
-      case "Mes":
+      case "Month":
         return <TopPorMes />;
-      case "Año":
+      case "Year":
         return <TopPorAño />;
       case "Custom":
         return <TopCustom />;
@@ -31,7 +31,7 @@ const IndexTopProductos = () => {
 
   return (
     <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-center">Top productos</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">Top Products</h2>
 
       {/* Tabs */}
       <div className="flex flex-wrap justify-center gap-2 mb-8">
@@ -50,7 +50,7 @@ const IndexTopProductos = () => {
         ))}
       </div>
 
-      {/* Contenido */}
+      {/* Content */}
       <div>{renderTab()}</div>
     </div>
   );
