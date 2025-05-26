@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import NavbarCustomer from "./navbarCustomer/NavbarCustomer";
-import OrderHistory from "./view/OrderHistoryCustomer";
+import OrderHistory from "./historyOrder/OrderHistoryCustomer";
 import Footer from "../subscribers/footer/Footer";
 import { ClipboardList } from "lucide-react";
 
@@ -78,6 +78,7 @@ export default function CustomerProfile() {
     };
 
     syncUser();
+    
   }, [user, slug]);
 
   if (!mounted || isLoading) return <p className="text-center mt-20">Cargando...</p>;

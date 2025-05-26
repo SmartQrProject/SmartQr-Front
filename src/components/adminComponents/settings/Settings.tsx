@@ -85,107 +85,105 @@ const Settings = () => {
     }
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
-            <div className="bg-default-50 rounded-xl p-6 shadow-sm">
-                <h1 className="text-2xl font-bold text-center mb-6">Profile Settings</h1>
-                
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Email</label>
-                        <input 
-                            type="email" 
-                            value={user?.payload.email || ''} 
-                            disabled 
-                            className="w-full p-2 bg-gray-100 rounded-md text-gray-500"
-                        />
-                        <p className="text-sm text-gray-500 mt-1">Email cannot be modified</p>
-                    </div>
+<div className="max-w-md mx-auto mb-10 p-6 bg-default-50 rounded-xl shadow-sm">
+  <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-sm">
+    <h1 className="text-3xl md:text-4xl font-bold text-center text-[#4f89f5]">
+      Profile Settings
+    </h1>
 
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Name</label>
-                        <input
-                            {...register("name")}
-                            className="w-full p-2 bg-white rounded-md border border-gray-300 focus:border-default-500 focus:ring-1 focus:ring-default-500"
-                            placeholder="Enter your name"
-                        />
-                        {errors.name && (
-                            <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-                        )}
-                    </div>
+    {/* Email (no editable) */}
+    <div className="flex flex-col">
+      <label className="text-sm font-medium mb-1">Email</label>
+      <input
+        type="email"
+        value={user?.payload.email || ''}
+        disabled
+        className="w-full p-2 bg-gray-100 rounded-md text-gray-500"
+      />
+      <p className="text-sm text-gray-500 mt-1">Email cannot be modified</p>
+    </div>
 
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Phone Number</label>
-                        <input
-                            {...register("phone")}
-                            type="tel"
-                            className="w-full p-2 bg-white rounded-md border border-gray-300 focus:border-default-500 focus:ring-1 focus:ring-default-500"
-                            placeholder="+1234567890"
-                        />
-                        {errors.phone && (
-                            <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
-                        )}
-                    </div>
+    {/* Name */}
+    <div className="flex flex-col">
+      <label className="text-sm font-medium mb-1">Name</label>
+      <input
+        {...register('name')}
+        className="w-full p-2 bg-white rounded-md"
+        placeholder="Enter your name"
+      />
+      {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+    </div>
 
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Address</label>
-                        <textarea
-                            {...register("address")}
-                            className="w-full p-2 bg-white rounded-md border border-gray-300 focus:border-default-500 focus:ring-1 focus:ring-default-500 min-h-[100px]"
-                            placeholder="Enter your address"
-                        />
-                        {errors.address && (
-                            <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>
-                        )}
-                    </div>
+    {/* Phone */}
+    <div className="flex flex-col">
+      <label className="text-sm font-medium mb-1">Phone Number</label>
+      <input
+        type="tel"
+        {...register('phone')}
+        className="w-full p-2 bg-white rounded-md"
+        placeholder="+1234567890"
+      />
+      {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
+    </div>
 
-                    <div className="border-t pt-6 mt-6">
-                        <div className="mb-4">
-                            <h2 className="text-lg font-semibold">Password Settings <span className="text-gray-500 font-normal">(Optional)</span></h2>
-                        </div>
+    {/* Address */}
+    <div className="flex flex-col">
+      <label className="text-sm font-medium mb-1">Address</label>
+      <textarea
+        {...register('address')}
+        className="w-full p-2 bg-white rounded-md min-h-[100px]"
+        placeholder="Enter your address"
+      />
+      {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
+    </div>
 
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-1">New Password</label>
-                                <PasswordInput
-                                    register={register}
-                                    name="password"
-                                    error={errors.password?.message}
-                                    placeholder="Enter your new password"
-                                />
-                            </div>
+    {/* Password Settings (optional) */}
+    <div className="pt-4 border-t mt-4">
+      <h2 className="text-lg font-semibold mb-2">
+        Password Settings <span className="text-gray-500 font-normal">(Optional)</span>
+      </h2>
 
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Confirm Password</label>
-                                <PasswordInput
-                                    register={register}
-                                    name="confirmPassword"
-                                    error={errors.confirmPassword?.message}
-                                    placeholder="Enter your confirmed password"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="pt-4">
-                        <ButtonPrimary
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full max-w-md mx-auto"
-                            variant="primary"
-                        >
-                            {isLoading ? (
-                                <div className="flex items-center justify-center">
-                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                                    Saving...
-                                </div>
-                            ) : (
-                                'Save Changes'
-                            )}
-                        </ButtonPrimary>
-                    </div>
-                </form>
-            </div>
+      <div className="flex flex-col space-y-4">
+        <div>
+          <label className="text-sm font-medium mb-1">New Password</label>
+          <PasswordInput
+            register={register}
+            name="password"
+            error={errors.password?.message}
+            placeholder="Enter your new password"
+          />
         </div>
+
+        <div>
+          <label className="text-sm font-medium mb-1">Confirm Password</label>
+          <PasswordInput
+            register={register}
+            name="confirmPassword"
+            error={errors.confirmPassword?.message}
+            placeholder="Enter your confirmed password"
+          />
+        </div>
+      </div>
+    </div>
+
+    {/* Submit Button */}
+    <ButtonPrimary
+      type="submit"
+      disabled={isLoading}
+      className="w-full"
+      variant="primary"
+    >
+      {isLoading ? (
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+          Saving...
+        </div>
+      ) : (
+        'Save Changes'
+      )}
+    </ButtonPrimary>
+  </form>
+</div>
     );
 }
 

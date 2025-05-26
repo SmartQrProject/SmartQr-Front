@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 const APIURL = process.env.NEXT_PUBLIC_API_URL
 
 interface CustomerData {
@@ -16,13 +18,14 @@ export async function modifyCustomersData(
 ) {
   try {
     const response = await fetch(`${APIURL}/${slug}/customers/${id}`, {
-      method: "PUT", // Mantener PUT porque backend no soporta PATCH
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });
+    console.log("ELIANA URL",`${APIURL}/${slug}/customers/${id}`)
 
     const result = await response.json();
 
@@ -44,23 +47,24 @@ export async function modifyCustomersData(
 export async function getCustomerById(token: string, slug: string, id: string) {
   try {
     const response = await fetch(`${APIURL}/${slug}/customers/${id}`, {
-      method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
-      const errorResponse = await response.json();
-      throw new Error(errorResponse?.message || `Failed to fetch customer (status: ${response.status})`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    console.log("🧠 Customer fetched successfully:", response);
     const data = await response.json();
-    console.log("ELI RESPONSE", data);
-    return data;
 
+    if (!data || typeof data !== "object") {
+      throw new Error("No se recibió data válida del servidor.");
+    }
+
+    return { success: true, data };
   } catch (error: any) {
+    console.error("❌ Error fetching customer by ID:", error);
+    return { success: false, message: error.message };
   }
 }

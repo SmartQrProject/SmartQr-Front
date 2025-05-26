@@ -1,4 +1,5 @@
-import CustomerEditDashboard from "@/components/customers/view/CustomerEditDashboard";
+import CustomerEditDashboard from "@/components/customers/dashboard/CustomerEditDashboard"
+
 
 const CustomerEditProfile = () => {
   return (
