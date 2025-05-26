@@ -20,7 +20,7 @@ const ButtonPrimary: React.FC<ButtonProps> = ({
   const baseStyles = "w-full rounded-lg py-3 px-6 text-sm font-semibold transition-all duration-200 flex items-center justify-center cursor-pointer shadow-sm";
   
   const variantStyles = {
-    primary: "bg-[#4f89f5] text-white hover:bg-[#5C77EF] active:bg-[#1437D1] disabled:bg-[#4f89f5]/50 disabled:cursor-not-allowed",
+    primary: "bg-[#4f89f5] text-white hover:bg-blue-400 font-semibold active:bg-[#1437D1] disabled:bg-[#4f89f5]/50 disabled:cursor-not-allowed",
     secondary: "bg-white text-[#4f89f5] border-2 border-[#4f89f5] hover:bg-[#4f89f5]/10 active:bg-[#4f89f5]/20 disabled:border-[#4f89f5]/50 disabled:text-[#4f89f5]/50 disabled:cursor-not-allowed",
     danger: "bg-red-500 text-white hover:bg-red-600 active:bg-red-700 disabled:bg-red-500/50 disabled:cursor-not-allowed"
   };

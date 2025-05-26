@@ -5,6 +5,9 @@ import { useParams, useRouter } from 'next/navigation';
 import { ICartProduct } from "@/components/adminComponents/menu/menuTypes/menuTypes";
 import { CreditCard, MinusCircle, PlusCircle, Receipt, ShoppingCart, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { CgClose } from 'react-icons/cg';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
 
 const CartView = () => {
   const router = useRouter();
@@ -69,15 +72,11 @@ const CartView = () => {
 
     try {
       const res = await fetch(`${APIURL}/${slug}/reward-codes/code/${promoCode.trim()}`);
-
       if (res.status === 404) {
         toast.error("Invalid or expired promo code.");
         return;
       }
-
-      if (!res.ok) {
-        throw new Error("Failed to validate promo code");
-      }
+      if (!res.ok) throw new Error("Failed to validate promo code");
 
       const matchedCode = await res.json();
       setIsPromoValid(true);
@@ -115,7 +114,6 @@ const CartView = () => {
 
       const session = localStorage.getItem("customerSession");
       const token = session ? JSON.parse(session).token : null;
-
       if (!token) throw new Error("Missing auth token");
 
       const res = await fetch(`${APIURL}/${slug}/orders`, {
@@ -128,7 +126,6 @@ const CartView = () => {
       });
 
       const data = await res.json();
-
       if (!res.ok) {
         toast.error(data.message || "Order creation failed");
         return;
@@ -136,7 +133,6 @@ const CartView = () => {
 
       localStorage.setItem("cart", "[]");
       toast.success("✅ Order created. Redirecting to payment...");
-
       if (!data.stripeSession) throw new Error("Missing Stripe session URL");
 
       window.location.href = data.stripeSession;
@@ -154,40 +150,30 @@ const CartView = () => {
           <h2 className="text-center text-2xl font-bold mb-4 flex gap-2 justify-center items-center">
             <ShoppingCart className='h-6 w-6 text-sky-600' /> Products
           </h2>
+
           <div className="grid gap-4">
             {cart.length === 0 ? (
               <p className="text-lg text-gray-600 text-center">Your cart is empty.</p>
             ) : (
               cart.map((product) => (
-                <div key={product.id} className="shadow-md rounded-md p-4 flex flex-col gap-3 sm:flex-row justify-between items-center">
-                  <div className="flex-1">
+                <div key={product.id} className="shadow-sm rounded-md p-4 flex flex-col sm:flex-row gap-4 items-center justify-between bg-gray-50">
+                  <div className="w-full sm:w-24 h-24 flex-shrink-0">
+                    <img src={product.image_url as string} alt={product.name} className="w-full h-full object-cover rounded-md" />
+                  </div>
+                  <div className="flex-1 w-full">
                     <p className="text-lg font-medium">{product.name}</p>
-                    <p className="text-gray-600">${product.price}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <button
-                        onClick={() => updateQuantity(product.id, product.quantity - 1)}
-                        disabled={product.quantity <= 1}
-                        className=" disabled:opacity-50 cursor-pointer"
-                      >
-                        <MinusCircle className="h-6 w-6 text-sky-700 hover:text-sky-500" />
+                    <p className="text-gray-600 text-sm">${Number(product.price).toFixed(2)}</p>
+                    <div className="flex items-center gap-3 mt-2">
+                      <button onClick={() => updateQuantity(product.id, product.quantity - 1)} disabled={product.quantity <= 1} className="disabled:opacity-50">
+                        <MinusCircle className="h-5 w-5 text-sky-700 hover:text-sky-500" />
                       </button>
-                      <span className='font-semibold'>{product.quantity}</span>
-                      <button
-                        onClick={() => updateQuantity(product.id, product.quantity + 1)}
-                        className="cursor-pointer"
-                      >
-                        <PlusCircle className="h-6 w-6 text-sky-700 hover:text-sky-500" />
+                      <span className="font-semibold">{product.quantity}</span>
+                      <button onClick={() => updateQuantity(product.id, product.quantity + 1)}>
+                        <PlusCircle className="h-5 w-5 text-sky-700 hover:text-sky-500" />
                       </button>
                     </div>
                   </div>
-                  <div className="w-24 h-24">
-                    <img src={product.image_url as string} alt={product.name} className="w-full h-full object-cover rounded-md" />
-                  </div>
-                  <button
-                    onClick={() => removeFromCart(product.id)}
-                    className="text-red-500 hover:text-red-700 mt-2 sm:mt-0"
-                    title="Remove product"
-                  >
+                  <button onClick={() => removeFromCart(product.id)} className="text-red-500 hover:text-red-700">
                     <Trash2 className="h-5 w-5" />
                   </button>
                 </div>
@@ -252,12 +238,11 @@ const CartView = () => {
                 className="ml-2 text-red-500 hover:text-red-700 text-sm"
                 title="Remove promo code"
               >
-                ❌
+                <CgClose className="h-5 w-5" />
               </button>
             </div>
           )}
 
-          {/* Actions */}
           {cart.length > 0 && (
             <div className="mt-6 flex flex-col gap-2">
               <button
@@ -279,6 +264,8 @@ const CartView = () => {
       </div>
     </div>
   );
+
+
 };
 
 export default CartView;
