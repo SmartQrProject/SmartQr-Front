@@ -3,10 +3,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { HiOutlineHome, HiOutlineBuildingStorefront, HiOutlineCog6Tooth, HiOutlineChartBar, HiOutlineUserGroup, HiOutlineClipboardDocumentList, HiOutlineCheckCircle } from "react-icons/hi2";
-
+import { GiKnifeFork } from "react-icons/gi"
 import { MdOutlineTableBar } from "react-icons/md";
 import { useUserRole } from "../hooks/useUserRole";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import { FaTags } from "react-icons/fa";
+import { RiCoupon3Line } from 'react-icons/ri';
+
 
 
 const MenuAdmin = () => {
@@ -92,18 +95,27 @@ return (
             {isOpen && <span>Staff Creation</span>}
           </Link>
 
-          <Link href="/dashboard/menu/createcategory" onClick={handleLinkClick} className={linkClasses("/dashboard/menu/createcategory")}>
-                                    {" "}
-                                    {pathname === "/dashboard/menu/createcategory" && <div className="absolute left-0 top-2 bottom-2 w-1 bg-black" />}
-                                    Menu
-                                </Link>
+          
+
+          {/* <Link href="/dashboard/menu/createcategory" onClick={handleLinkClick} className={linkClasses("/dashboard/menu/createcategory")}>
+          <GiKnifeFork />
+          {isOpen && <span>Menu</span>}
+          </Link> */}
 
           <Link href="/dashboard/reports" onClick={handleLinkClick} className={linkClasses("/dashboard/reports")}>
             <HiOutlineChartBar />
             {isOpen && <span>Reports</span>}
           </Link>
+
+          <Link href="/dashboard/promocodes" onClick={handleLinkClick} className={linkClasses("/dashboard/promocodes")}>
+            <RiCoupon3Line      />
+            {isOpen && <span>Promo Codes</span>}
+          </Link>
+
         </>
-      )}
+
+        
+      )}      
 
       <Link href="/dashboard/orders" onClick={handleLinkClick} className={linkClasses("/dashboard/orders")}>
         <HiOutlineClipboardDocumentList />

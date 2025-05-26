@@ -13,8 +13,10 @@ export default function StorePage() {
       
       <div className="flex flex-1">
           <MenuAdmin />
-           
+           <main className="flex-1">
               <StorePageClient />
+
+           </main>
          
 
       </div>

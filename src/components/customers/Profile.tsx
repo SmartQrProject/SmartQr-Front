@@ -78,7 +78,7 @@ export default function CustomerProfile() {
     };
 
     syncUser();
-    console.log("user ELI", user);
+    
   }, [user, slug]);
 
   if (!mounted || isLoading) return <p className="text-center mt-20">Cargando...</p>;

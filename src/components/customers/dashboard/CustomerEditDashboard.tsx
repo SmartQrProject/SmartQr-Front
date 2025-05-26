@@ -11,8 +11,6 @@ import { UserProfileData, UserProfileSchema } from '../dashboard/customerSchema'
 import PasswordInput from '@/components/adminComponents/sessionInputs/PaswordInput';
 import Link from 'next/link';
 import { FiArrowLeft, FiUser  } from 'react-icons/fi';
-import { FaStar } from 'react-icons/fa';
-
 
 const CustomerEditDashboard = () => {
   const [slug, setSlug] = useState('');
@@ -36,50 +34,55 @@ const CustomerEditDashboard = () => {
     },
   });
 
-  useEffect(() => {
-    const storedSlug = localStorage.getItem('slug');
-    const session = localStorage.getItem('customerSession');
+ useEffect(() => {
+  const storedSlug = localStorage.getItem('slug');
+  const session = localStorage.getItem('customerSession');
 
-    if (!storedSlug || !session) {
-      setIsLoading(false);
-      return;
-    }
+  if (!storedSlug || !session) {
+    setIsLoading(false);
+    return;
+  }
 
-    const parsed = JSON.parse(session);
-    const id = parsed?.payload?.id;
-    const token = parsed?.token;
-    const slugFromSession = parsed?.slug || storedSlug;
+  const parsed = JSON.parse(session);
+  const id = parsed?.payload?.id;
+  const token = parsed?.token;
+  const slugFromSession = slug || storedSlug;
 
-    setSlug(slugFromSession);
+  console.log("Eliana", parsed)
+  setSlug(slugFromSession);
 
-    const fetchData = async () => {
-      
-      try {
-        const [restaurant, customerData] = await Promise.all([
-          getRestaurantWithMenu(slugFromSession),
-          getCustomerById(token, slugFromSession, id),
-        ]);
+  const fetchData = async () => {
+    try {
+      const [restaurant, customerRes] = await Promise.all([
+        getRestaurantWithMenu(slugFromSession),
+        getCustomerById(token, slugFromSession, id),
+      ]);
 
-
-        setRestaurantData(restaurant);
-        setCustomer(customerData);
-
-        reset({
-          name: customerData.name || '',
-          phone: customerData.phone || '',
-          password: '',
-          confirmPassword: '',
-        });
-      } catch (error) {
-        // console.error('❌ Error fetching data:', error);
-      } finally {
-        setIsLoading(false);
+      if (!customerRes.success) {
+        throw new Error(customerRes.message || "Failed to get customer");
       }
-    };
 
-    fetchData();
-  }, [reset]);
+      setRestaurantData(restaurant);
+      setCustomer(customerRes.data);
 
+      reset({
+        name: customerRes.data.name || '',
+        phone: customerRes.data.phone || '',
+        password: '',
+        confirmPassword: '',
+      });
+    } catch (error) {
+      console.error('❌ Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  console.log("✅ Slug usado:", slugFromSession);
+  console.log("✅ ID usado:", id);
+  console.log("✅ Token usado:", token.slice(0, 20) + "...")
+  fetchData();
+}, [reset]);
 const onSubmit = async (data: UserProfileData) => {
   setIsSubmitting(true);
   try {
@@ -101,7 +104,7 @@ console.log("ELI", storedSession, slug, id, token, customer);
       email: customer.email,
       phone: phoneNumber || customer.phone || data.phone,
       exist: true,
-      name: customer.name || data.name ,
+      name: data.name || customer.name,
       picture: customer.picture || '',
       ...(data.password
         ? { password: data.password, confirmPassword: data.confirmPassword }
@@ -118,6 +121,8 @@ console.log("ELI", storedSession, slug, id, token, customer);
   } finally {
     setIsSubmitting(false);
       }
+
+      
 };
 
 
@@ -153,12 +158,12 @@ return (
 
           <span className="text-center block mb-2 text-sm font-medium text-gray-500"> {customer.email}</span>
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="block mb-2 text-sm font-semibold text-gray-700"> Points / Reward</label>
 
               <div className="flex items-center gap-3 bg-yellow-100 border border-yellow-300 rounded-xl px-4 py-3 shadow-sm"><FaStar className="text-yellow-500 w-5 h-5" /><input type="number" value={customer.reward || 0} disabled  className="bg-transparent text-lg font-medium text-yellow-800 w-full outline-none cursor-not-allowed"/>
               </div>
-            </div>
+            </div> */}
 
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-900">Phone</label>

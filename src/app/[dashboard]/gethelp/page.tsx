@@ -4,7 +4,7 @@ import NavbarAdmin from '@/components/adminComponents/navbar/NavbarAdmin'
 import Footer from '@/components/subscribers/footer/Footer'
 import React from 'react'
 
-const page = () => {
+const getHelp = () => {
   return (
    <div className="flex flex-col min-h-screen">
       <NavbarAdmin />
@@ -20,4 +20,4 @@ const page = () => {
   )
 }
 
-export default page
+export default getHelp

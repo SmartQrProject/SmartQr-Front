@@ -13,12 +13,12 @@ const faqs = [
       },
       {
         q: "Can I switch roles within the app?",
-        a: "No, only Admins can assign roles through the Staff Creation section.",
+        a: "No, only Admins can assign staff role through the Staff Creation section.",
       },
     ],
   },
   {
-    category: "Store Management",
+    category: "Store",
     questions: [
       {
         q: "How do I update my restaurant's banner?",
@@ -35,7 +35,7 @@ const faqs = [
     ],
   },
   {
-    category: "Orders Management",
+    category: "Orders",
     questions: [
       {
         q: "What are the order statuses?",
@@ -58,14 +58,11 @@ const faqs = [
         q: "What reports are available to Admins?",
         a: "Sales summary, top products, top categories, sales frequency, top customers, and new vs returning customers — all with time filters.",
       },
-      {
-        q: "Can I filter reports by custom dates?",
-        a: "Yes, using the calendar selector available in each report.",
-      },
+      
     ],
   },
   {
-    category: "Staff Management",
+    category: "Staff",
     questions: [
       {
         q: "How do I create new staff accounts?",
@@ -78,7 +75,7 @@ const faqs = [
     ],
   },
   {
-    category: "Tables Management",
+    category: "Tables",
     questions: [
       {
         q: "How can I create a new table?",
