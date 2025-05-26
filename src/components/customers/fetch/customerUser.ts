@@ -1,13 +1,14 @@
+import { useEffect } from "react";
+
 const APIURL = process.env.NEXT_PUBLIC_API_URL
 
 interface CustomerData {
   name?: string;
   email?: string;
-  phone?: string;
+  phone?: number;
   password?: string;
   reward?: number;
 }
-
 
 export async function modifyCustomersData(
   slug: string,
@@ -24,6 +25,7 @@ export async function modifyCustomersData(
       },
       body: JSON.stringify(data),
     });
+    console.log("ELIANA URL",`${APIURL}/${slug}/customers/${id}`)
 
     const result = await response.json();
 
@@ -34,8 +36,7 @@ export async function modifyCustomersData(
       };
     }
 
-    return { success: true, data: result }; 
-
+    return { success: true, data: result };
   } catch (error: any) {
     return { success: false, message: error?.message || "Unexpected error occurred" };
   }
@@ -46,21 +47,24 @@ export async function modifyCustomersData(
 export async function getCustomerById(token: string, slug: string, id: string) {
   try {
     const response = await fetch(`${APIURL}/${slug}/customers/${id}`, {
-      method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
-      const errorResponse = await response.json();
-      throw new Error(errorResponse?.message || `Failed to fetch customer (status: ${response.status})`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return await response.json();
+    const data = await response.json();
 
+    if (!data || typeof data !== "object") {
+      throw new Error("No se recibió data válida del servidor.");
+    }
+
+    return { success: true, data };
   } catch (error: any) {
-    throw new Error(error?.message || "Unexpected error occurred");
+    console.error("❌ Error fetching customer by ID:", error);
+    return { success: false, message: error.message };
   }
 }

@@ -60,7 +60,7 @@ const DeleteTableButton: React.FC<Props> = ({ tableId, onTableDeleted }) => {
             </button>
 
             {showConfirm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
                         <h3 className="text-lg font-semibold mb-4">Are you sure?</h3>
                         <p className="text-sm text-gray-600 mb-6">This action will permanently delete the table.</p>

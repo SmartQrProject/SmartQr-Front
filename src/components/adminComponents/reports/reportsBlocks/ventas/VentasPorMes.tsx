@@ -42,9 +42,9 @@ const VentasPorMes = () => {
         );
         const result = await res.json();
         const total = result.total ?? 0;
-        setData([{ name: "Mes actual", total }]);
+        setData([{ name: "Current Month", total }]);
       } catch (err) {
-        console.error("Error al obtener ventas del mes:", err);
+        console.error("Error fetching monthly sales:", err);
         setData([]);
       } finally {
         setLoading(false);
@@ -56,16 +56,16 @@ const VentasPorMes = () => {
 
   return (
     <div ref={chartRef} className="bg-white p-4 rounded-xl border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Ventas del mes</h3>
+      <h3 className="text-lg font-semibold mb-4">Monthly Sales</h3>
       <p className="text-sm mb-2">
-        Desde el <strong>{start}</strong> hasta el <strong>{end}</strong>
+        From <strong>{start}</strong> to <strong>{end}</strong>
       </p>
 
-      {/* 🎯 Input + info complementaria */}
+      {/* Target input + complementary info */}
       <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:gap-6">
         <div>
           <label className="block text-sm font-medium mb-1">
-            Meta mensual provisional ($):
+            Provisional monthly target ($):
           </label>
           <input
             type="number"
@@ -75,17 +75,17 @@ const VentasPorMes = () => {
           />
         </div>
 
-        {/* 🔢 Info de cuánto falta y % completado */}
+        {/* Progress info */}
         {data.length > 0 && (
           <div className="mt-2 sm:mt-6 text-sm text-gray-700">
             <p>
-              Falta:{" "}
+              Remaining:{" "}
               <strong>
                 ${Math.max(metaMensual - data[0].total, 0).toFixed(2)}
               </strong>
             </p>
             <p>
-              Progreso:{" "}
+              Progress:{" "}
               <strong
                 className={
                   data[0].total >= metaMensual
@@ -106,24 +106,12 @@ const VentasPorMes = () => {
         )}
       </div>
 
-      {/* 🔒 Futuro: carga desde backend */}
-      {/*
-      useEffect(() => {
-        const fetchMeta = async () => {
-          const res = await fetch(`${APIURL}/restaurants?slug=test-cafe`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const json = await res.json();
-          setMetaMensual(json.meta_mensual); // <-- cargar desde backend
-        };
-        fetchMeta();
-      }, []);
-      */}
+      {/* Future: load from backend */}
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : data.length === 0 ? (
-        <p>No hubo ventas este mes.</p>
+        <p>No sales this month.</p>
       ) : (
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
@@ -139,7 +127,7 @@ const VentasPorMes = () => {
             <XAxis dataKey="name" />
             <YAxis domain={[0, Math.max(metaMensual, data[0].total) + 300]} />
             <Tooltip
-              formatter={(value: number) => [`$${value.toFixed(2)}`, "Ventas"]}
+              formatter={(value: number) => [`$${value.toFixed(2)}`, "Sales"]}
             />
 
             <ReferenceLine
@@ -147,7 +135,7 @@ const VentasPorMes = () => {
               stroke="red"
               strokeDasharray="4 4"
               label={{
-                value: `Meta: $${metaMensual}`,
+                value: `Target: $${metaMensual}`,
                 position: "top",
                 fill: "red",
                 fontSize: 12,

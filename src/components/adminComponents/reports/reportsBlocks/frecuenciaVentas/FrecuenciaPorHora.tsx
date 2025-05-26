@@ -51,13 +51,13 @@ const FrecuenciaPorHora = () => {
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
       <h3 className="text-lg font-semibold mb-4">
-        Frecuencia por hora del día
+        Hourly Sales Frequency
       </h3>
 
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : data.length === 0 ? (
-        <p>No hay datos de ventas por hora.</p>
+        <p>No sales data by hour.</p>
       ) : (
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -74,7 +74,7 @@ const FrecuenciaPorHora = () => {
                 height={60}
               />
               <YAxis allowDecimals={false} />
-              <Tooltip formatter={(value: number) => [`${value}`, "Ventas"]} />
+              <Tooltip formatter={(value: number) => [`${value}`, "Sales"]} />
               <Bar dataKey="count" fill="#8884d8">
                 <LabelList
                   dataKey="count"

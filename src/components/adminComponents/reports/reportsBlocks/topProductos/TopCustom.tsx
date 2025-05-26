@@ -41,7 +41,7 @@ const TopCustom = () => {
       const data = await res.json();
       setProductos(data);
     } catch (err) {
-      console.error("Error al obtener top productos personalizados:", err);
+      console.error("Error fetching custom top products:", err);
       setProductos([]);
     } finally {
       setLoading(false);
@@ -50,14 +50,12 @@ const TopCustom = () => {
 
   return (
     <div className="bg-white p-4 rounded-xl border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">
-        Top productos personalizados
-      </h3>
+      <h3 className="text-lg font-semibold mb-4">Top custom products</h3>
 
       {/* Filtros de fechas */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Desde:</label>
+          <label className="block text-sm font-medium mb-1">From:</label>
           <input
             type="date"
             className="border p-2 rounded w-full"
@@ -66,7 +64,7 @@ const TopCustom = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Hasta:</label>
+          <label className="block text-sm font-medium mb-1">To:</label>
           <input
             type="date"
             className="border p-2 rounded w-full"
@@ -78,14 +76,14 @@ const TopCustom = () => {
 
       {/* Orden */}
       <div className="mb-4">
-        <label className="font-medium mr-2">Orden:</label>
+        <label className="font-medium mr-2">Order:</label>
         <select
           className="border px-2 py-1 rounded"
           value={sort}
           onChange={(e) => setSort(e.target.value as "asc" | "desc")}
         >
-          <option value="desc">Más vendidos</option>
-          <option value="asc">Menos vendidos</option>
+          <option value="desc">Best Sellers</option>
+          <option value="asc">Least Sold</option>
         </select>
       </div>
 
@@ -93,14 +91,14 @@ const TopCustom = () => {
         onClick={handleSearch}
         className="bg-black text-white px-4 py-2 rounded mb-6"
       >
-        Consultar
+        Search
       </button>
 
       {/* Resultado */}
       {loading ? (
-        <p>Cargando...</p>
+        <p>Loading...</p>
       ) : productos.length === 0 ? (
-        <p>No hubo productos vendidos en este rango.</p>
+        <p>No products sold in this range.</p>
       ) : (
         <ResponsiveContainer width="100%" height={50 * productos.length}>
           <BarChart
@@ -116,7 +114,7 @@ const TopCustom = () => {
               width={150}
               tick={{ fontSize: 12 }}
             />
-            <Tooltip formatter={(value: number) => [`${value}`, "Vendidos"]} />
+            <Tooltip formatter={(value: number) => [`${value}`, "Sold"]} />
             <Bar dataKey="quantity" fill="#a4de6c">
               <LabelList
                 dataKey="quantity"

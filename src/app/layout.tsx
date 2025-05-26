@@ -25,6 +25,9 @@ const openSans = Open_Sans({
 export const metadata: Metadata = {
     title: "SmartQR",
     description: "SmartQR is a self-ordering menu system using QR codes and modern tech to help restaurants improve service, efficiency, and sales.",
+    icons: {
+        icon: "/sqr.ico",
+    }
 };
 
 export default function RootLayout({

@@ -49,7 +49,7 @@ const VentasCustom = () => {
       setTotal(total);
       setData([{ name: "Rango personalizado", total }]);
     } catch (err) {
-      console.error("Error al obtener ventas personalizadas:", err);
+      console.error("Error fetching custom sales:", err);
       setTotal(null);
       setData([]);
     } finally {
@@ -59,10 +59,10 @@ const VentasCustom = () => {
 
   return (
     <div ref={chartRef} className="bg-white p-4 rounded-xl border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Ventas personalizadas</h3>
+      <h3 className="text-lg font-semibold mb-4">Custom Sales</h3>
 
       <div className="mb-4">
-        <label className="block mb-1 font-medium">Desde:</label>
+        <label className="block mb-1 font-medium">From:</label>
         <input
           type="date"
           className="border p-2 rounded w-full"
@@ -72,7 +72,7 @@ const VentasCustom = () => {
       </div>
 
       <div className="mb-4">
-        <label className="block mb-1 font-medium">Hasta:</label>
+        <label className="block mb-1 font-medium">To:</label>
         <input
           type="date"
           className="border p-2 rounded w-full"
@@ -85,7 +85,7 @@ const VentasCustom = () => {
         onClick={handleSearch}
         className="bg-black text-white px-4 py-2 rounded"
       >
-        Consultar
+        Search
       </button>
 
       {/* 🎯 Input + info complementaria */}
@@ -93,7 +93,7 @@ const VentasCustom = () => {
         <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:gap-6">
           <div>
             <label className="block text-sm font-medium mb-1">
-              Meta para este rango ($):
+              Target for this range ($):
             </label>
             <input
               type="number"
@@ -105,13 +105,13 @@ const VentasCustom = () => {
 
           <div className="mt-2 sm:mt-6 text-sm text-gray-700">
             <p>
-              Falta:{" "}
+              Remaining:{" "}
               <strong>
                 ${Math.max(metaPersonalizada - total, 0).toFixed(2)}
               </strong>
             </p>
             <p>
-              Progreso:{" "}
+              Progress:{" "}
               <strong
                 className={
                   total >= metaPersonalizada
@@ -151,7 +151,7 @@ const VentasCustom = () => {
         ) : total !== null ? (
           <>
             <p className="mb-2">
-              Ventas desde el <strong>{from}</strong> hasta el{" "}
+              Sales from <strong>{from}</strong> to{" "}
               <strong>{to}</strong>
             </p>
             <ResponsiveContainer width="100%" height={300}>
@@ -170,7 +170,7 @@ const VentasCustom = () => {
                 <Tooltip
                   formatter={(value: number) => [
                     `$${value.toFixed(2)}`,
-                    "Ventas",
+                    "Sales",
                   ]}
                 />
                 <ReferenceLine
@@ -178,7 +178,7 @@ const VentasCustom = () => {
                   stroke="red"
                   strokeDasharray="4 4"
                   label={{
-                    value: `Meta: $${metaPersonalizada}`,
+                    value: `Target: $${metaPersonalizada}`,
                     position: "top",
                     fill: "red",
                     fontSize: 12,
@@ -203,7 +203,7 @@ const VentasCustom = () => {
             </ResponsiveContainer>
           </>
         ) : (
-          <p>Seleccioná un rango de fechas y consultá.</p>
+          <p>Select a date range and search.</p>
         )}
       </div>
     </div>
