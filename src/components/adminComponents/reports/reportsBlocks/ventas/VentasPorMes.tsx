@@ -42,7 +42,7 @@ const VentasPorMes = () => {
         );
         const result = await res.json();
         const total = result.total ?? 0;
-        setData([{ name: "Mes actual", total }]);
+        setData([{ name: "Current Month", total }]);
       } catch (err) {
         console.error("Error fetching monthly sales:", err);
         setData([]);

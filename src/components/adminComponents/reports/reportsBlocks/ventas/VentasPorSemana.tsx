@@ -43,7 +43,7 @@ const VentasPorSemana = () => {
         );
         const result = await res.json();
         const total = result.total ?? 0;
-        setData([{ name: "Semana actual", total }]);
+        setData([{ name: "Current Week", total }]);
       } catch (err) {
         console.error("Error fetching weekly sales:", err);
         setData([]);

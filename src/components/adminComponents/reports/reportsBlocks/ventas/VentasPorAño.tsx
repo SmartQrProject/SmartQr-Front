@@ -43,9 +43,9 @@ const VentasPorAño = () => {
         );
         const result = await res.json();
         const total = result.total ?? 0;
-        setData([{ name: "Año actual", total }]);
+        setData([{ name: "Current Year", total }]);
       } catch (err) {
-        console.error("Error al obtener ventas del año:", err);
+        console.error("Error fetching yearly sales:", err);
         setData([]);
       } finally {
         setLoading(false);
