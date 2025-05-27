@@ -28,48 +28,56 @@ export default function RegisterForm() {
     setIsLoading(true);
 
     try {
-
-      const check = await fetch(
-        `${APIURL}/restaurants/public?slug=${data.slug}`
-      );
-      if (check.status === 200) {
+      
+      const slugRes = await fetch(`${APIURL}/restaurants/public?slug=${data.slug}`);
+      if (slugRes.status === 200) {
         toast.error("This slug is already taken. Please choose another.");
         return;
-      } else if (check.status !== 404) {
+      } else if (slugRes.status !== 404) {
         toast.error("Unable to validate slug. Please try again.");
         return;
       }
-      const restaurantData = {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        slug: data.slug,
-      };
-      localStorage.setItem("pendingRestaurant", JSON.stringify(restaurantData));
-      console.log("✅ Saved to localStorage:", restaurantData);
 
-      // Redirect to Stripe
-      const res = await fetch(`${APIURL}/stripe/subscription-session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ slug: restaurantData.slug }),
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        toast.error(`Stripe error ${res.status}: ${errorText}`);
+      
+      const emailRes = await fetch(`${APIURL}/users/check-email?email=${encodeURIComponent(data.email)}`);
+      if (emailRes.status === 200) {
+        toast.error("This email is already registered. Please use another.");
+        return;
+      } else if (emailRes.status !== 404) {
+        toast.error("Unable to validate email. Please try again.");
         return;
       }
 
-      const { url } = await res.json();
-      if (!url) throw new Error("No Stripe session returned");
+     
+      const restaurantData = {
+        name: data.storeName,
+        slug: data.slug,
+        owner_email: data.email,
+        owner_pass: data.password,
+      };
 
-      window.location.href = url;
+      const createRes = await fetch(`${APIURL}/restaurants/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(restaurantData),
+      });
+
+      if (!createRes.ok) {
+        const errorData = await createRes.json();
+        let message = errorData.message || "Error creating the restaurant";
+        if (message.includes("registered")) {
+          message = "This restaurant name is already registered";
+        }
+        throw new Error(message);
+      }
+
+      const json = await createRes.json();
+
+      window.location.href = json.url;
+
     } catch (error: any) {
       toast.error(error?.message || "Something went wrong. Please try again.");
-      console.error("Checkout error:", error);
+      console.error("Registration error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -95,9 +103,7 @@ export default function RegisterForm() {
             className="w-full p-2 bg-white rounded-md"
             placeholder="johnSmith@mail.com"
           />
-          {errors.email && (
-            <p className="text-red-500">{errors.email.message}</p>
-          )}
+          {errors.email && <p className="text-red-500">{errors.email.message}</p>}
         </div>
 
         <div>
@@ -107,9 +113,7 @@ export default function RegisterForm() {
             className="w-full p-2 bg-white rounded-md"
             placeholder="My Store"
           />
-          {errors.storeName && (
-            <p className="text-red-500">{errors.storeName.message}</p>
-          )}
+          {errors.storeName && <p className="text-red-500">{errors.storeName.message}</p>}
         </div>
 
         <div>
