@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import BannerHero from '../shared/bannerHero';
 import PublicCategoryList from '../shared/categoryList';
 import PublicCategoryNav from '../shared/categoryNavBar';
+import { useSearchParams } from 'next/navigation';
 
 interface Product {
   id: string;
@@ -33,13 +34,19 @@ interface StorePageClientProps {
 
 export default function StorePageClient({ data, slug }: StorePageClientProps) {
 
-    useEffect(() => {
+  const searchParams = useSearchParams();
+  const table = searchParams.get('table');
+
+  useEffect(() => {
     if (slug) {
       localStorage.setItem("slug", slug);
     }if (data.name) {
       localStorage.setItem('storeName', data.name);
     }
-  }, [slug, data.name]);
+    if (table) {
+      localStorage.setItem('tableNumber', table);
+    }
+  }, [slug, data.name, table]);
   return (
    
     <>
