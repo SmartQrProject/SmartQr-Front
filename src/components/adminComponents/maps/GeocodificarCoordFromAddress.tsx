@@ -6,7 +6,7 @@ export const getCoordsFromAddress = async (address: string): Promise<[number, nu
     const res = await fetch(url);
     const data = await res.json();
     if (data.features && data.features.length > 0) {
-      return data.features[0].center; // [lng, lat]
+      return data.features[0].center; 
     }
   } catch (error) {
     console.error('Error geocoding:', error);

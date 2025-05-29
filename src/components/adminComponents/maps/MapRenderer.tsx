@@ -6,7 +6,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
 interface MapRendererProps {
-  coords: [number, number]; // [lng, lat]
+  coords: [number, number];
 }
 
 const MapRenderer: React.FC<MapRendererProps> = ({ coords }) => {
@@ -27,7 +27,7 @@ const MapRenderer: React.FC<MapRendererProps> = ({ coords }) => {
     return () => map.remove();
   }, [coords]);
 
-  return <div ref={mapRef} className="w-full h-100 rounded-lg shadow border" />;
+  return <div ref={mapRef} className="w-full h-100 rounded-lg shadow " />;
 };
 
 export default MapRenderer;

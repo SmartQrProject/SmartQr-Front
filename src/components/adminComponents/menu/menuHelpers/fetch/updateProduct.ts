@@ -23,7 +23,19 @@ export async function updateProduct({
   details: string[];
   token: string;
 }) {
+
+   console.log("PAYLOAD",{
+      name,
+      price,
+      description,
+      image_url,
+      categoryId,
+      is_available,
+      details,
+    });
+ 
   const res = await fetch(`${APIURL}/${slug}/products/${productId}`, {
+    
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -39,6 +51,8 @@ export async function updateProduct({
       details,
     }),
   });
+
+
 
   if (!res.ok) throw new Error("Error al actualizar producto");
     return await res.json();

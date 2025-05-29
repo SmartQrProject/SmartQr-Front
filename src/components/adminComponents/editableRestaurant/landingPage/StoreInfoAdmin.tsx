@@ -74,8 +74,6 @@ useEffect(() => {
       </div>
     );
   }
-  console.log("Coord", restaurant.latitude, restaurant.longitude);
-  console.log("RESTAURANTE RECIBIENDO INFO", restaurant);
 
   const handleEditClick = () => {
     setIsEditableModalOpen(true);

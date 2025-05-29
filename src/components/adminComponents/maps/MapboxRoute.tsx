@@ -1,3 +1,5 @@
+// components/maps/MapboxRoute.tsx
+'use client';
 import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -51,6 +53,15 @@ const MapboxRoute: React.FC<RouteProps> = ({ origin, destination }) => {
           'line-width': 5,
         },
       });
+
+      new mapboxgl.Marker({ color: 'blue' }).setPopup(new mapboxgl.Popup().setText('You are here')).setLngLat(origin).addTo(map);
+      new mapboxgl.Marker({ color: 'red' }).setLngLat(destination).setPopup(new mapboxgl.Popup().setHTML(`
+        <strong>Restaurant</strong><br />
+        <a href="https://www.google.com/maps/dir/?api=1&destination=${destination[1]},${destination[0]}" target="_blank" rel="noopener noreferrer">
+          Open in Google Maps
+        </a>
+        `)
+      ).addTo(map);
 
       map.addControl(new mapboxgl.NavigationControl());
     });

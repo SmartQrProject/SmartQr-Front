@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 const APIURL = process.env.NEXT_PUBLIC_API_URL
 
 interface CustomerData {
@@ -25,7 +23,7 @@ export async function modifyCustomersData(
       },
       body: JSON.stringify(data),
     });
-    console.log("ELIANA URL",`${APIURL}/${slug}/customers/${id}`)
+    
 
     const result = await response.json();
 
@@ -46,7 +44,11 @@ export async function modifyCustomersData(
 
 export async function getCustomerById(token: string, slug: string, id: string) {
   try {
-    const response = await fetch(`${APIURL}/${slug}/customers/${id}`, {
+  
+    const url = `${APIURL}/${slug}/customers/${id}`;
+   
+
+    const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -59,12 +61,12 @@ export async function getCustomerById(token: string, slug: string, id: string) {
     const data = await response.json();
 
     if (!data || typeof data !== "object") {
-      throw new Error("No se recibió data válida del servidor.");
+      throw new Error("No valid response data received from server.");
     }
 
     return { success: true, data };
   } catch (error: any) {
-    console.error("❌ Error fetching customer by ID:", error);
+    // console.error("❌ Error fetching customer by ID:", error);
     return { success: false, message: error.message };
   }
 }
