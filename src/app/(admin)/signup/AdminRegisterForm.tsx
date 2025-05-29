@@ -19,7 +19,6 @@ export default function RegisterForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<RegisterFormInputs>({
     resolver: zodResolver(AdminRegisterSchema),
   });
@@ -28,7 +27,7 @@ export default function RegisterForm() {
     setIsLoading(true);
 
     try {
-      
+     
       const slugRes = await fetch(`${APIURL}/restaurants/public?slug=${data.slug}`);
       if (slugRes.status === 200) {
         toast.error("This slug is already taken. Please choose another.");
@@ -38,7 +37,7 @@ export default function RegisterForm() {
         return;
       }
 
-      
+    
       const emailRes = await fetch(`${APIURL}/users/check-email?email=${encodeURIComponent(data.email)}`);
       if (emailRes.status === 200) {
         toast.error("This email is already registered. Please use another.");
@@ -48,13 +47,16 @@ export default function RegisterForm() {
         return;
       }
 
-     
+  
       const restaurantData = {
         name: data.storeName,
         slug: data.slug,
         owner_email: data.email,
         owner_pass: data.password,
+        isTrial: data.isTrial,
       };
+
+      console.log("🚀 Payload enviado al backend:", restaurantData);
 
       const createRes = await fetch(`${APIURL}/restaurants/create`, {
         method: "POST",
@@ -72,7 +74,6 @@ export default function RegisterForm() {
       }
 
       const json = await createRes.json();
-
       window.location.href = json.url;
 
     } catch (error: any) {
@@ -86,9 +87,11 @@ export default function RegisterForm() {
   return (
     <div className="max-w-md mx-auto mt-10 mb-10 p-6 bg-default-50 rounded-xl">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-sm">
+
         <div>
-          <label>Name</label>
+          <label htmlFor="name">Name</label>
           <input
+            id="name"
             {...register("name")}
             className="w-full p-2 bg-white rounded-md"
             placeholder="John Smith"
@@ -97,8 +100,9 @@ export default function RegisterForm() {
         </div>
 
         <div>
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
           <input
+            id="email"
             {...register("email")}
             className="w-full p-2 bg-white rounded-md"
             placeholder="johnSmith@mail.com"
@@ -107,8 +111,9 @@ export default function RegisterForm() {
         </div>
 
         <div>
-          <label>Store Name</label>
+          <label htmlFor="storeName">Store Name</label>
           <input
+            id="storeName"
             {...register("storeName")}
             className="w-full p-2 bg-white rounded-md"
             placeholder="My Store"
@@ -117,17 +122,18 @@ export default function RegisterForm() {
         </div>
 
         <div>
-          <label>Slug</label>
+          <label htmlFor="slug">Slug</label>
           <input
+            id="slug"
             {...register("slug")}
             className="w-full p-2 bg-white rounded-md"
-            placeholder="default-store"
+            placeholder="my-store"
           />
           {errors.slug && <p className="text-red-500">{errors.slug.message}</p>}
         </div>
 
         <div>
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
           <PasswordInput
             register={register}
             name="password"
@@ -136,12 +142,42 @@ export default function RegisterForm() {
         </div>
 
         <div>
-          <label>Confirm Password</label>
+          <label htmlFor="confirmPassword">Confirm Password</label>
           <PasswordInput
             register={register}
             name="confirmPassword"
             error={errors.confirmPassword?.message}
           />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-2">Start with:</label>
+          <div className="flex items-center space-x-4">
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                value="false"
+                {...register("isTrial", {
+                  setValueAs: (v) => v === "true",
+                })}
+                defaultChecked
+              />
+              <span>Pay Now</span>
+            </label>
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                value="true"
+                {...register("isTrial", {
+                  setValueAs: (v) => v === "true",
+                })}
+              />
+              <span>Free Trial (14 days)</span>
+            </label>
+          </div>
+          {errors.isTrial && (
+            <p className="text-red-500 text-sm">{errors.isTrial.message}</p>
+          )}
         </div>
 
         <ButtonPrimary type="submit" loading={isSubmitting || isLoading}>

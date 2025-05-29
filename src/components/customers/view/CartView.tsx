@@ -88,6 +88,9 @@ const CartView = () => {
   };
 
   const handleCheckout = async () => {
+    const table = localStorage.getItem("tableNumber") || "00";
+    const paddedTable = table.padStart(2, '0');
+    const code = `${paddedTable}`;
     if (loadingSession) {
       toast.loading("Checking login...");
       return;
@@ -106,7 +109,7 @@ const CartView = () => {
 
       const orderPayload = {
         customerId,
-        code: "T-01",
+        code,
         rewardCode: isPromoValid ? promoCode.trim() : undefined,
         products: productsForOrder,
       };
@@ -124,6 +127,7 @@ const CartView = () => {
         body: JSON.stringify(orderPayload),
       });
 
+
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.message || "Order creation failed");
@@ -131,7 +135,7 @@ const CartView = () => {
       }
 
       localStorage.setItem("cart", "[]");
-      toast.success("✅ Order created. Redirecting to payment...");
+      toast.success("Order created. Redirecting to payment...");
       if (!data.stripeSession) throw new Error("Missing Stripe session URL");
 
       window.location.href = data.stripeSession;
@@ -144,7 +148,7 @@ const CartView = () => {
   return (
     <div className="p-4 md:min-h-screen bg-gray-50">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
-        {/* Product List */}
+        
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-center text-2xl font-bold mb-4 flex gap-2 justify-center items-center">
             <ShoppingCart className='h-6 w-6 text-sky-600' /> Products

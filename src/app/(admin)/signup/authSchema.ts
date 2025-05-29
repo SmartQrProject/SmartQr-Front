@@ -30,7 +30,7 @@ export const AdminRegisterSchema = z
       .string()
       .regex(passwordRegex, {
         message:
-          "Password must be 8 to15 characters with uppercase, lowercase, number, and special character (!@#$%^&*)",
+          "Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (!@#$%^&*)",
       }),
 
     confirmPassword: z
@@ -39,6 +39,11 @@ export const AdminRegisterSchema = z
         message:
           "Confirm Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (!@#$%^&*)",
       }),
+
+    isTrial: z.coerce.boolean({
+      required_error: "Please select a trial option",
+    }),
+
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

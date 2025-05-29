@@ -6,11 +6,17 @@ import React from "react";
 
 const PricingPage = () => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
+     
       <Navbar />
-      <Pricing />
+
+      <main className="flex-grow">
+        <Pricing />
+      </main>
+
+   
       <Footer />
-    </>
+    </div>
   );
 };
 

@@ -17,7 +17,7 @@ export default function BannerHero({ imageUrl, title }: BannerHeroProps) {
 
       <div className="absolute inset-0 bg-black/50 z-10" />
 
-      <h1 className="absolute z-20 inset-0 flex items-center justify-center text-white text-3xl md:text-5xl font-bold">
+      <h1 className="absolute z-10 inset-0 flex items-center justify-center text-white text-3xl md:text-5xl font-bold pointer-events-none">
         {title}
       </h1>
     </div>
