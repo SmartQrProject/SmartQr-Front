@@ -79,9 +79,7 @@ const OrderHistory: React.FC = () => {
   return (
     <div className="p-4 md:min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto">
-        {/* <h1 className="text-center text-2xl font-bold mb-4 flex justify-center items-center gap-2">
-          <ClipboardList className="h-7 w-7 text-sky-700" /> My Orders
-        </h1> */}
+        
 
         {orders.length === 0 ? (
           <div className="bg-white text-center text-gray-600 text-xl font-semibold p-10 rounded-md shadow-md">
@@ -143,10 +141,6 @@ const OrderHistory: React.FC = () => {
                   </ul>
                 </div>
                 
-                {/* <p className="text-lg font-semibold text-gray-800 flex justify-between">
-                  Order Type:
-                  <span className="text-gray-600">{order.order_type}</span>
-                </p> */}
 
                 {/* <p className="text-lg font-semibold text-gray-800 flex justify-between">
                   Table:

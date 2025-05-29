@@ -27,60 +27,62 @@ export default function CustomerProfile() {
         setMounted(true);
     }, [params?.slug]);
 
-    useEffect(() => {
-        const syncUser = async () => {
-            if (!user || !slug) return;
+useEffect(() => {
+  const syncUser = async () => {
+    if (!user || !slug) return;
 
-            const existingSessionRaw = localStorage.getItem("customerSession") || "{}";
-            const existingSession = JSON.parse(existingSessionRaw);
-            if (existingSession?.payload?.id) {
-                setSessionReady(true);
-                return;
-            }
+  
 
-            try {
-                const token = await getAccessToken();
-                console.log("🔐 Token obtenido:", token);
+    try {
+      const token = await getAccessToken();
+      
 
-                const res = await fetch(`${APIURL}/${slug}/customers/sincronizar`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        name: user.name,
-                        email: user.email,
-                        auth0Id: user.sub,
-                        picture: user.picture,
-                    }),
-                });
+      const res = await fetch(`${APIURL}/${slug}/customers/sincronizar`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: user.name,
+          email: user.email,
+          auth0Id: user.sub,
+          picture: user.picture,
+        }),
+      });
 
-                const data = await res.json();
+      if (!res.ok) {
+        
+        const errText = await res.text();
+        console.error("Detalles:", errText);
+        return;
+      }
 
-                const customerSession = {
-                    token: token,
-                    payload: {
-                        picture: user.picture,
-                        id: data?.id,
-                    },
-                };
+      const data = await res.json();
 
-                localStorage.setItem("customerSession", JSON.stringify(customerSession));
-                window.dispatchEvent(new Event("customerSessionUpdated"));
-                console.log("✅ Usuario sincronizado:", customerSession);
-                setSessionReady(true);
-            } catch (err) {
-                console.error("❌ Error al sincronizar usuario:", err);
-            }
-        };
+      const customerSession = {
+        token: token,
+        payload: {
+          picture: user.picture,
+          id: data?.id,
+        },
+      };
 
-        syncUser();
-    }, [user, slug]);
+      localStorage.setItem("customerSession", JSON.stringify(customerSession));
+      window.dispatchEvent(new Event("customerSessionUpdated"));
+      
+      setSessionReady(true);
+    } catch (err) {
+      console.error("Error syncing user:", err);
+    }
+  };
 
-    if (!mounted || isLoading) return <p className="text-center mt-20">Cargando...</p>;
-    if (!slug) return <p className="text-center mt-20">Error: Slug no disponible</p>;
-    if (!user) return <p className="text-center mt-20">No autenticado</p>;
+  syncUser();
+}, [user, slug]);
+
+    if (!mounted || isLoading) return <p className="text-center mt-20">Loading...</p>;
+    if (!slug) return <p className="text-center mt-20">Error: Slug not available</p>;
+    if (!user) return <p className="text-center mt-20">Not authenticated</p>;
 
     return (
         <>
@@ -90,7 +92,9 @@ export default function CustomerProfile() {
             </h1>
             <h2 className="text-center text-xl ">Hi, {user.name}</h2>
             <div className="relative w-20 h-20 mx-auto mt-4 mb-6">
-                <img src={user.picture ?? ""} alt="Foto" className="rounded-full w-20 h-20 object-cover" />
+                {user.picture && (
+                <img src={user.picture} alt="Foto" className="rounded-full w-20 h-20 object-cover" />
+                )}
                 <Link
                     href={`/customer/dashboard/edit`}
                     className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md hover:bg-gray-200 flex items-center justify-center"

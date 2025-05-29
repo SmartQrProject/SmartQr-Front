@@ -6,6 +6,7 @@ import { StoreIcon } from 'lucide-react';
 import Link from 'next/link';
 import { FiShoppingCart } from 'react-icons/fi';
 import { HiOutlineUser } from 'react-icons/hi';
+import PublicStoreInfoModal from '@/components/shared/storeInfoCustomer';
 
 interface NavbarCustomerProps {
   slug?: string;
@@ -18,16 +19,17 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
   const [localName, setLocalName] = useState('');
   const [customerProfileImg, setCustomerProfileImg] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isStoreInfoModalOpen, setIsStoreInfoModalOpen] = useState(false);
+
+  const [tableNumber, setTableNumber] = useState('');
 
   useEffect(() => {
     if (!slug || !name) {
-      const storedSlug = localStorage.getItem('slug') || '';
-      const storedName = localStorage.getItem('storeName') || '';
-      setLocalSlug(storedSlug);
-      setLocalName(storedName);
+      setLocalSlug(localStorage.getItem('slug') || '');
+      setLocalName(localStorage.getItem('storeName') || '');
     }
-    const session = localStorage.getItem('customerSession');
-    setIsLoggedIn(!!session);
+    const storedTableNumber = localStorage.getItem('tableNumber');
+    if (storedTableNumber) setTableNumber(storedTableNumber);
   }, [slug, name]);
 
   useEffect(() => {
@@ -38,10 +40,14 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
           const sessionObj = JSON.parse(session);
           const picture = sessionObj?.payload?.picture;
           setCustomerProfileImg(picture || null);
+          setIsLoggedIn(true);
         } catch (error) {
           console.error('Error parsing customerSession from localStorage', error);
+          setIsLoggedIn(false);
+          setCustomerProfileImg(null);
         }
       } else {
+        setIsLoggedIn(false);
         setCustomerProfileImg(null);
       }
     };
@@ -53,15 +59,21 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
     };
   }, []);
 
+  const handleOpenModal = () => setIsStoreInfoModalOpen(true);
+  const handleCloseModal = () => setIsStoreInfoModalOpen(false);
+
   const displaySlug = slug || localSlug;
   const displayName = name || localName;
+
+  console.log('NavbarCustomer', { displaySlug, displayName, tableNumber });
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <nav className="border-b border-gray-200 text-default-800 relative">
       <div className="flex items-center justify-between p-4">
-        <Link href={`/menu/${displaySlug}`} className="flex items-center space-x-3 rtl:space-x-reverse">
+
+        <Link href={`/menu/${displaySlug}?table=${tableNumber}`} className="flex items-center space-x-3 rtl:space-x-reverse">
           <span className="self-center text-2xl font-semibold whitespace-nowrap flex items-center gap-2">
             <StoreIcon className="w-6 h-6 text-sky-800" />
             {displayName || 'Store'}
@@ -87,16 +99,13 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
           </Link>
 
           <Link
-            href={`/menu/${displaySlug}/cart`}
+            href={`/menu/${displaySlug}/cart?table=${tableNumber}`}
             className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition"
           >
             <FiShoppingCart className="text-xl text-black" />
           </Link>
 
-          <button
-            onClick={toggleMenu}
-            type="button"
-            className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-gray-200"
+          <button onClick={toggleMenu} type="button" className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-gray-200"
             aria-controls="navbar-hamburger"
             aria-expanded={isMenuOpen}
           >
@@ -109,34 +118,43 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
 
         {isMenuOpen && (
           <div
-            id="navbar-hamburger"
-            className="fixed top-0 right-0 h-full w-full max-w-xs bg-white shadow-lg z-20 p-4 flex flex-col justify-start"
-          >
-            <div>
-              <div className="flex items-center justify-between mt-3 pb-3 border-b border-gray-200">
-                <span className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                  <StoreIcon className="w-6 h-6 text-sky-800" />
-                  {displayName || 'Store'}
-                </span>
-                <button onClick={() => setIsMenuOpen(false)} className="text-gray-800 hover:text-red-500 text-2xl" aria-label="Close menu">
-                  &times;
-                </button>
-              </div>
+  id="navbar-hamburger"
+  className="fixed top-0 right-0 h-full w-full max-w-xs bg-white shadow-lg z-20 p-4 flex flex-col justify-start"
+>
+  <div>
+    {/* Header con nombre y botón cerrar */}
+    <div className="flex items-center gap-4 flex-row justify-between mb-2">
+      <span className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+        <StoreIcon className="w-6 h-6 text-sky-800" /> {displayName || 'Store'}
+      </span>
+      <button
+        onClick={() => setIsMenuOpen(false)}
+        className="text-gray-800 hover:text-red-500 text-2xl"
+        aria-label="Close menu"
+      >
+        &times;
+      </button>
+    </div>
 
-              <ul className="flex flex-col font-medium space-y-4 mt-8">
-                <li>
-                  <a href="#" onClick={() => setIsMenuOpen(false)} className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-300">
-                    Store Info
-                  </a>
-                </li>
-                {/* <li><a href="/customer/dashboard/edit" onClick={() => setIsMenuOpen(false)} className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-300">Rewards</a></li> */}
-              </ul>
-            </div>
+    {/* Botón Store Info debajo del nombre */}
+    <button
+      onClick={handleOpenModal}
+      className="mt-2 py-2 px-3 rounded-sm hover:bg-gray-300 cursor-pointer w-full text-left text-gray-800"
+    >
+      Store Info
+    </button>
+    <PublicStoreInfoModal
+      open={isStoreInfoModalOpen}
+      onClose={handleCloseModal}
+      slug={displaySlug}
+    />
+  </div>
 
-            <div className="flex flex-row gap-3 mt-auto mb-20">
-              <AuthLinks />
-            </div>
-          </div>
+  {/* Footer con links de auth */}
+  <div className="flex flex-row gap-3 mt-auto mb-20">
+    <AuthLinks />
+  </div>
+</div>
         )}
       </div>
     </nav>

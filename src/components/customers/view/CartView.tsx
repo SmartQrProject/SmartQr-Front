@@ -127,6 +127,7 @@ const CartView = () => {
         body: JSON.stringify(orderPayload),
       });
 
+
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.message || "Order creation failed");

@@ -103,6 +103,7 @@ export async function updateProduct({
   details: string[];
   token: string;
 }) {
+  
   const res = await fetch(`${APIURL}/${slug}/products/${productId}`, {
     method: "PATCH",
     headers: {
@@ -119,6 +120,10 @@ export async function updateProduct({
       details,
     }),
   });
+
+  
+  console.log("Product upd", res);
+  
 
   if (!res.ok) throw new Error("Error al actualizar producto");
   return await res.json();

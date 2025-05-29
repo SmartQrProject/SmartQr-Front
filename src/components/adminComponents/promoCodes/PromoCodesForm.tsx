@@ -7,6 +7,7 @@ import { useState } from "react";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary";
 import { schemaPromoCodes, FormPromoCodes } from "./PromoCodesSchema";
 import { createPromoCodes } from "./fetch";
+import toast from "react-hot-toast";
 
 const PromoCodeForm = ({ onCodeCreated }: { onCodeCreated?: () => void }) => {
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,7 @@ const PromoCodeForm = ({ onCodeCreated }: { onCodeCreated?: () => void }) => {
   const onSubmit = async (data: FormPromoCodes) => {
 
     if (!slug || !token) {
-      alert("Authentication data not found.");
+      toast.error("Authentication data not found.");
       return;
     }
 
@@ -50,12 +51,13 @@ const PromoCodeForm = ({ onCodeCreated }: { onCodeCreated?: () => void }) => {
       const result = await createPromoCodes(token, Data, slug);
       if (result.success) {
         reset();
-        onCodeCreated?.();
+        onCodeCreated?.()
+        toast.success("Promo code created successfully!");
       } else {
-        alert(result.message || "Error creating code");
+        toast.error(result.message || "Error creating code");
       }
     } catch {
-      alert("Unexpected error while creating the promo code.");
+      toast.error("Unexpected error while creating the promo code.");
     } finally {
       setLoading(false);
     }

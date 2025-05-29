@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getPromoCodes, deletePromoCodes } from "./fetch";
 import { Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 type PromoCode = {
   code: string;
@@ -62,10 +63,10 @@ const PromoCodesList = ({ refreshTrigger }: { refreshTrigger: number }) => {
 
         await handleGetPromoCodes();
       } else {
-        alert(result.message || "Failed to delete promo code.");
+        toast.error(result.message || "Failed to delete promo code.");
       }
     } catch (error) {
-      alert("Unexpected error while deleting the promo code.");
+      toast.error("Unexpected error while deleting the promo code.");
     } finally {
       setDeletingId(null);
     }
