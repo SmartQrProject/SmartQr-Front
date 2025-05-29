@@ -70,10 +70,10 @@ export default function Hero() {
           transition={{ delay: 0.6, duration: 0.6 }}
         >
           <Link
-            href="/signup"
+            href="/pricing"
             className="bg-default-50 text-[#4285F4] text-lg font-bold px-6 py-3 rounded-full hover:bg-blue-400 hover:text-white transition"
           >
-            Create Account
+            Check our plans
           </Link>
         </motion.div>
       </motion.div>

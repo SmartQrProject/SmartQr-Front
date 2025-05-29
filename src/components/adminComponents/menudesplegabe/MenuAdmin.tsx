@@ -12,7 +12,7 @@ import {
     HiOutlineCheckCircle,
 } from "react-icons/hi2";
 import { GiHamburgerMenu, GiKnifeFork } from "react-icons/gi";
-import { MdOutlineTableBar } from "react-icons/md";
+import { MdOutlineReceipt, MdOutlineTableBar } from "react-icons/md";
 import { useUserRole } from "../hooks/useUserRole";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { FaTags } from "react-icons/fa";
@@ -129,6 +129,11 @@ const MenuAdmin = () => {
                         <Link href="/dashboard/tables" onClick={handleLinkClick} className={linkClasses("/dashboard/tables")}>
                             <MdOutlineTableBar />
                             {isOpen && <span>Tables</span>}
+                        </Link>
+
+                        <Link href="/dashboard/billing" onClick={handleLinkClick} className={linkClasses("/dashboard/billing")}>
+                            <MdOutlineReceipt />
+                            {isOpen && <span>Billing</span>}
                         </Link>
 
                         <Link href="/dashboard/settings" onClick={handleLinkClick} className={linkClasses("/dashboard/settings")}>
