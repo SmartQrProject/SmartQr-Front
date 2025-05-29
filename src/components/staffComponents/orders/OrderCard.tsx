@@ -7,12 +7,13 @@ import toast from "react-hot-toast";
 
 interface Props {
     order: IOrder;
+    tableName: string;
     onAdvanceStatus: (orderId: string, newStatus: string) => void;
     onRetreatStatus: (orderId: string, newStatus: string) => void;
     onStatusChange?: () => void;
 }
 
-const OrderCard: React.FC<Props> = ({ order, onAdvanceStatus, onRetreatStatus, onStatusChange }) => {
+const OrderCard: React.FC<Props> = ({ order, tableName, onAdvanceStatus, onRetreatStatus, onStatusChange }) => {
     const [timeElapsed, setTimeElapsed] = useState(0);
     const { user } = useAuth();
     const slug = user?.payload?.slug;
@@ -98,7 +99,7 @@ const OrderCard: React.FC<Props> = ({ order, onAdvanceStatus, onRetreatStatus, o
             <div className="text-sm text-gray-600 mb-2">
                 <p>🕒 Time: {formatDuration(timeElapsed)}</p>
                 <p>🧾 Total: ${total.toFixed(2)}</p>
-                <p className="italic">🪑 Table: {order.tableId}</p>
+                <p className="italic">🪑 Table: {tableName}</p>
             </div>
 
             <ul className="mb-3 text-sm space-y-2">

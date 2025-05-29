@@ -11,7 +11,7 @@ import {
     HiOutlineClipboardDocumentList,
     HiOutlineCheckCircle,
 } from "react-icons/hi2";
-import { GiHamburgerMenu, GiKnifeFork } from "react-icons/gi";
+import { GiHamburgerMenu, GiKnifeFork, GiChart } from "react-icons/gi";
 import { MdOutlineReceipt, MdOutlineTableBar } from "react-icons/md";
 import { useUserRole } from "../hooks/useUserRole";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
@@ -148,6 +148,10 @@ const MenuAdmin = () => {
                         <Link href="/dashboard/restaurants" onClick={handleLinkClick} className={linkClasses("/dashboard/restaurants")}>
                             <GiHamburgerMenu />
                             {isOpen && <span>Restaurant</span>}
+                        </Link>
+                        <Link href="/dashboard/reportssa" onClick={handleLinkClick} className={linkClasses("/dashboard/reportssa")}>
+                            <GiChart />
+                            {isOpen && <span>Reports</span>}
                         </Link>
                     </>
                 )}
