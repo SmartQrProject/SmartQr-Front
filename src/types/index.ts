@@ -55,7 +55,24 @@ export interface IRestaurant {
     is_active: boolean;
     categories?: ICategory[];
     banner?: string;
+    address?: string;
+    phone?: string;
+    description?: string;
+    tags?: string[];
+    trading_hours?: {
+        mondayToFriday?: { open: string; close: string };
+        saturday?: { open: string; close: string };
+        sunday?: { open: string; close: string };
+    };
+    ordering_times?: {
+        pickup?: number;
+        dinein?: number;
+    };
+    latitude?: number;    
+    longitude?: number;    
 }
+
+
 export interface IProduct {
     id: string;
     name: string;
