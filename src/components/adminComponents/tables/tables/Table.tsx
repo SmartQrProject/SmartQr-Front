@@ -26,7 +26,7 @@ const Table: React.FC<TableProps> = ({ id, code, created_at, is_active, onTableD
             <div className="flex items-center gap-4 h-full">
                 <div className="w-10 h-10 bg-white rounded-full border border-gray-400" />
                 <div className="flex flex-col justify-center">
-                    <p className="text-lg font-semibold">Mesa {code}</p>
+                    <p className="text-lg font-semibold">Table {code}</p>
                     <p className={`text-xs font-medium ${is_active ? "text-green-600" : "text-red-600"}`}>State: {is_active ? "Active" : "Inactive"}</p>
                 </div>
             </div>
