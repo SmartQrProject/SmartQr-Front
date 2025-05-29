@@ -90,7 +90,7 @@ const CartView = () => {
   const handleCheckout = async () => {
     const table = localStorage.getItem("tableNumber") || "00";
     const paddedTable = table.padStart(2, '0');
-    const code = `T${paddedTable}`;
+    const code = `${paddedTable}`;
     if (loadingSession) {
       toast.loading("Checking login...");
       return;
