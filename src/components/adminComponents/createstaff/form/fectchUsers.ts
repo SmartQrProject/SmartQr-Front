@@ -31,17 +31,21 @@ export async function staffRegister (token: string, data: StaffFormInputs, slug:
   }
 }
 
-export async function getUsers (slug: string, token: string) {
+export async function getUsers(slug: string, token: string, page = 1, limit = 5) {
   try {
-    const response = await fetch(`${APIURL}/users/staff?slug=${slug}&page=1&limit=5`, {
+    const response = await fetch(`${APIURL}/users/staff?slug=${slug}&page=${page}&limit=${limit}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
       }
     });
+    
+    const data = await response.json();
 
-    return response.json();
+      console.log("Respuesta del backend:", data);
+
+    return data;
 
   } catch (error: any) {
     throw new Error(error.message || "Error fetching users");
