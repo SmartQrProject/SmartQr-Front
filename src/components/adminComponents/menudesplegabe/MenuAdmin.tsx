@@ -66,7 +66,7 @@ const MenuAdmin = () => {
     return (
         <div className={`h-screen bg-white shadow-md transition-all duration-300 ${isOpen ? "w-64" : "w-16"}`}>
             <div className="flex justify-end p-2">
-                <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-black transition-transform text-xl">
+                <button onClick={() => setIsOpen(!isOpen)} className="text-blue-600 hover:text-blue-400 transition-transform text-xl cursor-pointer">
                     {" "}
                     {isOpen ? <IoChevronBack /> : <IoChevronForward />}
                 </button>
