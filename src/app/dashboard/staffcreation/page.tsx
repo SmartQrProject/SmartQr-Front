@@ -65,14 +65,14 @@ const StaffCreation = () => {
               <ListUserResturantView users={users} refreshUsers={fetchUsers} />
 
               <div className="flex items-center justify-end gap-2">
-                <label className="text-sm font-medium">Usuarios por página:</label>
+                <label className="text-sm font-medium">Users per page</label>
                 <select
                   value={limit}
                   onChange={(e) => {
                     setLimit(Number(e.target.value))
                     setPage(1)
                   }}
-                  className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="border rounded px-1 py-1 text-sm focus:outline-none focus:ring-2 "
                 >
                   {LIMIT_OPTIONS.map((opt) => (
                     <option key={opt} value={opt}>
@@ -88,17 +88,17 @@ const StaffCreation = () => {
                   disabled={page === 1}
                   onClick={() => setPage((p) => p - 1)}
                 >
-                  Anterior
+                  Previous
                 </button>
                 <span className="text-sm text-gray-700">
-                  Página {page} de {totalPages}
+                  Page {page} of {totalPages}
                 </span>
                 <button
                   className="px-4 py-2 bg-gray-200 text-sm rounded hover:bg-gray-300 disabled:opacity-50"
                   disabled={page === totalPages}
                   onClick={() => setPage((p) => p + 1)}
                 >
-                  Siguiente
+                  Next
                 </button>
               </div>
             </div>

@@ -61,13 +61,13 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
     }
 
     localStorage.setItem('cart', JSON.stringify(cart))
-    router.push(`/menu/${slug}`)
+    onCancel()
+    
   }
 
   return (
     <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg scrollbar-hide">
 
-      {/* Close button */}
       <button
         onClick={onCancel}
         className="absolute top-4 right-4 z-10 w-8 h-8 border border-gray-300 rounded-full text-gray-600 hover:text-black flex items-center justify-center bg-white shadow cursor-pointer"
