@@ -27,27 +27,8 @@ export default function RegisterForm() {
     setIsLoading(true);
 
     try {
-     
-      const slugRes = await fetch(`${APIURL}/restaurants/public?slug=${data.slug}`);
-      if (slugRes.status === 200) {
-        toast.error("This slug is already taken. Please choose another.");
-        return;
-      } else if (slugRes.status !== 404) {
-        toast.error("Unable to validate slug. Please try again.");
-        return;
-      }
+ 
 
-    
-      const emailRes = await fetch(`${APIURL}/users/check-email?email=${encodeURIComponent(data.email)}`);
-      if (emailRes.status === 200) {
-        toast.error("This email is already registered. Please use another.");
-        return;
-      } else if (emailRes.status !== 404) {
-        toast.error("Unable to validate email. Please try again.");
-        return;
-      }
-
-  
       const restaurantData = {
         name: data.storeName,
         slug: data.slug,
