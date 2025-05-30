@@ -16,9 +16,9 @@ export async function getProducts(slug: string, token: string) {
     }
 }
 
-export async function getProductsById(slug: string, token: string) {
+export async function getProductsById(slug: string, token: string, id: string) {
     try {
-        const response = await fetch(`${APIURL}/${slug}/products`, {
+        const response = await fetch(`${APIURL}/${slug}/products/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export async function getProductsById(slug: string, token: string) {
 export async function uploadImage(file: File, token: string): Promise<string> {
     const formData = new FormData();
     formData.append("file", file);
-    // formData.append("upload_preset", `${preset}`);
+
     console.log("Subiendo imagen:", file);
 
     const response = await fetch(`${APIURL}/cloudinary/uploadImage`, {
@@ -56,7 +56,6 @@ export async function uploadImage(file: File, token: string): Promise<string> {
     return secureUrl;
 }
 
-//enviando producto a la base de datos
 
 const createProduct = async ({
     slug,
