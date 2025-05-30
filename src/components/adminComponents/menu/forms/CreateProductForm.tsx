@@ -4,18 +4,18 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-hot-toast';
 import { useEffect, useState } from 'react';
-import { ProductFormData, productSchema } from '../menuHelpers/schemas/createProductSchema';
 import imageCompression from 'browser-image-compression';
-import { Image, Wheat } from 'lucide-react';
+import { Wheat } from 'lucide-react';
 import { CgClose } from 'react-icons/cg';
 import CardView from '../card/CardView';
 import { useCategories } from '../menuHelpers/hook/useCategories';
 import { createProduct } from '../menuHelpers/fetch/createProduct';
 import { updateProduct } from '../menuHelpers/fetch/updateProduct';
 import { uploadImage } from '../menuHelpers/fetch/uploadImage';
+import { ProductFormDataCreate, ProductFormDataEdit, productSchemaCreate, productSchemaEdit } from '../menuHelpers/schemas/createProductSchema';
 
 interface Props {
-  initialData?: ProductFormData & { id?: string; image_url?: string };
+  initialData?: ProductFormDataCreate & { id?: string; image_url?: string };
   mode?: 'create' | 'edit';
   onClose?: () => void;
   onSuccess?: () => void;
@@ -23,10 +23,12 @@ interface Props {
 }
 
 export default function CreateMenuForm({ initialData, mode = 'create', onClose, onSuccess, refetchCategories }: Props) {
-  const { categories, error } = useCategories();
+  const { categories } = useCategories();
   const [isLoading, setIsLoading] = useState(false);
   const [preview, setPreview] = useState<any>(null);
 
+  const isEdit = mode === 'edit';
+  
   const {
     register,
     handleSubmit,
@@ -36,33 +38,35 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
     setValue,
     watch,
     formState: { errors },
-  } = useForm<ProductFormData>({
-    resolver: zodResolver(productSchema),
+  } = useForm<ProductFormDataCreate | ProductFormDataEdit>({
+    resolver: zodResolver(isEdit ? productSchemaEdit : productSchemaCreate),
     defaultValues: {
-      name: '',
-      description: '',
-      price: 0,
-      available: true,
-      details: [''],
-      categoryId: '',
+      name: initialData?.name || '',
+      description: initialData?.description || '',
+      price: initialData?.price || 0,
+      available: initialData?.available ?? true,
+      details: initialData?.details?.length ? initialData.details : [''],
+      categoryId: initialData?.categoryId || '',
       file: undefined,
     },
   });
-
-  const { fields, append, remove, replace } = useFieldArray({ control, name: 'details' });
+  
+  const { fields, append, remove, replace } = useFieldArray({ control, name: 'details' as any });
+  const fileSelected = watch('file')?.length > 0;
+  const selectedFileName = watch('file')?.[0]?.name || '';
 
   useEffect(() => {
     if (initialData) {
+      const details = initialData.details?.length ? initialData.details : [''];
       reset({
         name: initialData.name,
         description: initialData.description,
         price: initialData.price,
         available: initialData.available,
         categoryId: initialData.categoryId,
-        file: undefined,
-        details: initialData.details.length ? initialData.details : [''],
+        details,
       });
-      replace(initialData.details.length ? initialData.details : ['']);
+      replace(details);
       setPreview({ imageUrl: initialData.image_url });
     }
   }, [initialData, reset, replace]);
@@ -75,37 +79,53 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
     toast.success('Preview ready');
   };
 
-  const onSubmit = async (data: ProductFormData) => {
+  const onSubmit = async (data: ProductFormDataCreate | ProductFormDataEdit) => {
     setIsLoading(true);
     try {
+
+      const cleanedDetails = data.details?.filter(d => d.trim().length > 0) ?? [];
+
+      
+
       const session = localStorage.getItem('adminSession');
       if (!session) throw new Error('No session');
       const { token, payload: { slug } } = JSON.parse(session);
 
       let image_url = initialData?.image_url || '';
-      const file = data.file?.[0];
+      const file = (data as ProductFormDataCreate).file?.[0];
       if (file) {
         const compressed = await imageCompression(file, { maxSizeMB: 0.2, maxWidthOrHeight: 800 });
         image_url = await uploadImage(compressed, token);
       }
 
-      const payload = {
-        name: data.name,
-        description: data.description,
-        price: Number(data.price),
-        categoryId: data.categoryId,
-        image_url,
-        is_available: data.available,
-        details: data.details,
-        token,
-        slug,
-      };
-
       if (mode === 'edit' && initialData?.id) {
-        await updateProduct({ productId: initialData.id, ...payload });
+        const updatePayload = {
+          productId: initialData.id,
+          slug,
+          token,
+          name: data.name ?? initialData.name ?? '',
+          description: data.description ?? initialData.description ?? '',
+          price: data.price ?? initialData.price ?? 0,
+          categoryId: data.categoryId ?? initialData.categoryId ?? '',
+          image_url,
+          is_available: data.available ?? initialData.available ?? true,
+          details: cleanedDetails,
+        };
+        await updateProduct(updatePayload);
         toast.success('Product updated');
       } else {
-        await createProduct(payload);
+        const createPayload = {
+          slug,
+          token,
+          name: data.name ?? '',
+          description: data.description ?? '',
+          price: data.price ?? 0,
+          categoryId: data.categoryId ?? '',
+          image_url,
+          is_available: data.available ?? true,
+          details: cleanedDetails,
+        };
+        await createProduct(createPayload);
         toast.success('Product created');
         reset();
         replace(['']);
@@ -136,8 +156,12 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
         {errors.price && <p className="text-red-500">{errors.price.message}</p>}
 
         <select {...register('categoryId')} className="w-full p-2 bg-white rounded">
-          <option value="" disabled>Select category</option>
-          {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+          <option value="">Select category</option>
+          {categories.map(cat => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
         </select>
         {errors.categoryId && <p className="text-red-500">{errors.categoryId.message}</p>}
 
@@ -145,10 +169,41 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
           <input type="checkbox" {...register('available')} /> Available
         </label>
 
-        <input type="file" accept="image/*" {...register('file')} className="w-full bg-white p-2" />
-        {!watch('file')?.length && preview?.imageUrl && (
-          <img src={preview.imageUrl} alt="Preview" className="mt-2 w-32 rounded border" />
-        )}
+        <div className="flex flex-col gap-2">
+            <label
+              htmlFor="imageUpload"
+              className={`cursor-pointer flex items-center justify-center gap-2 p-2 rounded-2xl transition-colors border-2 border-dashed
+                ${fileSelected ? 'bg-green-100 border-green-500' : 'bg-gray-100 border-gray-400 hover:bg-gray-200'}
+              `}
+            >
+              <img className={`w-5 h-5 ${fileSelected ? 'text-green-600' : 'text-gray-600'}`} />
+              <span className={`font-medium ${fileSelected ? 'text-green-700' : 'text-gray-700'}`}>
+                {fileSelected ? 'Image selected' : 'Click to upload an image'}
+              </span>
+            </label>
+
+            <input
+              id="imageUpload"
+              type="file"
+              accept="image/*"
+              {...register('file')}
+              className="hidden"
+            />
+
+            {fileSelected && (
+              <span className="text-sm text-green-700 font-medium truncate">
+                📁 {selectedFileName}
+              </span>
+            )}
+
+            {!fileSelected && preview?.imageUrl && (
+              <img
+                src={preview.imageUrl}
+                alt="Preview"
+                className="w-32 h-32 object-cover rounded-xl border border-gray-300 shadow"
+              />
+            )}
+          </div>
 
         <div>
           <label className="font-semibold flex gap-2"><Wheat /> More</label>
@@ -163,8 +218,12 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
 
         <div className="flex gap-4">
           <button type="button" onClick={handlePreview} className="w-full bg-default-800 text-white px-4 py-2 rounded">Preview</button>
-          <button type="submit" disabled={isLoading} className="w-full border-2 border-default-800 px-4 py-2 rounded text-default-800 font-bold hover:bg-default-700 hover:text-white">
-            {isLoading ? 'Saving...' : mode === 'edit' ? 'Update Product' : 'Create Product'}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full border-2 border-default-800 px-4 py-2 rounded text-default-800 font-bold hover:bg-default-700 hover:text-white"
+          >
+            {isLoading ? 'Saving...' : isEdit ? 'Update Product' : 'Create Product'}
           </button>
         </div>
       </form>
