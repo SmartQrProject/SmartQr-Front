@@ -8,5 +8,12 @@ export async function getRestaurantWithMenu(slug: string) {
 
   if (!res.ok) return null;
 
-  return await res.json();
+  const json = await res.json();
+
+  // Verifica que realmente haya datos útiles
+  if (!json || Object.keys(json).length === 0 || !json.name) {
+    return null;
+  }
+
+  return json;
 }
