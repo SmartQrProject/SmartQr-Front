@@ -85,6 +85,8 @@ const MenuAdmin = () => {
                     {isOpen && <span>Home</span>}
                 </Link>
 
+                
+
                 {role === "owner" && (
                     <>
                         <Link href="/dashboard/store" onClick={handleLinkClick} className={linkClasses("/dashboard/store")}>
@@ -95,12 +97,7 @@ const MenuAdmin = () => {
                         <Link href="/dashboard/staffcreation" onClick={handleLinkClick} className={linkClasses("/dashboard/staffcreation")}>
                             <HiOutlineUserGroup />
                             {isOpen && <span>Staff Creation</span>}
-                        </Link>
-
-                        {/* <Link href="/dashboard/menu/createcategory" onClick={handleLinkClick} className={linkClasses("/dashboard/menu/createcategory")}>
-          <GiKnifeFork />
-          {isOpen && <span>Menu</span>}
-          </Link> */}
+                        </Link>                        
 
                         <Link href="/dashboard/reports" onClick={handleLinkClick} className={linkClasses("/dashboard/reports")}>
                             <HiOutlineChartBar />
@@ -111,8 +108,15 @@ const MenuAdmin = () => {
                             <RiCoupon3Line />
                             {isOpen && <span>Promo Codes</span>}
                         </Link>
+
+                        <Link href="/dashboard/billing" onClick={handleLinkClick} className={linkClasses("/dashboard/billing")}>
+                            <MdOutlineReceipt />
+                            {isOpen && <span>Billing</span>}
+                        </Link>
                     </>
                 )}
+
+
 
                 {(role === "owner" || role === "staff") && (
                     <>
@@ -131,17 +135,18 @@ const MenuAdmin = () => {
                             {isOpen && <span>Tables</span>}
                         </Link>
 
-                        <Link href="/dashboard/billing" onClick={handleLinkClick} className={linkClasses("/dashboard/billing")}>
-                            <MdOutlineReceipt />
-                            {isOpen && <span>Billing</span>}
-                        </Link>
+                        
 
                         <Link href="/dashboard/settings" onClick={handleLinkClick} className={linkClasses("/dashboard/settings")}>
                             <HiOutlineCog6Tooth />
                             {isOpen && <span>Settings</span>}
                         </Link>
+
+                        
                     </>
                 )}
+
+
 
                 {role === "superAdmin" && (
                     <>

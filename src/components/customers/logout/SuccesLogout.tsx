@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Confetti from 'react-confetti';
 import { motion } from 'framer-motion';
 
 export default function StaticLogoutPage() {
   const router = useRouter();
-  const [counter, setCounter] = useState(10);
+  const [counter, setCounter] = useState(3);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   const [slug, setSlug] = useState<string | null>(null);
@@ -49,15 +48,7 @@ export default function StaticLogoutPage() {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-tr from-gray-100 to-blue-50 p-6 relative overflow-hidden">
-      {/* Confetti con colores profesionales */}
-      <Confetti
-        width={dimensions.width}
-        height={dimensions.height}
-        recycle={counter > 0}
-        numberOfPieces={150}
-        colors={['#1e293b', '#475569', '#bfa058']}
-      />
-
+      
       <motion.div
         className="bg-white bg-opacity-90 backdrop-blur-md rounded-3xl p-12 max-w-sm w-full shadow-lg border border-gray-300 flex flex-col items-center"
         initial={{ scale: 0.5, opacity: 0 }}
@@ -73,7 +64,7 @@ export default function StaticLogoutPage() {
           }}
           transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
         >
-          🎉 Goodbye! 🎉
+        Come Back Soon
         </motion.h1>
 
         <p className="mb-6 text-center font-semibold text-gray-700 text-lg">

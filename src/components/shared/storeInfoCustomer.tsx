@@ -78,7 +78,7 @@ const PublicStoreInfoModal = ({ open, onClose, slug: slugProp }: StoreInfoModalP
   return (
       <>
       <div className="fixed inset-0 flex items-center justify-center pointer-events-auto">
-        <div className="relative w-full max-w-xl rounded-xl p-6 mx-4 border border-black bg-white shadow-lg overflow-y-auto">
+        <div className="relative w-full max-w-xl rounded-xl p-6 mx-4 border border-gray-300 bg-white shadow-lg overflow-y-auto">
           <div className="absolute top-3 right-3 flex gap-2">
             
             <button
@@ -125,7 +125,7 @@ const PublicStoreInfoModal = ({ open, onClose, slug: slugProp }: StoreInfoModalP
                   <span className="text-lx text-gray-500">Need help?</span>
                   <br />
                   <span className="text-md mb-1">
-                    If you have any questions about the menu, allergens, or ordering, call us on {restaurant.phone}
+                    If you have any questions about the menu, allergens, or ordering, call us on <span className='text-gray-700 font-bold'>{restaurant.phone}</span>
                   </span>
                 </div>
               )}

@@ -17,13 +17,9 @@ const StoreInfoModal = ({ open, onClose, slug }: StoreInfoModalProps) => {
   const [isEditableModalOpen, setIsEditableModalOpen] = useState(false);
   const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
 
-useEffect(() => {
-  if (!open || !slug) {
-    setRestaurant(null);
-    return;
-  }
+const fetchData = async () => {
+    if (!slug) return;
 
-  const fetchData = async () => {
     try {
       const data = await getRestaurantWithMenu(slug);
 
@@ -61,9 +57,14 @@ useEffect(() => {
       console.error("Error fetching restaurant info:", error);
     }
   };
+useEffect(() => {
+    if (!open) {
+      setRestaurant(null);
+      return;
+    }
 
-  fetchData();
-}, [open, slug]);
+    fetchData();
+  }, [open, slug]);
 
   if (!open) return null;
 
@@ -79,10 +80,15 @@ useEffect(() => {
     setIsEditableModalOpen(true);
   };
 
+  const handleCloseEditableModal = async () => {
+    setIsEditableModalOpen(false);
+    await fetchData();
+  };
+
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 overflow-y-auto">
-        <div className="relative w-full max-w-xl rounded-xl p-6 mx-4 border border-black bg-white shadow-lg overflow-y-auto">
+        <div className="relative w-full max-w-xl rounded-xl p-6 mx-4 border border-gray-300 bg-white shadow-lg overflow-y-auto">
           <div className="absolute top-3 right-3 flex gap-2">
             <button
               onClick={handleEditClick}
@@ -103,7 +109,7 @@ useEffect(() => {
           {isEditableModalOpen && (
             <EditableStoreInfoModal
               open={isEditableModalOpen}
-              onClose={() => setIsEditableModalOpen(false)}
+              onClose={handleCloseEditableModal}  
               restaurant={restaurant}
             />
           )}
@@ -142,37 +148,37 @@ useEffect(() => {
                   <span className="text-lx text-gray-500">Need help?</span>
                   <br />
                   <span className="text-md mb-1">
-                    If you have any questions about the menu, allergens, or ordering, call us on {restaurant.phone}
+                    If you have any questions about the menu, allergens, or ordering, call us on <span className='text-gray-700 font-bold'>{restaurant.phone}</span>
                   </span>
                 </div>
               )}
 
              {restaurant.trading_hours && (
-  (restaurant.trading_hours.mondayToFriday?.open || restaurant.trading_hours.mondayToFriday?.close ||
-   restaurant.trading_hours.saturday?.open || restaurant.trading_hours.saturday?.close ||
-   restaurant.trading_hours.sunday?.open || restaurant.trading_hours.sunday?.close) && (
-    <div>
-      <span className="text-lx text-gray-500">Trading hours</span>
-      <div className="text-md mb-1">
-        {(restaurant.trading_hours.mondayToFriday?.open || restaurant.trading_hours.mondayToFriday?.close) && (
-          <div>
-            Monday to Friday: {restaurant.trading_hours.mondayToFriday.open} - {restaurant.trading_hours.mondayToFriday.close}
-          </div>
-        )}
-        {(restaurant.trading_hours.saturday?.open || restaurant.trading_hours.saturday?.close) && (
-          <div>
-            Saturday: {restaurant.trading_hours.saturday.open} - {restaurant.trading_hours.saturday.close}
-          </div>
-        )}
-        {(restaurant.trading_hours.sunday?.open || restaurant.trading_hours.sunday?.close) && (
-          <div>
-            Sunday: {restaurant.trading_hours.sunday.open} - {restaurant.trading_hours.sunday.close}
-          </div>
-        )}
-      </div>
-    </div>
-  )
-)}
+                (restaurant.trading_hours.mondayToFriday?.open || restaurant.trading_hours.mondayToFriday?.close ||
+                restaurant.trading_hours.saturday?.open || restaurant.trading_hours.saturday?.close ||
+                restaurant.trading_hours.sunday?.open || restaurant.trading_hours.sunday?.close) && (
+                  <div>
+                    <span className="text-lx text-gray-500">Trading hours</span>
+                    <div className="text-md mb-1">
+                      {(restaurant.trading_hours.mondayToFriday?.open || restaurant.trading_hours.mondayToFriday?.close) && (
+                        <div>
+                          Monday to Friday: {restaurant.trading_hours.mondayToFriday.open} - {restaurant.trading_hours.mondayToFriday.close}
+                        </div>
+                      )}
+                      {(restaurant.trading_hours.saturday?.open || restaurant.trading_hours.saturday?.close) && (
+                        <div>
+                          Saturday: {restaurant.trading_hours.saturday.open} - {restaurant.trading_hours.saturday.close}
+                        </div>
+                      )}
+                      {(restaurant.trading_hours.sunday?.open || restaurant.trading_hours.sunday?.close) && (
+                        <div>
+                          Sunday: {restaurant.trading_hours.sunday.open} - {restaurant.trading_hours.sunday.close}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              )}
 
               {restaurant.ordering_times && (restaurant.ordering_times.pickup || restaurant.ordering_times.dinein) && (
                 <div>

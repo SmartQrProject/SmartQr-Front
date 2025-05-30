@@ -126,7 +126,7 @@ if (longitude !== null && longitude !== undefined) payload.longitude = longitude
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-24  overflow-y-auto">
-      <div className="relative w-full max-w-xl rounded-xl p-6 mx-4 bg-gray-200 border shadow-lg overflow-y-auto">
+      <div className="relative w-full max-w-xl rounded-xl p-6 mx-4 bg-white border shadow-lg overflow-y-auto">
         <div className="absolute top-3 right-3 flex gap-2">
           <button onClick={onClose} className="text-gray-900 hover:text-red-500 cursor-pointer" aria-label="Close">
             <XIcon className="w-5 h-5" />
