@@ -65,8 +65,6 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
   const displaySlug = slug || localSlug;
   const displayName = name || localName;
 
-  console.log('NavbarCustomer', { displaySlug, displayName, tableNumber });
-
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (

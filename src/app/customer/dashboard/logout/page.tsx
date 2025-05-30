@@ -6,8 +6,7 @@ const LogoutPage = () => {
 
   return (
     <div>
-      
-      <StaticLogoutPage />
+            <StaticLogoutPage />
     </div>
   )
 }
