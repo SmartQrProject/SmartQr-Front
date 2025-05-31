@@ -46,8 +46,8 @@ useEffect(() => {
     if (response.success) {
       setCustomer(response.data);
       reset({
-        phone: response.data.phone,
-        name: response.data.name
+        phone: response.data.phone ?? "",
+        name: response.data.name ?? ""
       });
     } else {
       console.error("❌ Failed to load customer data:", response.message);
@@ -169,7 +169,6 @@ if (!customer ) return <p className="text-center mt-20">Loading...</p>;
               )}
             </div>
 
-            <span className='text-xs'>* You need to fill in all fields to update your information.</span>
             <button
               type="submit"
               disabled={isSubmitting}
