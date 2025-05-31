@@ -40,8 +40,6 @@ export const StaffRegisterSchema = z
         message:
           "Confirm Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (!@#$%^&*)",
       }),
-
-    role: z.enum(["admin", "staff"]).optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

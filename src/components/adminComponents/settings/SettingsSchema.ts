@@ -12,10 +12,7 @@ export const UserProfileSchema = z.object({
     .string()
     .regex(/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number")
     .optional(),
-  address: z
-    .string()
-    .max(200, "Address must be at most 200 characters")
-    .optional(),
+
   password: z.string().optional(),
   confirmPassword: z.string().optional(),
 }).refine((data) => {

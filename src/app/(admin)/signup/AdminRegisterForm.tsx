@@ -28,8 +28,8 @@ export default function RegisterForm() {
 
     try {
  
-
       const restaurantData = {
+        ownerName: data.ownerName,
         name: data.storeName,
         slug: data.slug,
         owner_email: data.email,
@@ -70,14 +70,14 @@ export default function RegisterForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-sm">
 
         <div>
-          <label htmlFor="name">Name</label>
+          <label htmlFor="ownerName">Name</label>
           <input
-            id="name"
-            {...register("name")}
+            id="ownerName"
+            {...register("ownerName")}
             className="w-full p-2 bg-white rounded-md"
             placeholder="John Smith"
           />
-          {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+          {errors.ownerName && <p className="text-red-500">{errors.ownerName.message}</p>}
         </div>
 
         <div>

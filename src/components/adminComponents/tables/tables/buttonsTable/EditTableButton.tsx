@@ -21,8 +21,8 @@ const EditTableButton: React.FC<Props> = ({ tableId, currentCode, isActive, onTa
     const handleEdit = async () => {
         if (!APIURL || !newCode) return;
 
-        if (!/^[\w\s-]{5,100}$/.test(newCode)) {
-            toast.error("The table name must be between 5 and 100 characters and can only contain letters, numbers, spaces and dashes.");
+        if (!/^[A-Za-z0-9 -]{1,15}$/.test(newCode)) {
+            toast.error("The table name must be between 1 and 15 characters and can only contain letters, numbers, spaces and dashes.");
             return;
         }
 
