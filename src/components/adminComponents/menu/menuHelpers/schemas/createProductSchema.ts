@@ -1,24 +1,24 @@
 import { z } from "zod";
 
 export const productSchemaCreate = z.object({
-  name: z.string().min(1, "Name is required"),
-  description: z.string().min(1, "Description is required"),
-  price: z.coerce.number().min(0.01, "Price must be a positive number"),
+  name: z.string().min(2, "Product name must be at least 2 characters").max(30, "Product name must be maximum 30 characters"),
+  description: z.string().min(5, "Description must be at least 5 characters").max(100, "Description must be maximun 100 characters").optional(),
+  price: z.coerce.number().min(0.01, "Price must be a positive number").max(99999999.99, "Price must not exceed $99999999.99"),
   file: z.any().optional(),
-  available: z.boolean(),
-  details: z.array(z.string()).optional(),
-  categoryId: z.string().min(1, "Category is required"),
+  available: z.boolean().optional(),
+  details: z.array(z.string().min(1, "Details must be at least 1 character").max(20, "Details must be maximun 20 characters")).optional(),
+  categoryId: z.string().uuid({ message: "Invalid category ID format" }),
 });
 
 
 export const productSchemaEdit = z.object({
-  name: z.string().optional(),
-  description: z.string().optional(),
-  price: z.coerce.number().optional(),
+  name: z.string().min(2, "Product name must be at least 2 characters").max(30, "Product name must be maximum 30 characters").optional(),
+  description: z.string().min(5, "Description must be at least 5 characters").max(100, "Description must be maximun 100 characters").optional(),
+  price: z.coerce.number().min(0.01, "Price must be a positive number").max(99999999.99, "Price must not exceed $99999999.99").optional(),
   file: z.any().optional(),
   available: z.boolean().optional(),
-  details: z.array(z.string()).optional(),
-  categoryId: z.string().optional(),
+  details: z.array(z.string().min(1, "Details must be at least 1 character").max(20, "Details must be maximun 20 characters")).optional(),
+  categoryId: z.string().uuid({ message: "Invalid category ID format" }).optional(),
 });
 
 
