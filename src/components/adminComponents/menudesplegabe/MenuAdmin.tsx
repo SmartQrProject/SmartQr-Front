@@ -60,7 +60,7 @@ const MenuAdmin = () => {
     const linkClasses = (path: string) => {
         const isActive = path === "/dashboard" ? pathname === "/dashboard" : pathname === path || pathname.startsWith(path + "/");
 
-        return `flex items-center gap-2 py-2 px-4 rounded-3xl hover:bg-gray-300 relative ${isActive ? "font-semibold" : ""}`;
+        return `flex items-center gap-2 py-2 px-4 hover:text-[#4285F4] relative ${isActive ? "font-semibold text-[#0d5ad9]" : ""}`;
     };
 
     return (
@@ -75,7 +75,7 @@ const MenuAdmin = () => {
             <div className="flex flex-col space-y-2 px-2">
                 {isOpen && (
                     <div className="px-2 mb-2">
-                        <h1 className="font-semibold text-lg truncate">{restaurantName}</h1>
+                        <h1 className="font-bold text-lg truncate text-[#4285F4]">{restaurantName}</h1>
                         <span className="text-sm text-gray-500">Restaurant</span>
                     </div>
                 )}

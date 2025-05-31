@@ -20,9 +20,6 @@ const StaffRegisterForm = ({ setUsers }: { setUsers: (u: IUserStaff[]) => void }
   reset,
 } = useForm<StaffFormInputs>({
   resolver: zodResolver(StaffRegisterSchema),
-  defaultValues: {
-    role: "staff", // valor por defecto
-  },
 });
 
   const onSubmit = async (data: StaffFormInputs) => {
@@ -38,7 +35,6 @@ const StaffRegisterForm = ({ setUsers }: { setUsers: (u: IUserStaff[]) => void }
     const completeData = {
       ...data,
       slug,      
-      role: "staff" 
     } as StaffFormInputs;
 
     const response = await staffRegister(token, completeData, slug);

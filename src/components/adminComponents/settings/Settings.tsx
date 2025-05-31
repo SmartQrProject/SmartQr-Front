@@ -41,7 +41,6 @@ const Settings = () => {
             if (userData) {
                 setValue("name", userData.name || '');
                 setValue("phone", userData.phone || '');
-                setValue("address", userData.address || '');
                 setValue("password", '');
                 setValue("confirmPassword", '');
             }
@@ -61,7 +60,6 @@ const Settings = () => {
                 reset({
                     name: '',
                     phone: '',
-                    address: '',
                     password: '',
                     confirmPassword: '',
                 });
@@ -126,17 +124,7 @@ const Settings = () => {
       {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
     </div>
 
-    {/* Address */}
-    <div className="flex flex-col">
-      <label className="text-sm font-medium mb-1">Address</label>
-      <textarea
-        {...register('address')}
-        className="w-full p-2 bg-white rounded-md min-h-[100px]"
-        placeholder="Enter your address"
-      />
-      {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
-    </div>
-
+    
     {/* Password Settings (optional) */}
     <div className="pt-4 border-t mt-4">
       <h2 className="text-lg font-semibold mb-2">
