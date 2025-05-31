@@ -15,6 +15,19 @@ export async function middleware(request: NextRequest) {
         pathname === "/deleteproduct" ||
         pathname === "/modifyproduct" ||
         pathname === "/tables" ||
+        pathname === "/dashboard/store" ||
+        pathname === "/dashboard/reportssa" ||
+        pathname === "/dashboard/reports" ||
+        pathname === "/dashboard/promocodes" ||
+        pathname === "/dashboard/staffcreation" ||
+        pathname === "/dashboard/billing" ||
+        pathname === "/dashboard/orders" ||
+        pathname === "/dashboard/completed" ||
+        pathname === "/dashboard/tables" ||
+        pathname === "/dashboard/settings" ||
+        pathname === "/dashboard/gethelp" ||
+        pathname === "/dashboard/menu" ||
+        pathname === "/dashboard/restaurants" ||
         pathname === "/restaurants";
 
     const session = request.cookies.get("adminSession")?.value;
@@ -35,4 +48,3 @@ export async function middleware(request: NextRequest) {
 export const config = {
     matcher: ["/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"],
 };
-

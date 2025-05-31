@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import RestaurantCard from "./RestaurantCard";
 import EditRestaurantModal from "./EditRestaurantModal";
@@ -14,9 +15,31 @@ interface IRestaurantWithOwnerName extends IRestaurant {
 }
 
 export default function RestaurantList() {
+    const router = useRouter();
     const [restaurants, setRestaurants] = useState<IRestaurantWithOwnerName[]>([]);
     const [editingRestaurant, setEditingRestaurant] = useState<IRestaurant | null>(null);
     const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
+    const [checkingAuth, setCheckingAuth] = useState(true);
+    const [authorized, setAuthorized] = useState(false);
+
+    useEffect(() => {
+        const sessionRaw = localStorage.getItem("adminSession");
+        if (!sessionRaw) {
+            router.push("/404");
+            return;
+        }
+
+        const session = JSON.parse(sessionRaw);
+        const role = session.payload?.role;
+
+        if (role !== "superAdmin") {
+            router.push("/404");
+            return;
+        }
+
+        setAuthorized(true);
+        setCheckingAuth(false);
+    }, [router]);
 
     const getSession = () => {
         const sessionRaw = localStorage.getItem("adminSession");
@@ -44,7 +67,6 @@ export default function RestaurantList() {
         return Array.isArray(data) ? data : [data];
     };
 
-    // ✅ CORREGIDO: usa ownerEmail y ownerName
     const fetchOwners = async (token: string, slug: string) => {
         const res = await fetch(`${APIURL}/${slug}/reports/admin/owners`, {
             method: "GET",
@@ -59,7 +81,7 @@ export default function RestaurantList() {
 
         const ownerMap: Record<string, string> = {};
         for (const owner of data) {
-            ownerMap[owner.ownerEmail] = owner.ownerName; // ← FIX
+            ownerMap[owner.ownerEmail] = owner.ownerName;
         }
 
         return ownerMap;
@@ -68,7 +90,6 @@ export default function RestaurantList() {
     const loadData = async () => {
         try {
             const { token, slug } = getSession();
-
             const [restaurantData, ownerMap] = await Promise.all([fetchRestaurants(token), fetchOwners(token, slug)]);
 
             const combined: IRestaurantWithOwnerName[] = restaurantData.map((r) => ({
@@ -79,13 +100,14 @@ export default function RestaurantList() {
             setRestaurants(combined);
         } catch (err) {
             toast.error("Error loading data");
-            console.error("❌ loadData error:", err);
         }
     };
 
     useEffect(() => {
-        loadData();
-    }, []);
+        if (authorized) {
+            loadData();
+        }
+    }, [authorized]);
 
     const handleToggleStatus = async (slug: string, currentStatus: boolean) => {
         try {
@@ -106,7 +128,6 @@ export default function RestaurantList() {
             loadData();
         } catch (err) {
             toast.error("Error updating status");
-            console.error("handleToggleStatus error:", err);
         }
     };
 
@@ -128,9 +149,16 @@ export default function RestaurantList() {
             loadData();
         } catch (err) {
             toast.error("Error deleting restaurant");
-            console.error("handleDeleteRestaurant error:", err);
         }
     };
+
+    if (checkingAuth) {
+        return <p className="p-4 text-center">Checking access...</p>;
+    }
+
+    if (!authorized) {
+        return null;
+    }
 
     return (
         <div className="p-6">
