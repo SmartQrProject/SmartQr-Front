@@ -11,9 +11,10 @@ interface Props {
     onAdvanceStatus: (orderId: string, newStatus: string) => void;
     onRetreatStatus: (orderId: string, newStatus: string) => void;
     onStatusChange?: () => void;
+    allowRetreat?: boolean; // 👈 NUEVO PROP
 }
 
-const OrderCard: React.FC<Props> = ({ order, tableName, onAdvanceStatus, onRetreatStatus, onStatusChange }) => {
+const OrderCard: React.FC<Props> = ({ order, tableName, onAdvanceStatus, onRetreatStatus, onStatusChange, allowRetreat = true }) => {
     const [timeElapsed, setTimeElapsed] = useState(0);
     const { user } = useAuth();
     const slug = user?.payload?.slug;
@@ -116,14 +117,19 @@ const OrderCard: React.FC<Props> = ({ order, tableName, onAdvanceStatus, onRetre
             </ul>
 
             <div className="flex gap-2 flex-wrap">
-                {prevStatus && (
-                    <button
-                        onClick={() => updateStatusOnServer(prevStatus, "retreat")}
-                        className="mt-2 px-3 py-1 bg-yellow-500 text-white rounded-lg text-sm hover:bg-yellow-600 transition"
-                    >
-                        Back to: {prevStatus}
-                    </button>
-                )}
+                {prevStatus &&
+                    (allowRetreat ? (
+                        <button
+                            onClick={() => updateStatusOnServer(prevStatus, "retreat")}
+                            className="mt-2 px-3 py-1 bg-yellow-500 text-white rounded-lg text-sm hover:bg-yellow-600 transition"
+                        >
+                            Back to: {prevStatus}
+                        </button>
+                    ) : (
+                        <button className="mt-2 px-3 py-1 bg-gray-300 text-gray-500 rounded-lg text-sm cursor-not-allowed" disabled>
+                            Back disabled
+                        </button>
+                    ))}
                 {nextStatus ? (
                     <button
                         onClick={() => updateStatusOnServer(nextStatus, "advance")}

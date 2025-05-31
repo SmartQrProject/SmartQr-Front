@@ -7,6 +7,7 @@ export interface RestaurantCardProps {
     slug: string;
     name: string;
     owner_email: string;
+    owner_name: string;
     created_at: string;
     is_active: boolean;
     onToggleStatus: (slug: string, currentStatus: boolean) => void;
@@ -14,7 +15,17 @@ export interface RestaurantCardProps {
     onDelete: () => void;
 }
 
-const RestaurantCard: React.FC<RestaurantCardProps> = ({ slug, name, owner_email, created_at, is_active, onToggleStatus, onEdit, onDelete }) => {
+const RestaurantCard: React.FC<RestaurantCardProps> = ({ id, slug, name, owner_email, owner_name, created_at, is_active, onToggleStatus, onEdit, onDelete }) => {
+    console.log("🧾 RestaurantCard props:", {
+        id,
+        slug,
+        name,
+        owner_email,
+        owner_name,
+        created_at,
+        is_active,
+    });
+
     return (
         <tr className="bg-white hover:bg-gray-50 transition">
             <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{name}</td>
@@ -30,8 +41,9 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ slug, name, owner_email
                     <span className={`${is_active ? "translate-x-5" : "translate-x-1"} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`} />
                 </Switch>
             </td>
+            <td className="px-6 py-4 text-sm text-gray-700">{owner_name}</td>
             <td className="px-6 py-4 text-sm text-gray-600">{owner_email}</td>
-            <td className="px-6 py-4 text-sm text-gray-600">{new Date(created_at).toLocaleDateString()}</td>
+            <td className="px-6 py-4 text-sm text-gray-600">{created_at ? new Date(created_at).toLocaleDateString() : "N/A"}</td>
             <td className="px-6 py-4 flex gap-3">
                 <button onClick={onEdit} className="p-1 rounded-full hover:bg-gray-100">
                     <Pencil className="w-4 h-4 text-gray-500" />
