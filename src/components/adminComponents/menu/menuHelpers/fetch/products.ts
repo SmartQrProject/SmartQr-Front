@@ -32,12 +32,11 @@ export async function getProductsById(slug: string, token: string, id: string) {
     }
 }
 
-
 export async function uploadImage(file: File, token: string): Promise<string> {
     const formData = new FormData();
     formData.append("file", file);
 
-    console.log("Subiendo imagen:", file);
+    // console.log("Subiendo imagen:", file);
 
     const response = await fetch(`${APIURL}/cloudinary/uploadImage`, {
         method: "POST",
@@ -52,10 +51,9 @@ export async function uploadImage(file: File, token: string): Promise<string> {
     }
 
     const secureUrl = await response.text();
-    console.log("Respuesta Cloudinary (texto plano):", secureUrl);
+    // console.log("Respuesta Cloudinary (texto plano):", secureUrl);
     return secureUrl;
 }
-
 
 const createProduct = async ({
     slug,
@@ -78,15 +76,15 @@ const createProduct = async ({
     details: string[];
     token: string;
 }) => {
-    console.log("Enviando producto:", {
-        name,
-        description,
-        price,
-        categoryId,
-        image_url,
-        is_available,
-        details,
-    });
+    // console.log("Enviando producto:", {
+    //     name,
+    //     description,
+    //     price,
+    //     categoryId,
+    //     image_url,
+    //     is_available,
+    //     details,
+    // });
     const res = await fetch(`${APIURL}/${slug}/products`, {
         method: "POST",
         headers: {

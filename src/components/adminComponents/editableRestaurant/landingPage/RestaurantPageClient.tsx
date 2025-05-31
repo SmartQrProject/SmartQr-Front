@@ -9,32 +9,32 @@ import { Store } from "lucide-react";
 import { getRestaurantWithMenu } from "@/helper/restaurantsSlugFetch";
 
 export default function RestaurantPageClient() {
-  const { user } = useAuth(); 
-  const slug = user?.payload?.slug;
+    const { user } = useAuth();
+    const slug = user?.payload?.slug;
 
-  const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
-  const [error, setError] = useState<string | null>(null);
+    const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!slug) {
-      setError("Missing restaurant slug");
-      return;
-    }
+    useEffect(() => {
+        if (!slug) {
+            setError("Missing restaurant slug");
+            return;
+        }
 
-    getRestaurantWithMenu(slug)
-      .then((res) => {
-        console.log("Fetched restaurant data:", res);
-        setRestaurant(res);
-      })
-      .catch((err) => setError(err.message));
-  }, [slug]);
+        getRestaurantWithMenu(slug)
+            .then((res) => {
+                // console.log("Fetched restaurant data:", res);
+                setRestaurant(res);
+            })
+            .catch((err) => setError(err.message));
+    }, [slug]);
 
-  if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
-  if (!restaurant) return <div className="p-4">No restaurant found...</div>;
+    if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
+    if (!restaurant) return <div className="p-4">No restaurant found...</div>;
 
-  return (
-    <div className="mx-auto">
-      <EditableBannerHero title={restaurant.name} initialBanner={restaurant.banner ?? undefined} />
-    </div>
-  );
+    return (
+        <div className="mx-auto">
+            <EditableBannerHero title={restaurant.name} initialBanner={restaurant.banner ?? undefined} />
+        </div>
+    );
 }
