@@ -101,7 +101,7 @@ const createProduct = async ({
             details,
         }),
     });
-    console.log("Respuesta del servidor:", res);
+    // console.log("Respuesta del servidor:", res);
     if (!res.ok) throw new Error("Error al crear producto" + Error);
     return await res.json();
 };

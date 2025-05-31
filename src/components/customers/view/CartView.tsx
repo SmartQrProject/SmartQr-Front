@@ -120,7 +120,6 @@ const CartView = () => {
             if (orderPayload.code === "00") {
                 orderPayload.code = "counter";
             }
-            console.log(orderPayload);
             const res = await fetch(`${APIURL}/${slug}/orders`, {
                 method: "POST",
                 headers: {
