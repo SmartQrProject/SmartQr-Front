@@ -5,6 +5,7 @@ import { IOrder } from "@/types";
 import OrderCard from "./OrderCard";
 import toast from "react-hot-toast";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+import { useRouter } from "next/navigation";
 
 const transformOrderFromApi = (order: any): IOrder => ({
     id: order.id,
@@ -27,16 +28,29 @@ const transformOrderFromApi = (order: any): IOrder => ({
 export default function CompletedOrdersPage() {
     const [orders, setOrders] = useState<IOrder[]>([]);
     const [tableNames, setTableNames] = useState<Record<string, string>>({});
+    const [authorized, setAuthorized] = useState(false);
+    const [checkingAuth, setCheckingAuth] = useState(true);
+
     const { user } = useAuth();
     const slug = user?.payload?.slug;
     const token = user?.token;
+    const role = user?.payload?.role;
+    const router = useRouter();
 
     useEffect(() => {
-        if (!slug || !token) return;
+        if (!role || (role !== "owner" && role !== "staff")) {
+            router.push("/404");
+            return;
+        }
+        setAuthorized(true);
+        setCheckingAuth(false);
+    }, [role, router]);
+
+    useEffect(() => {
+        if (!slug || !token || !authorized) return;
 
         const fetchData = async () => {
             try {
-                console.log("primer CL");
                 const [ordersRes, tablesRes] = await Promise.all([
                     fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/orders`, {
                         headers: { Authorization: `Bearer ${token}` },
@@ -44,7 +58,6 @@ export default function CompletedOrdersPage() {
                     fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/restaurant-tables`, {
                         headers: { Authorization: `Bearer ${token}` },
                     }),
-                    console.log("segundo CL"),
                 ]);
 
                 const ordersData = await ordersRes.json();
@@ -61,13 +74,13 @@ export default function CompletedOrdersPage() {
                 setOrders(mappedOrders);
                 setTableNames(tableMap);
             } catch (err) {
-                console.error("Error fetching completed orders:", err);
                 toast.error("Failed to load completed orders");
             }
         };
 
         fetchData();
-    }, [slug, token]);
+    }, [slug, token, authorized]);
+
     const updateOrderStatus = (orderId: string, newStatus: string) => {
         setOrders((prevOrders) => prevOrders.map((order) => (order.id === orderId ? { ...order, status: newStatus } : order)));
     };
@@ -76,7 +89,17 @@ export default function CompletedOrdersPage() {
         updateOrderStatus(orderId, "ready");
     };
 
-    const getOrdersByStatus = (status: string) => orders.filter((o) => o.status === status).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+    const getOrdersByStatus = (status: string) => orders.filter((o) => o.status === status).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+    const isRevertAllowed = (createdAt: string) => {
+        const now = new Date();
+        const completedTime = new Date(createdAt);
+        const diffInMs = now.getTime() - completedTime.getTime();
+        const diffInHours = diffInMs / (1000 * 60 * 60);
+        return diffInHours <= 2;
+    };
+
+    if (checkingAuth) return null;
 
     return (
         <div className="p-6">
@@ -90,6 +113,7 @@ export default function CompletedOrdersPage() {
                             onAdvanceStatus={() => {}}
                             onRetreatStatus={() => handleRetreatStatus(order.id)}
                             tableName={tableNames[order.tableId] ?? "Unknown"}
+                            allowRetreat={isRevertAllowed(order.created_at)}
                         />
                     ))}
                 </div>

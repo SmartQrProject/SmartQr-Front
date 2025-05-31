@@ -68,10 +68,12 @@ export interface IRestaurant {
         pickup?: number;
         dinein?: number;
     };
-    latitude?: number;    
-    longitude?: number;    
+    latitude?: number;
+    longitude?: number;
+    user?: {
+        name: string;
+    };
 }
-
 
 export interface IProduct {
     id: string;

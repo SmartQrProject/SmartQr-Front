@@ -46,18 +46,20 @@ export default function OwnerContacts() {
     const getSafe = (value?: string | null) => (value && value.trim() !== "" ? value : "N/A");
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow-md">
-            <h2 className="text-xl font-bold mb-4">Restaurant Owner Contacts</h2>
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md w-full">
+            <div className="mb-4">
+                <h2 className="text-lg sm:text-xl font-bold">Restaurant Owner Contacts</h2>
+            </div>
 
             <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                <table className="min-w-full divide-y divide-gray-200 text-xs md:text-sm">
                     <thead className="bg-gray-100">
                         <tr>
-                            <th className="px-4 py-2 text-left text-gray-500 uppercase">Name</th>
-                            <th className="px-4 py-2 text-left text-gray-500 uppercase">Email</th>
-                            <th className="px-4 py-2 text-left text-gray-500 uppercase">Phone</th>
-                            <th className="px-4 py-2 text-left text-gray-500 uppercase">Address</th>
-                            <th className="px-4 py-2 text-left text-gray-500 uppercase">Restaurant</th>
+                            <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-gray-500 uppercase">Name</th>
+                            <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-gray-500 uppercase">Email</th>
+                            <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-gray-500 uppercase">Phone</th>
+                            <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-gray-500 uppercase">Address</th>
+                            <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-gray-500 uppercase">Restaurant</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -70,11 +72,11 @@ export default function OwnerContacts() {
                         ) : (
                             contacts.map((owner, index) => (
                                 <tr key={index}>
-                                    <td className="px-4 py-2">{getSafe(owner.ownerName)}</td>
-                                    <td className="px-4 py-2">{getSafe(owner.ownerEmail)}</td>
-                                    <td className="px-4 py-2">{getSafe(owner.phone)}</td>
-                                    <td className="px-4 py-2">{getSafe(owner.address)}</td>
-                                    <td className="px-4 py-2">{getSafe(owner.restaurantName)}</td>
+                                    <td className="px-2 sm:px-4 py-1 sm:py-2">{getSafe(owner.ownerName)}</td>
+                                    <td className="px-2 sm:px-4 py-1 sm:py-2">{getSafe(owner.ownerEmail)}</td>
+                                    <td className="px-2 sm:px-4 py-1 sm:py-2">{getSafe(owner.phone)}</td>
+                                    <td className="px-2 sm:px-4 py-1 sm:py-2">{getSafe(owner.address)}</td>
+                                    <td className="px-2 sm:px-4 py-1 sm:py-2">{getSafe(owner.restaurantName)}</td>
                                 </tr>
                             ))
                         )}

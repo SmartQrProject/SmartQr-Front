@@ -9,7 +9,6 @@ export async function updateProfile(token: string, data: UserProfileFormInputs, 
     const updateData = {
       name: data.name,
       phone: data.phone,
-      address: data.address,
       ...(data.password && {
         password: data.password,
         confirmPassword: data.confirmPassword

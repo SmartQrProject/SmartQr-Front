@@ -1,38 +1,64 @@
 "use client";
 
-import { useAuth } from '@/app/(admin)/login/adminLoginContext';
-import RestaurantPageClient from '@/components/adminComponents/editableRestaurant/landingPage/RestaurantPageClient';
-import EditableCategories from '@/components/adminComponents/editableRestaurant/landingPage/EditableCategories';
-import { useState } from 'react';
-import CategoryProductList from './CategoryProductList';
-import StoreInfoModal from './StoreInfoAdmin';
+import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+import RestaurantPageClient from "@/components/adminComponents/editableRestaurant/landingPage/RestaurantPageClient";
+import EditableCategories from "@/components/adminComponents/editableRestaurant/landingPage/EditableCategories";
+import { useEffect, useState } from "react";
+import CategoryProductList from "./CategoryProductList";
+import StoreInfoModal from "./StoreInfoAdmin";
+import { useRouter } from "next/navigation";
 
 export default function StorePageAdmin() {
-  const { user } = useAuth();
-  const slug = user?.payload?.slug;
-  const [isStoreInfoModalOpen, setIsStoreInfoModalOpen] = useState(false);
+    const { user } = useAuth();
+    const router = useRouter();
 
-  const handleOpenModal = () => setIsStoreInfoModalOpen(true);
-  const handleCloseModal = () => setIsStoreInfoModalOpen(false);
+    const [isStoreInfoModalOpen, setIsStoreInfoModalOpen] = useState(false);
+    const [isAuthorized, setIsAuthorized] = useState(false);
+    const [checkingAuth, setCheckingAuth] = useState(true);
 
-  if (!slug) {
-    return <p className="p-4 text-center">Loading restaurant...</p>;
-  }
+    const handleOpenModal = () => setIsStoreInfoModalOpen(true);
+    const handleCloseModal = () => setIsStoreInfoModalOpen(false);
 
-  return (
-    <>
-      
-      <div>
-        <button onClick={handleOpenModal}  className="m-1 w-full max-w-[8rem] h-10 text-sm text-white font-semibold bg-default-800 rounded hover:bg-default-700 cursor-pointer">
-        Store Info
-        </button>
-        <StoreInfoModal open={isStoreInfoModalOpen} onClose={handleCloseModal} slug={slug} />
-      </div>
+    useEffect(() => {
+        if (!user) return;
 
-        <RestaurantPageClient />
-        <EditableCategories slug={slug} />
-        <CategoryProductList slug={slug} />
-      
-    </>
-  );
+        const role = user.payload?.role;
+        const slug = user.payload?.slug;
+
+        if (role !== "owner" || !slug) {
+            router.push("/admin/dashboard");
+        } else {
+            setIsAuthorized(true);
+        }
+
+        setCheckingAuth(false);
+    }, [user, router]);
+
+    if (checkingAuth || !user) {
+        return <p className="p-4 text-center">Loading restaurant...</p>;
+    }
+
+    if (!isAuthorized) {
+        return null;
+    }
+
+    const slug = user.payload?.slug;
+
+    return (
+        <>
+            <div>
+                <button
+                    onClick={handleOpenModal}
+                    className="m-1 w-full max-w-[8rem] h-10 text-sm text-white font-semibold bg-default-800 rounded hover:bg-default-700 cursor-pointer"
+                >
+                    Store Info
+                </button>
+                <StoreInfoModal open={isStoreInfoModalOpen} onClose={handleCloseModal} slug={slug} />
+            </div>
+
+            <RestaurantPageClient />
+            <EditableCategories slug={slug} />
+            <CategoryProductList slug={slug} />
+        </>
+    );
 }
