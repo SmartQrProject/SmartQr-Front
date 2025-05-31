@@ -1,7 +1,7 @@
 import { NextURL } from "next/dist/server/web/next-url";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth0 } from "@/lib/auth0"; // Asegurate que esta ruta sea la correcta
+import { auth0 } from "@/lib/auth0";
 
 export async function middleware(request: NextRequest) {
     const { pathname, origin } = request.nextUrl;
