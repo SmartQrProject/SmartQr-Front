@@ -29,16 +29,21 @@ export default function RestaurantList() {
             return;
         }
 
-        const session = JSON.parse(sessionRaw);
-        const role = session.payload?.role;
+        try {
+            const session = JSON.parse(sessionRaw);
+            const role = session?.payload?.roles;
 
-        if (role !== "superAdmin") {
+            if (role !== "superAdmin") {
+                router.push("/404");
+                return;
+            }
+
+            setAuthorized(true);
+        } catch {
             router.push("/404");
-            return;
+        } finally {
+            setCheckingAuth(false);
         }
-
-        setAuthorized(true);
-        setCheckingAuth(false);
     }, [router]);
 
     const getSession = () => {
@@ -78,7 +83,6 @@ export default function RestaurantList() {
         if (!res.ok) throw new Error("Failed to fetch owner data");
 
         const data = await res.json();
-
         const ownerMap: Record<string, string> = {};
         for (const owner of data) {
             ownerMap[owner.ownerEmail] = owner.ownerName;
@@ -98,7 +102,7 @@ export default function RestaurantList() {
             }));
 
             setRestaurants(combined);
-        } catch (err) {
+        } catch {
             toast.error("Error loading data");
         }
     };
@@ -126,7 +130,7 @@ export default function RestaurantList() {
 
             toast.success("Restaurant status updated");
             loadData();
-        } catch (err) {
+        } catch {
             toast.error("Error updating status");
         }
     };
@@ -147,18 +151,13 @@ export default function RestaurantList() {
             toast.success("Restaurant deleted successfully");
             setDeletingSlug(null);
             loadData();
-        } catch (err) {
+        } catch {
             toast.error("Error deleting restaurant");
         }
     };
 
-    if (checkingAuth) {
-        return <p className="p-4 text-center">Checking access...</p>;
-    }
-
-    if (!authorized) {
-        return null;
-    }
+    if (checkingAuth) return <p className="p-4 text-center">Checking access...</p>;
+    if (!authorized) return null;
 
     return (
         <div className="p-6">

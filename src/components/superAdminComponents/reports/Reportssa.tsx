@@ -10,7 +10,7 @@ import OwnerContacts from "./ownerContacts/OwnerContacts";
 const Reports = () => {
     const router = useRouter();
     const [authorized, setAuthorized] = useState(false);
-    const [checkingAuth, setCheckingAuth] = useState(true);
+    const [checking, setChecking] = useState(true);
 
     useEffect(() => {
         const sessionRaw = localStorage.getItem("adminSession");
@@ -19,25 +19,26 @@ const Reports = () => {
             return;
         }
 
-        const session = JSON.parse(sessionRaw);
-        const role = session.payload?.role;
+        try {
+            const session = JSON.parse(sessionRaw);
+            const role = session?.payload?.roles;
 
-        if (role !== "superAdmin") {
+            if (role !== "superAdmin") {
+                router.push("/404");
+                return;
+            }
+
+            setAuthorized(true);
+        } catch {
             router.push("/404");
-            return;
+        } finally {
+            setChecking(false);
         }
-
-        setAuthorized(true);
-        setCheckingAuth(false);
     }, [router]);
 
-    if (checkingAuth) {
-        return <p className="p-4 text-center">Checking access...</p>;
-    }
+    if (checking) return null;
 
-    if (!authorized) {
-        return null;
-    }
+    if (!authorized) return null;
 
     return (
         <div className="w-full px-4 sm:px-6 py-6 space-y-10">

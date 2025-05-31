@@ -45,9 +45,9 @@ const TablesView: React.FC = () => {
                     const session = JSON.parse(sessionRaw);
                     const extractedToken = session.token;
                     const extractedSlug = session.restaurant?.slug || session.payload?.restaurant?.slug;
-                    const role = session.payload?.role;
+                    const roles = session.payload?.roles;
 
-                    if (role !== "owner" && role !== "staff") {
+                    if (!roles || (!roles.includes("owner") && !roles.includes("staff"))) {
                         router.push("/404");
                         return;
                     }

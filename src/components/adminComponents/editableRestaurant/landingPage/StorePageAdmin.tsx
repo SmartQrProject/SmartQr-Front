@@ -1,12 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import RestaurantPageClient from "@/components/adminComponents/editableRestaurant/landingPage/RestaurantPageClient";
 import EditableCategories from "@/components/adminComponents/editableRestaurant/landingPage/EditableCategories";
-import { useEffect, useState } from "react";
 import CategoryProductList from "./CategoryProductList";
 import StoreInfoModal from "./StoreInfoAdmin";
-import { useRouter } from "next/navigation";
 
 export default function StorePageAdmin() {
     const { user } = useAuth();
@@ -18,19 +18,20 @@ export default function StorePageAdmin() {
 
     const handleOpenModal = () => setIsStoreInfoModalOpen(true);
     const handleCloseModal = () => setIsStoreInfoModalOpen(false);
-
     useEffect(() => {
-        if (!user) return;
-
-        const role = user.payload?.role;
+        if (!user || !user.token) {
+            router.push("/");
+            return;
+        }
+        const role = user.payload?.roles;
         const slug = user.payload?.slug;
 
         if (role !== "owner" || !slug) {
             router.push("/admin/dashboard");
-        } else {
-            setIsAuthorized(true);
+            return;
         }
 
+        setIsAuthorized(true);
         setCheckingAuth(false);
     }, [user, router]);
 

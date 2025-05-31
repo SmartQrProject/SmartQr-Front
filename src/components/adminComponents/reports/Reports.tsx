@@ -18,7 +18,11 @@ const Reports = () => {
     const [checkingAuth, setCheckingAuth] = useState(true);
 
     useEffect(() => {
-        const role = user?.payload?.role;
+        if (!user || !user.token) {
+            router.push("/");
+            return;
+        }
+        const role = user?.payload?.roles;
         if (role === "owner") {
             setAuthorized(true);
         } else {
