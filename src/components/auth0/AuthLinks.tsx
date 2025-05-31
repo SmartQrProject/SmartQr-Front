@@ -10,7 +10,7 @@ export default function AuthLinks() {
     localStorage.removeItem("customerSession");
     localStorage.removeItem("cart");
 
-  const APP_BASE_URL = process.env.APP_BASE_URL || "http://localhost:3000" || "https://www.smart-qr.tech";
+  const APP_BASE_URL = process.env.APP_BASE_URL || "https://www.smart-qr.tech";
 
 
   
