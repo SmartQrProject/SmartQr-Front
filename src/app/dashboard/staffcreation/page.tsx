@@ -28,7 +28,7 @@ const StaffCreation = () => {
         const session = localStorage.getItem("adminSession");
         if (session) {
             const parsed = JSON.parse(session);
-            const roleFromSession = parsed.payload?.role || null;
+            const roleFromSession = parsed.payload?.roles || null;
             const slugFromSession = parsed.payload?.slug || "";
             const tokenFromSession = parsed.token || "";
 
@@ -94,7 +94,7 @@ const StaffCreation = () => {
                                         setLimit(Number(e.target.value));
                                         setPage(1);
                                     }}
-                                    className="border rounded px-1 py-1 text-sm focus:outline-none focus:ring-2 "
+                                    className="border rounded px-1 py-1 text-sm focus:outline-none focus:ring-2"
                                 >
                                     {LIMIT_OPTIONS.map((opt) => (
                                         <option key={opt} value={opt}>

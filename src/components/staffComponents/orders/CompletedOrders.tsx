@@ -34,17 +34,22 @@ export default function CompletedOrdersPage() {
     const { user } = useAuth();
     const slug = user?.payload?.slug;
     const token = user?.token;
-    const role = user?.payload?.role;
+    const roles = user?.payload?.roles;
     const router = useRouter();
 
     useEffect(() => {
-        if (!role || (role !== "owner" && role !== "staff")) {
+        if (!user || !user.token) {
+            router.push("/");
+            return;
+        }
+        if (!roles || (!roles.includes("owner") && !roles.includes("staff"))) {
             router.push("/404");
             return;
         }
+
         setAuthorized(true);
         setCheckingAuth(false);
-    }, [role, router]);
+    }, [user, roles, router]);
 
     useEffect(() => {
         if (!slug || !token || !authorized) return;

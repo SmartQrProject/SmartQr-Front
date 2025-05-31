@@ -18,16 +18,20 @@ const Settings = () => {
     const token = user?.token;
     const slug = user?.payload.slug;
     const userId = user?.payload.sub;
-    const role = user?.payload.roles;
+    const roles = user?.payload.roles;
 
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
     useEffect(() => {
-        if (!role || (role !== "owner" && role !== "staff")) {
+        if (!user || !user.token) {
+            router.push("/");
+            return;
+        }
+        if (!roles || (!roles.includes("owner") && !roles.includes("staff"))) {
             router.push("/404");
         }
-    }, [role, router]);
+    }, [roles, router]);
 
     const {
         register,
@@ -116,7 +120,6 @@ const Settings = () => {
                     {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
                 </div>
 
-                {/* Password Settings (optional) */}
                 <div className="pt-4 border-t mt-4">
                     <h2 className="text-lg font-semibold mb-2">
                         Password Settings <span className="text-gray-500 font-normal">(Optional)</span>
