@@ -10,6 +10,7 @@ import { UserProfileData, UserProfileSchema } from './customerSchema';
 import { getCustomerById, modifyCustomersData } from '../fetch/customerUser';
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from 'react-hot-toast';
+import { uploadImageToServer } from '@/utils/uploadImageToServer';
 
 const CustomerEditDashboard = () => {
 const [customer, setCustomer] = useState<any>(null);
@@ -46,6 +47,7 @@ useEffect(() => {
       setCustomer(response.data);
       reset({
         phone: response.data.phone,
+        name: response.data.name
       });
     } else {
       console.error("❌ Failed to load customer data:", response.message);
@@ -59,19 +61,45 @@ useEffect(() => {
 const onSubmit = async (data: UserProfileData) => {
   if (!slug || !token || !id) return;
 
-  const { confirmPassword, phone, ...rest } = data;
-  const sendData = {
-    ...rest,
-    phone: phone ? Number(phone) : undefined,
-  };
+  const { name, picture, phone, ...rest } = data;
+  const sendData: any = {};
+
+  if (data.name?.trim()) sendData.name = data.name.trim();
+  if (data.phone?.trim()) sendData.phone = data.phone.trim();
+
+  const selectedPicture = data.picture as FileList | undefined;
+  if (selectedPicture && selectedPicture.length > 0) {
+    const uploadedUrl = await uploadImageToServer(selectedPicture[0]);
+    if (uploadedUrl) {
+      sendData.picture = uploadedUrl; 
+    }
+  }
 
   const result = await modifyCustomersData(slug, token, id, sendData);
-  if (result.success) {
-    toast.success("Data updated successfully");
-  } else {
 
+  if (result.success) {
+    
+    const response = await getCustomerById(token, slug, id);
+    if (response.success) {
+      const updatedCustomer = response.data;
+      setCustomer(updatedCustomer);
+      toast.success("Data updated successfully");
+
+      
+      const session = localStorage.getItem("customerSession");
+      if (session) {
+        const parsed = JSON.parse(session);
+        parsed.payload.name = updatedCustomer.name;
+        parsed.payload.picture = updatedCustomer.picture;
+        localStorage.setItem("customerSession", JSON.stringify(parsed));
+
+        window.dispatchEvent(new Event("customerSessionUpdated"));
+      }
+    }
+  } else {
     toast.error("❌ Failed to update data");
   }
+
 };
 
 if (!customer ) return <p className="text-center mt-20">Loading...</p>;
@@ -110,7 +138,7 @@ if (!customer ) return <p className="text-center mt-20">Loading...</p>;
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-900">Phone</label>
               <input
-                type="number"
+                type="string"
                 {...register('phone')}
                 className="w-full p-2 bg-white rounded-md"
               />
@@ -118,26 +146,29 @@ if (!customer ) return <p className="text-center mt-20">Loading...</p>;
                 <p className="text-red-500 text-sm">{errors.phone.message}</p>
               )}
             </div>
-
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900">Password</label>
-              <PasswordInput
-                register={register}
-                name="password"
-                error={errors.password?.message}
+              <label className="block mb-2 text-sm font-medium text-gray-900">Name</label>
+              <input
+                type="string"
+                {...register('name')}
+                className="w-full p-2 bg-white rounded-md"
               />
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-900">Picture</label>
+              <input
+                type="file"
+                {...register('picture')}
+                className="w-full p-2 bg-white rounded-md cursor-pointer"
+              />
+              {typeof errors.picture?.message === 'string' && (
+                <p className="text-red-500 text-sm">{errors.picture.message}</p>
+              )}
             </div>
 
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-                Confirm Password
-              </label>
-              <PasswordInput
-                register={register}
-                name="confirmPassword"
-                error={errors.confirmPassword?.message}
-              />
-            </div>
             <span className='text-xs'>* You need to fill in all fields to update your information.</span>
             <button
               type="submit"

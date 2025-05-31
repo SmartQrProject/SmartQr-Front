@@ -18,7 +18,7 @@ const Settings = () => {
     const token = user?.token;
     const slug = user?.payload.slug;
     const userId = user?.payload.sub;
-    const role = user?.payload.role;
+    const role = user?.payload.roles;
 
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
