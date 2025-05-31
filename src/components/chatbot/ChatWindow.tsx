@@ -47,7 +47,7 @@ export default function ChatWindow({ messages, setMessages, close }: ChatWindowP
             </div>
             <div className="flex-1 overflow-y-auto p-2 space-y-2">
                 {messages.map((m, i) => {
-                    console.log("🧾 Received message:", m); // optional debug
+                    // console.log("🧾 Received message:", m); // optional debug
                     return (
                         <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
                             <div className={`${m.sender === "user" ? "chatbot-message-user" : "chatbot-message-bot"}`}>

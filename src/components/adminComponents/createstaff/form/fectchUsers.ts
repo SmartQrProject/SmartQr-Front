@@ -1,89 +1,84 @@
 import { StaffFormInputs } from "./SchemaStaff";
 
-const APIURL = process.env.NEXT_PUBLIC_API_URL
+const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
+export async function staffRegister(token: string, data: StaffFormInputs, slug: string) {
+    try {
+        const response = await fetch(`${APIURL}/users/${slug}/signup`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+        });
 
-export async function staffRegister (token: string, data: StaffFormInputs, slug: string) {
-  try {
-    const response = await fetch(`${APIURL}/users/${slug}/signup`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(data),
-    });
+        const result = await response.json();
 
-    const result = await response.json();
+        if (!response.ok) {
+            return {
+                success: false,
+                message: result.message || "Failed to create Staff user",
+            };
+        }
 
-    if (!response.ok) {
-      return {
-        success: false,
-        message: result.message || "Failed to create Staff user",
-      };
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, message: "Unexpected error occurred" };
     }
-
-    return { success: true };
-
-  } catch (error: any) {
-
-    return { success: false, message: "Unexpected error occurred" };
-  }
 }
 
 export async function getUsers(slug: string, token: string, page = 1, limit = 5) {
-  try {
-    const response = await fetch(`${APIURL}/users/staff?slug=${slug}&page=${page}&limit=${limit}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
-    });
-    
-    const data = await response.json();
+    try {
+        const response = await fetch(`${APIURL}/users/staff?slug=${slug}&page=${page}&limit=${limit}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
 
-      console.log("Respuesta del backend:", data);
+        const data = await response.json();
 
-    return data;
+        // console.log("Respuesta del backend:", data);
 
-  } catch (error: any) {
-    throw new Error(error.message || "Error fetching users");
-  }
+        return data;
+    } catch (error: any) {
+        throw new Error(error.message || "Error fetching users");
+    }
 }
 
-
 export const deleteUser = async (slug: string, userId: string, token: string) => {
-  const url = `${APIURL}/users/${slug}/${userId}`;
-  console.log("Deleting user with URL:", url);
+    const url = `${APIURL}/users/${slug}/${userId}`;
+    // console.log("Deleting user with URL:", url);
 
-  const res = await fetch(url, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": 'application/json',
-    },
-  });
+    const res = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
 
-  console.log("Respuesta status:", res.status);
+    // console.log("Respuesta status:", res.status);
 
-  const text = await res.text();
+    const text = await res.text();
 
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    data = text;
-  }
+    let data;
+    try {
+        data = JSON.parse(text);
+    } catch {
+        data = text;
+    }
 
-  console.log("Respuesta body:", data);
+    // console.log("Respuesta body:", data);
 
-  if (!res.ok) {
-    const errMsg = (data && data.message) || data || 'Failed to delete user';
-    throw new Error(errMsg);
-  }
+    if (!res.ok) {
+        const errMsg = (data && data.message) || data || "Failed to delete user";
+        throw new Error(errMsg);
+    }
 
-  if (res.status === 204) return null;
+    if (res.status === 204) return null;
 
-  return data;
+    return data;
 };
