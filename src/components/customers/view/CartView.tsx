@@ -98,6 +98,8 @@ const CartView = () => {
 
     if (!customerId) {
       toast.error("You must be logged in to checkout.");
+      const event = new CustomEvent('openHamburgerMenu');
+      window.dispatchEvent(event)
       return;
     }
 

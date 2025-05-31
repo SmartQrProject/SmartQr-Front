@@ -33,6 +33,18 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
   }, [slug, name]);
 
   useEffect(() => {
+  const handleOpenHamburgerMenu = () => {
+    setIsMenuOpen(true);
+  };
+
+  window.addEventListener('openHamburgerMenu', handleOpenHamburgerMenu);
+
+  return () => {
+    window.removeEventListener('openHamburgerMenu', handleOpenHamburgerMenu);
+  };
+}, []);
+
+  useEffect(() => {
     const loadSession = () => {
       const session = localStorage.getItem('customerSession');
       if (session) {
@@ -51,7 +63,6 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
         setCustomerProfileImg(null);
       }
     };
-
     loadSession();
     window.addEventListener('customerSessionUpdated', loadSession);
     return () => {
@@ -64,8 +75,6 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
 
   const displaySlug = slug || localSlug;
   const displayName = name || localName;
-
-  console.log('NavbarCustomer', { displaySlug, displayName, tableNumber });
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
