@@ -1,14 +1,14 @@
 import { z } from "zod";
 
 const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/
 
 export const StaffRegisterSchema = z
   .object({
     name: z
       .string()
       .min(5, "Name must be at least 5 characters")
-      .max(100, "Name must be at most 100 characters")
+      .max(50, "Name must be at most 50 characters")
       .regex(/^[A-Za-z0-9 ]+$/, {
         message: "Name can only contain letters, numbers, and spaces",
       }),
@@ -16,11 +16,15 @@ export const StaffRegisterSchema = z
     email: z
       .string()
       .nonempty({ message: "Email is required" })
+      .min(5, "Email must be at least 5 characters")
+      .max(100, "Email must be at most 100 characters")
       .email("Please enter a valid email address"),
 
     phone: z
     .string()
-    .regex(/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number")
+    .min(6)
+    .max(40)
+    .regex(/^\+?[()\-\d\s]{6,40}$/, "Please enter a valid phone number")
     .optional(),
 
     slug: z
@@ -29,6 +33,9 @@ export const StaffRegisterSchema = z
 
     password: z
       .string()
+      .nonempty({ message: "Password is required" })
+      .min(8, "Password must be at least 8 characters")
+      .max(15, "Password must be at most 15 characters")
       .regex(passwordRegex, {
         message:
           "Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (!@#$%^&*)",
@@ -36,6 +43,9 @@ export const StaffRegisterSchema = z
 
     confirmPassword: z
       .string()
+      .nonempty({ message: "Password is required" })
+      .min(8, "Password must be at least 8 characters")
+      .max(15, "Password must be at most 15 characters")
       .regex(passwordRegex, {
         message:
           "Confirm Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (!@#$%^&*)",

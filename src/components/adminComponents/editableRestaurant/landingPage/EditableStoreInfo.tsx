@@ -3,6 +3,7 @@ import { XIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { IRestaurant } from "@/types";
 import AddressInput from "../../maps/AddressInput";
+import { CompleteRestaurantsSchema } from "../../menu/menuHelpers/schemas/storeInfoSchema";
 
 type StoreInfoModalProps = {
     restaurant: IRestaurant;
@@ -43,66 +44,61 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
             const token = session.token;
             const slug = restaurant.slug;
 
-            const payload: any = {};
+            const tagArray = tags
+                .split(",")
+                .map((tag) => tag.trim())
+                .filter((tag) => tag !== "");
 
-            // console.log("Latitude:", latitude);
-            // console.log("Longitude:", longitude);
-            // console.log("Payload enviado al backend:", payload);
+            const payload: any = {
+                name: name.trim(),
+                slug,
+                address: address || undefined,
+                phone: phone.trim() || undefined,
+                description: description.trim() || undefined,
+                tags: tagArray.length > 0 ? tagArray : undefined,
+                latitude: latitude ?? undefined,
+                longitude: longitude ?? undefined,
+                trading_hours: showTradingHours
+                    ? {
+                        mondayToFriday: { open: monOpen, close: monClose },
+                        saturday: { open: satOpen, close: satClose },
+                        sunday: { open: sunOpen, close: sunClose },
+                    }
+                    : undefined,
+                ordering_times: showOrderingTimes
+                    ? {
+                        pickup,
+                        dinein,
+                    }
+                    : undefined,
+            };
 
-            if (name.trim()) payload.name = name.trim();
-
-            if (tags.trim()) {
-                payload.tags = tags
-                    .split(",")
-                    .map((tag) => tag.trim())
-                    .filter((tag) => tag !== "");
-            }
-
-            payload.address = address;
-            if (latitude !== null && latitude !== undefined) payload.latitude = latitude;
-            if (longitude !== null && longitude !== undefined) payload.longitude = longitude;
-
-            if (description.trim()) payload.description = description.trim();
-
-            if (phone.trim()) payload.phone = phone.trim();
-
-            if (showTradingHours) {
-                payload.trading_hours = {
-                    mondayToFriday: { open: monOpen, close: monClose },
-                    saturday: { open: satOpen, close: satClose },
-                    sunday: { open: sunOpen, close: sunClose },
-                };
-            } else {
-                payload.trading_hours = null;
-            }
-
-            if (showOrderingTimes) {
-                payload.ordering_times = {
-                    pickup,
-                    dinein,
-                };
-            } else {
-                payload.ordering_times = null;
-            }
-
-            // console.log("Payload enviado al backend:", payload);
+            // Validación Zod parcial (omite campos que no se modifican aquí)
+            const validatedPayload = CompleteRestaurantsSchema.partial({
+                owner_pass: true,
+                owner_name: true,
+                owner_email: true,
+                isTrial: true,
+                is_active: true,
+                banner: true,
+            }).parse(payload);
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/restaurants/${slug}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(payload),
+                body: JSON.stringify(validatedPayload),
             });
 
             if (!res.ok) throw new Error("Failed to update restaurant");
 
             toast.success("Store info updated");
             onClose();
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error updating store info:", error);
-            toast.error("Failed to update store");
+            toast.error(error?.message || "Failed to update store");
         }
     };
 
@@ -131,7 +127,7 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                         />
                         {address && (
                             <p className="text-sm text-gray-700 mt-1">
-                                Seleccionado: <span className="font-light  ">{address}</span>
+                                Seleccionado: <span className="font-light">{address}</span>
                             </p>
                         )}
                     </div>
@@ -182,7 +178,6 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                                             <span className="text-xs text-gray-600 mb-1">Open</span>
                                             <input type="time" value={monOpen} onChange={(e) => setMonOpen(e.target.value)} className="bg-gray-200 p-2 rounded-md text-sm" />
                                         </div>
-
                                         <div className="flex flex-col">
                                             <span className="text-xs text-gray-600 mb-1">Close</span>
                                             <input type="time" value={monClose} onChange={(e) => setMonClose(e.target.value)} className="bg-gray-200 p-2 rounded-md text-sm" />
@@ -244,14 +239,8 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                 </div>
 
                 <div className="flex justify-end gap-2 pt-4">
-                    <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
-                        {" "}
-                        Cancel
-                    </button>
-                    <button onClick={handleUpdateEditable} className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-                        {" "}
-                        Save
-                    </button>
+                    <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
+                    <button onClick={handleUpdateEditable} className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Save</button>
                 </div>
             </div>
         </div>
