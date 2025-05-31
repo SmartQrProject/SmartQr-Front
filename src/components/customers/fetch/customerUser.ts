@@ -3,7 +3,7 @@ const APIURL = process.env.NEXT_PUBLIC_API_URL
 interface CustomerData {
   name?: string;
   email?: string;
-  phone?: number;
+  phone?: string;
   password?: string;
   reward?: number;
 }
@@ -23,10 +23,11 @@ export async function modifyCustomersData(
       },
       body: JSON.stringify(data),
     });
+    console.log("body:", JSON.stringify(data))
     
 
     const result = await response.json();
-
+    console.log(result)
     if (!response.ok) {
       return {
         success: false,

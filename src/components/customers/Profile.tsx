@@ -18,6 +18,7 @@ export default function CustomerProfile() {
     const [slug, setSlug] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
     const [sessionReady, setSessionReady] = useState(false);
+    const [customerData, setCustomerData] = useState({name:"", picture:"", phone:""});
 
     useEffect(() => {
         const storedSlug = localStorage.getItem("slug");
@@ -59,11 +60,19 @@ useEffect(() => {
       }
 
       const data = await res.json();
+      console.log(data)
 
+      const customerData = {
+        name: data.name,
+        picture: data.picture,
+        phone: data.phone,
+      }
+
+      setCustomerData(customerData)
       const customerSession = {
         token: token,
         payload: {
-          picture: user.picture,
+          picture: customerData.picture,
           id: data?.id,
         },
       };
@@ -72,6 +81,7 @@ useEffect(() => {
       window.dispatchEvent(new Event("customerSessionUpdated"));
       
       setSessionReady(true);
+      
     } catch (err) {
       console.error("Error syncing user:", err);
     }
@@ -90,10 +100,10 @@ useEffect(() => {
             <h1 className="text-center text-2xl mt-20 font-bold mb-4 flex justify-center items-center gap-2">
                 <ClipboardList className="h-7 w-7 text-sky-700" /> My Orders
             </h1>
-            <h2 className="text-center text-xl ">Hi, {user.name}</h2>
+            <h2 className="text-center text-xl ">Hi, {customerData.name}</h2>
             <div className="relative w-20 h-20 mx-auto mt-4 mb-6">
-                {user.picture && (
-                <img src={user.picture} alt="Foto" className="rounded-full w-20 h-20 object-cover" />
+                {customerData.picture && (
+                <img src={customerData.picture} alt="Foto" className="rounded-full w-20 h-20 object-cover" />
                 )}
                 <Link
                     href={`/customer/dashboard/edit`}
