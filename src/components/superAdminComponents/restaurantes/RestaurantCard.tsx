@@ -16,15 +16,15 @@ export interface RestaurantCardProps {
 }
 
 const RestaurantCard: React.FC<RestaurantCardProps> = ({ id, slug, name, owner_email, owner_name, created_at, is_active, onToggleStatus, onEdit, onDelete }) => {
-    console.log("🧾 RestaurantCard props:", {
-        id,
-        slug,
-        name,
-        owner_email,
-        owner_name,
-        created_at,
-        is_active,
-    });
+    // console.log("🧾 RestaurantCard props:", {
+    //     id,
+    //     slug,
+    //     name,
+    //     owner_email,
+    //     owner_name,
+    //     created_at,
+    //     is_active,
+    // });
 
     return (
         <tr className="bg-white hover:bg-gray-50 transition">
