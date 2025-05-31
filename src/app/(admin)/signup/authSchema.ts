@@ -33,6 +33,9 @@ export const AdminRegisterSchema = z
 
     password: z
       .string()
+      .nonempty({ message: "Password is required" })
+      .min(8, "Password must be at least 8 characters")
+      .max(15, "Password must be at most 15 characters")
       .regex(passwordRegex, {
         message:
           "Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (@$!%?&)",
@@ -40,6 +43,9 @@ export const AdminRegisterSchema = z
 
     confirmPassword: z
       .string()
+      .nonempty({ message: "Password is required" })
+      .min(8, "Password must be at least 8 characters")
+      .max(15, "Password must be at most 15 characters")
       .regex(passwordRegex, {
         message:
           "Confirm Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (@$!%?&)",
@@ -59,5 +65,8 @@ export type RegisterFormInputs = z.infer<typeof AdminRegisterSchema>;
 
 export const loginSchema = z.object({
   email: z.string().nonempty({ message: "Email is required" }).email(),
-  password: z.string().nonempty({ message: "Password is required" }).min(8),
+  password: z.string()
+  .nonempty({ message: "Password is required" })
+  .min(8, "Password must be at least 8 characters")
+  .max(15, "Password must be at most 15 characters"),
 });
