@@ -37,7 +37,7 @@ export default function BillingComponent() {
         const session = localStorage.getItem("adminSession");
         if (session) {
             const parsed = JSON.parse(session);
-            const roleFromSession = parsed.payload?.role || null;
+            const roleFromSession = parsed.payload?.roles || null;
             const slugFromSession = parsed.payload?.slug || "";
             const tokenFromSession = parsed.token || "";
 

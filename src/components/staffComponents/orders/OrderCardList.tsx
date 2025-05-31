@@ -16,17 +16,22 @@ export default function OrderCardList() {
     const { user } = useAuth();
     const slug = user?.payload?.slug;
     const token = user?.token;
-    const role = user?.payload?.role;
     const router = useRouter();
-
     useEffect(() => {
-        if (!role || (role !== "owner" && role !== "staff")) {
+        if (!user || !user.token) {
+            router.push("/");
+            return;
+        }
+
+        const roles = user.payload?.roles;
+        if (!roles || (!roles.includes("owner") && !roles.includes("staff"))) {
             router.push("/404");
             return;
         }
+
         setAuthorized(true);
         setCheckingAuth(false);
-    }, [role, router]);
+    }, [user, router]);
 
     useEffect(() => {
         if (!slug || !token || !authorized) return;
