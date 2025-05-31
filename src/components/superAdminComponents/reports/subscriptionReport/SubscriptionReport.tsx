@@ -63,40 +63,51 @@ export default function SubscriptionReport() {
     const conversionRate = totalConversions ? ((conversionData[0].value / totalConversions) * 100).toFixed(1) : "0.0";
 
     return (
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Pie Chart - Subscription Distribution */}
+        <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+            {/* Subscription Type Distribution */}
             <div className="bg-white rounded-xl p-4 shadow-md">
-                <h2 className="text-lg font-semibold mb-4">Subscription Type Distribution</h2>
-                <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                        <Pie data={subscriptionData} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" dataKey="value" label>
-                            {subscriptionData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend />
-                    </PieChart>
-                </ResponsiveContainer>
+                <h2 className="text-base sm:text-lg font-semibold mb-4 text-center sm:text-left">Restaurants Subscription Type</h2>
+                <div className="w-full h-[250px] sm:h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Pie
+                                data={subscriptionData}
+                                cx="50%"
+                                cy="50%"
+                                outerRadius={80}
+                                fill="#8884d8"
+                                dataKey="value"
+                                label={(entry) => `${entry.name} (${entry.value})`} // ✅ Aquí se personaliza
+                            >
+                                {subscriptionData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
             </div>
-
-            {/* Pie Chart - Conversion from Free Trial */}
+            {/* Free Trial Conversion */}
             <div className="bg-white rounded-xl p-4 shadow-md">
-                <h2 className="text-lg font-semibold mb-4">Free Trial Conversion</h2>
-                <p className="text-gray-600 text-sm mb-2">
+                <h2 className="text-base sm:text-lg font-semibold mb-4 text-center sm:text-left">Free Trial Conversion</h2>
+                <p className="text-gray-600 text-sm mb-2 text-center sm:text-left">
                     {conversionData[0].value} of {totalConversions} users converted (<strong>{conversionRate}%</strong>)
                 </p>
-                <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                        <Pie data={conversionData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label>
-                            {conversionData.map((entry, index) => (
-                                <Cell key={`cell-conv-${index}`} fill={CONVERSION_COLORS[index % CONVERSION_COLORS.length]} />
-                            ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend />
-                    </PieChart>
-                </ResponsiveContainer>
+                <div className="w-full h-[250px] sm:h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Pie data={conversionData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label>
+                                {conversionData.map((entry, index) => (
+                                    <Cell key={`cell-conv-${index}`} fill={CONVERSION_COLORS[index % CONVERSION_COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
             </div>
         </div>
     );

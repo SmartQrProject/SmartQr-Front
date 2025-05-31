@@ -6,7 +6,7 @@ import OwnerContacts from "./ownerContacts/OwnerContacts";
 
 const Reports = () => {
     return (
-        <div>
+        <div className="w-full px-4 sm:px-6 py-6 space-y-10">
             <SubscriptionReport />
             <OwnerReport />
             <RestaurantStats />

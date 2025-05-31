@@ -49,19 +49,21 @@ export default function RestaurantStats() {
     }, [slug, token]);
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow-md">
-            <h2 className="text-xl font-bold mb-4">New Restaurants vs Cancellations</h2>
-            <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={restaurantStatsData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="newRestaurants" fill="#4ade80" name="New" />
-                    <Bar dataKey="canceledRestaurants" fill="#f87171" name="Canceled" />
-                </BarChart>
-            </ResponsiveContainer>
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md w-full max-w-full">
+            <h2 className="text-base sm:text-xl font-bold mb-4 text-center sm:text-left">New Restaurants vs Cancellations</h2>
+            <div className="w-full h-[250px] sm:h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={restaurantStatsData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="newRestaurants" fill="#4ade80" name="New" />
+                        <Bar dataKey="canceledRestaurants" fill="#f87171" name="Canceled" />
+                    </BarChart>
+                </ResponsiveContainer>
+            </div>
         </div>
     );
 }
