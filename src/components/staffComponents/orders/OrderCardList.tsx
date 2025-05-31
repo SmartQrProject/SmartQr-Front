@@ -5,16 +5,31 @@ import { IOrder } from "@/types";
 import OrderCard from "./OrderCard";
 import toast from "react-hot-toast";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+import { useRouter } from "next/navigation";
 
 export default function OrderCardList() {
     const [orders, setOrders] = useState<IOrder[]>([]);
     const [tableNames, setTableNames] = useState<Record<string, string>>({});
+    const [authorized, setAuthorized] = useState(false);
+    const [checkingAuth, setCheckingAuth] = useState(true);
+
     const { user } = useAuth();
     const slug = user?.payload?.slug;
     const token = user?.token;
+    const role = user?.payload?.role;
+    const router = useRouter();
 
     useEffect(() => {
-        if (!slug || !token) return;
+        if (!role || (role !== "owner" && role !== "staff")) {
+            router.push("/404");
+            return;
+        }
+        setAuthorized(true);
+        setCheckingAuth(false);
+    }, [role, router]);
+
+    useEffect(() => {
+        if (!slug || !token || !authorized) return;
 
         const fetchData = async () => {
             try {
@@ -28,8 +43,8 @@ export default function OrderCardList() {
                 ]);
 
                 const ordersData = await ordersRes.json();
-                const tablesJson = await tablesRes.json(); // ✅ aquí el cambio
-                const tablesData = tablesJson.restaurantTables; // ✅ acceso correcto al array
+                const tablesJson = await tablesRes.json();
+                const tablesData = tablesJson.restaurantTables;
 
                 const mappedOrders = ordersData.map((order: any) => ({
                     ...order,
@@ -48,13 +63,12 @@ export default function OrderCardList() {
                 setOrders(mappedOrders);
                 setTableNames(tableMap);
             } catch (err) {
-                console.error("Error loading data:", err);
                 toast.error("Failed to load orders or tables");
             }
         };
 
         fetchData();
-    }, [slug, token]);
+    }, [slug, token, authorized]);
 
     const updateOrderStatus = async (orderId: string, newStatus: string) => {
         if (!slug || !token) return;
@@ -91,6 +105,8 @@ export default function OrderCardList() {
                 ))}
         </div>
     );
+
+    if (checkingAuth) return null;
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

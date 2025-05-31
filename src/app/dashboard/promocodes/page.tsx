@@ -1,30 +1,52 @@
-import MenuAdmin from '@/components/adminComponents/menudesplegabe/MenuAdmin'
-import NavbarAdmin from '@/components/adminComponents/navbar/NavbarAdmin'
-import PromoCodesContainer from '@/components/adminComponents/promoCodes/PromoCodesContainer'
-import PromoCodeForm from '@/components/adminComponents/promoCodes/PromoCodesForm'
-import Footer from '@/components/subscribers/footer/Footer'
-import React from 'react'
+"use client";
 
-const promoCodes = () => {
-  return (
-   <div className="flex flex-col min-h-screen">
-      <NavbarAdmin />
-      <div className="flex flex-1">
-          <MenuAdmin />
-          <main className="flex flex-1 items-center justify-center p-6 bg-gray-50">
-          <PromoCodesContainer />
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+import MenuAdmin from "@/components/adminComponents/menudesplegabe/MenuAdmin";
+import NavbarAdmin from "@/components/adminComponents/navbar/NavbarAdmin";
+import PromoCodesContainer from "@/components/adminComponents/promoCodes/PromoCodesContainer";
+import Footer from "@/components/subscribers/footer/Footer";
 
-        </main>
-     </div>
+const PromoCodesPage = () => {
+    const { user } = useAuth();
+    const router = useRouter();
+    const [authorized, setAuthorized] = useState(false);
+    const [checkingAuth, setCheckingAuth] = useState(true);
 
-      <Footer />
-    </div>
-  )
-}
+    useEffect(() => {
+        const role = user?.payload?.role;
+        if (role === "owner") {
+            setAuthorized(true);
+        } else {
+            router.push("/404");
+        }
+        setCheckingAuth(false);
+    }, [user, router]);
 
-export default promoCodes
+    if (checkingAuth) {
+        return <p className="p-4 text-center">Checking access...</p>;
+    }
 
+    if (!authorized) {
+        return null;
+    }
 
+    return (
+        <div className="flex flex-col min-h-screen">
+            <NavbarAdmin />
+            <div className="flex flex-1">
+                <MenuAdmin />
+                <main className="flex flex-1 items-center justify-center p-6 bg-gray-50">
+                    <PromoCodesContainer />
+                </main>
+            </div>
+            <Footer />
+        </div>
+    );
+};
+
+export default PromoCodesPage;
 // 'use client'
 // import FooterAdmin from '@/components/adminComponents/footer/Footer'
 // import MenuAdmin from '@/components/adminComponents/menudesplegabe/MenuAdmin'
@@ -47,7 +69,7 @@ export default promoCodes
 //             <div className="flex flex-1">
 //                 <MenuAdmin />
 //                 <main className="flex-1 p-4 max-w-3xl mx-auto bg-white shadow rounded-md">
-  
+
 //       <h1 className="text-2xl font-bold mb-4">Promo Codes Management</h1>
 //       <PromoCodeForm onCodeCreated={handleRefresh} />
 //       <PromoCodesList refreshTrigger={refresh} />
@@ -57,5 +79,5 @@ export default promoCodes
 //         </div>
 //   );
 // };
-  
+
 // export default promoCodes
