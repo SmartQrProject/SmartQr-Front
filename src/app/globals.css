@@ -57,6 +57,20 @@ h6 {
     --color-default-200: #d2d7e0;
     --color-default-100: #f0f2f5;
     --color-default-50: #f8f9fb;
+
+    --color-branding-950: #010a18;
+    --color-branding-900: #041e48;
+    --color-branding-800: #073278;
+    --color-branding-700: #0a46a9;
+    --color-branding-600: #0d5ad9;
+    --color-branding-500: #2673f2;
+    --color-branding-400: #5692f5;
+    --color-branding-300: #87b1f8;
+    --color-branding-200: #b7d0fb;
+    --color-branding-100: #e7effe;
+    --color-branding-50: #f2f6ff;
+
+
 }
 
 .sage-light {
