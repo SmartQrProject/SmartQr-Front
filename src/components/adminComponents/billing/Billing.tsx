@@ -57,6 +57,7 @@ export default function BillingComponent() {
 
     useEffect(() => {
         const fetchSubscriptions = async () => {
+            
             if (!slug || !token) return;
 
             try {
@@ -65,12 +66,16 @@ export default function BillingComponent() {
                         Authorization: `Bearer ${token}`,
                     },
                 });
+             
 
                 if (!res.ok) throw new Error("Failed to fetch subscription");
 
                 const data: SubscriptionData = await res.json();
                 setSubscription(data);
                 setCancelled(data.cancelAtPeriodEnd);
+
+               
+            
             } catch (error) {
                 toast.error("Failed to load subscription data");
                 console.error(error);
@@ -81,6 +86,7 @@ export default function BillingComponent() {
     }, [slug, token]);
 
     const handleCancelSubscription = async () => {
+ 
         if (!slug || !token) {
             toast.error("Missing credentials to cancel subscription.");
             return;
@@ -88,7 +94,7 @@ export default function BillingComponent() {
 
         setIsCancelling(true);
         try {
-            const res = await fetch(`${APIURL}/${slug}/cancel`, {
+            const res = await fetch(`${APIURL}/${slug}/subscription/cancel`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
