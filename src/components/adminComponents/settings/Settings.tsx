@@ -16,7 +16,7 @@ function parseJwt(token: string) {
         const base64Payload = token.split(".")[1];
         const payload = atob(base64Payload);
         return JSON.parse(payload);
-    } catch (e) {
+    } catch {
         return null;
     }
 }
@@ -29,10 +29,11 @@ const Settings = () => {
     const [userId, setUserId] = useState("");
     const [email, setEmail] = useState("");
     const [roles, setRoles] = useState<string[]>([]);
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
-    // ✅ Auth check & token load
     useEffect(() => {
         const cookieToken = Cookies.get("adminSession");
         if (!cookieToken) {
@@ -41,16 +42,22 @@ const Settings = () => {
         }
 
         const payload = parseJwt(cookieToken);
-        if (!payload || (!payload.roles?.includes("owner") && !payload.roles?.includes("staff"))) {
+        const role = payload?.roles;
+        const slug = payload?.slug;
+        const userId = payload?.sub;
+
+        if (!role || (!role.includes("owner") && !role.includes("staff")) || !slug || !userId) {
             router.push("/404");
             return;
         }
 
         setToken(cookieToken);
-        setSlug(payload.slug);
-        setUserId(payload.sub);
+        setSlug(slug);
+        setUserId(userId);
         setEmail(payload.email);
-        setRoles(payload.roles);
+        setName(payload.name || "");
+        setPhone(payload.phone || "");
+        setRoles(role);
         setIsLoadingProfile(false);
     }, [router]);
 
@@ -64,23 +71,27 @@ const Settings = () => {
         resolver: zodResolver(UserProfileSchema),
     });
 
-    // ✅ Prefill form once loaded
     useEffect(() => {
-        if (!isLoadingProfile && token && slug && userId) {
-            const payload = parseJwt(token);
-            if (payload) {
-                setValue("name", payload.name || "");
-                setValue("phone", payload.phone || "");
-                setValue("password", "");
-                setValue("confirmPassword", "");
-            }
+        if (!isLoadingProfile) {
+            setValue("name", name);
+            setValue("phone", phone);
+            setValue("password", "");
+            setValue("confirmPassword", "");
         }
-    }, [token, slug, userId, isLoadingProfile, setValue]);
+    }, [isLoadingProfile, name, phone, setValue]);
 
     const onSubmit = async (data: UserProfileFormInputs) => {
         setIsLoading(true);
         try {
-            const result = await updateProfile(token, data, slug, userId);
+            const sanitizedData: UserProfileFormInputs = {
+                name: data.name?.trim() || "",
+                phone: data.phone?.trim() || "",
+                password: data.password?.trim() || "",
+                confirmPassword: data.confirmPassword?.trim() || "",
+            };
+
+            const result = await updateProfile(token, sanitizedData, slug, userId);
+
             if (result.success) {
                 toast.success("Profile updated successfully");
                 reset({
@@ -89,7 +100,8 @@ const Settings = () => {
                     password: "",
                     confirmPassword: "",
                 });
-                // Optionally: reload page or re-fetch token
+                setName(sanitizedData.name || "");
+                setPhone(sanitizedData.phone || "");
             } else {
                 toast.error(result.message || "Failed to update profile");
             }
@@ -111,24 +123,44 @@ const Settings = () => {
     return (
         <div className="max-w-md mx-auto mb-10 p-6 bg-default-50 rounded-xl shadow-sm">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-sm">
-                <h1 className="text-3xl md:text-4xl font-bold text-center text-[#4f89f5]">Profile Settings</h1>
+                <h1 className="text-3xl md:text-4xl font-bold text-center text-[#4f89f5]">
+                    Profile Settings
+                </h1>
 
                 <div className="flex flex-col">
                     <label className="text-sm font-medium mb-1">Email</label>
-                    <input type="email" value={email} disabled className="w-full p-2 bg-gray-100 rounded-md text-gray-500" />
+                    <input
+                        type="email"
+                        value={email}
+                        disabled
+                        className="w-full p-2 bg-gray-100 rounded-md text-gray-500"
+                    />
                     <p className="text-sm text-gray-500 mt-1">Email cannot be modified</p>
                 </div>
 
                 <div className="flex flex-col">
                     <label className="text-sm font-medium mb-1">Name</label>
-                    <input {...register("name")} className="w-full p-2 bg-white rounded-md" placeholder="Enter your name" />
-                    {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+                    <input
+                        {...register("name")}
+                        className="w-full p-2 bg-white rounded-md"
+                        placeholder="Enter your name"
+                    />
+                    {errors.name && (
+                        <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+                    )}
                 </div>
 
                 <div className="flex flex-col">
                     <label className="text-sm font-medium mb-1">Phone Number</label>
-                    <input type="tel" {...register("phone")} className="w-full p-2 bg-white rounded-md" placeholder="+1234567890" />
-                    {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
+                    <input
+                        type="tel"
+                        {...register("phone")}
+                        className="w-full p-2 bg-white rounded-md"
+                        placeholder="+1234567890"
+                    />
+                    {errors.phone && (
+                        <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                    )}
                 </div>
 
                 <div className="pt-4 border-t mt-4">
@@ -139,17 +171,32 @@ const Settings = () => {
                     <div className="flex flex-col space-y-4">
                         <div>
                             <label className="text-sm font-medium mb-1">New Password</label>
-                            <PasswordInput register={register} name="password" error={errors.password?.message} placeholder="Enter your new password" />
+                            <PasswordInput
+                                register={register}
+                                name="password"
+                                error={errors.password?.message}
+                                placeholder="Enter your new password"
+                            />
                         </div>
 
                         <div>
                             <label className="text-sm font-medium mb-1">Confirm Password</label>
-                            <PasswordInput register={register} name="confirmPassword" error={errors.confirmPassword?.message} placeholder="Enter your confirmed password" />
+                            <PasswordInput
+                                register={register}
+                                name="confirmPassword"
+                                error={errors.confirmPassword?.message}
+                                placeholder="Enter your confirmed password"
+                            />
                         </div>
                     </div>
                 </div>
 
-                <ButtonPrimary type="submit" disabled={isLoading} className="w-full" variant="primary">
+                <ButtonPrimary
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full"
+                    variant="primary"
+                >
                     {isLoading ? (
                         <div className="flex items-center justify-center">
                             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
