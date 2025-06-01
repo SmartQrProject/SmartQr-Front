@@ -56,8 +56,8 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                 phone: phone.trim() || undefined,
                 description: description.trim() || undefined,
                 tags: tagArray.length > 0 ? tagArray : undefined,
-                latitude: latitude ?? 0,
-                longitude: longitude ?? 0,
+                latitude: typeof latitude === "number" ? latitude : undefined,
+longitude: typeof longitude === "number" ? longitude : undefined,
                 trading_hours: showTradingHours
                     ? {
                         mondayToFriday: { open: monOpen, close: monClose },
