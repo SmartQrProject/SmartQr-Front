@@ -42,7 +42,7 @@ export default function ChatWindow({
 
     // const slug = window.location.pathname.split("/").pop() || "default";
     const slug = localStorage.getItem("slug")
-    console.log("📝 Sending message:", input, "to slug:", slug); // optional debug
+    // console.log("📝 Sending message:", input, "to slug:", slug); 
 
      
 
