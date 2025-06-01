@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 const passwordRegex =
-  /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/
+
 
   
 
@@ -43,9 +44,9 @@ export const AdminRegisterSchema = z
 
     confirmPassword: z
       .string()
-      .nonempty({ message: "Password is required" })
-      .min(8, "Password must be at least 8 characters")
-      .max(15, "Password must be at most 15 characters")
+      .nonempty({ message: "Confirm Password is required" })
+      .min(8, "Confirm Password must be at least 8 characters")
+      .max(15, "Confirm Password must be at most 15 characters")
       .regex(passwordRegex, {
         message:
           "Confirm Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (@$!%?&)",
