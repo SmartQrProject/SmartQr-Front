@@ -19,10 +19,14 @@ export const TradingHoursSchema = z.object({
     .optional(),
 });
 
-export const OrderingTimesSchema = z.object({
-  pickup: z.string(),
-  dinein: z.string(),
-});
+export const OrderingTimesSchema = z
+  .object({
+    pickup: z.number().min(0).max(1440).optional(),
+    dinein: z.number().min(0).max(1440).optional(),
+  })
+  .refine((data) => data.pickup !== undefined || data.dinein !== undefined, {
+    message: "At least one of pickup or dinein is required",
+  });
 
 export const CompleteRestaurantsSchema = z.object({
   name: z
