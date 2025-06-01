@@ -34,8 +34,8 @@ const PublicStoreInfoModal = ({ open, onClose, slug: slugProp }: StoreInfoModalP
             try {
                 const data = await getRestaurantWithMenu(slug);
                 if (data) {
-                    let latitude = data.latitude;
-                    let longitude = data.longitude;
+                    let latitude = Number(data.latitude);
+                    let longitude = Number(data.longitude);
 
                     if ((!latitude || !longitude) && data.address) {
                         const coords = await getCoordsFromAddress(data.address);

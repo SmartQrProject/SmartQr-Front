@@ -21,11 +21,12 @@ export const StaffRegisterSchema = z
       .email("Please enter a valid email address"),
 
     phone: z
-    .string()
-    .min(6)
-    .max(40)
-    .regex(/^\+?[()\-\d\s]{6,40}$/, "Please enter a valid phone number")
-    .optional(),
+      .string()
+      .optional()
+      .refine(
+        (val) => !val || /^\+?[()\-\d\s]{6,40}$/.test(val),
+        { message: "Please enter a valid phone number" }
+      ),
 
     slug: z
       .string()

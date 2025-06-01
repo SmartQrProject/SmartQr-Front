@@ -34,7 +34,8 @@ const StaffRegisterForm = ({ setUsers }: { setUsers: (u: IUserStaff[]) => void }
 
     const completeData = {
       ...data,
-      slug,      
+      slug,
+      phone: data.phone ? Number(data.phone.replace(/\D/g, '')) : undefined,      
     } as StaffFormInputs;
 
     const response = await staffRegister(token, completeData, slug);
@@ -80,7 +81,7 @@ const StaffRegisterForm = ({ setUsers }: { setUsers: (u: IUserStaff[]) => void }
 
                 <div>
                   <label>Phone</label>
-                  <input type="number" {...register('phone')} className="w-full p-2 bg-white rounded-md"/>{errors.phone && ( <p className="text-red-500 text-sm">{errors.phone.message}</p> )}
+                  <input type="text" {...register('phone')} className="w-full p-2 bg-white rounded-md"/>{errors.phone && ( <p className="text-red-500 text-sm">{errors.phone.message}</p> )}
                </div>
 
                 <div>

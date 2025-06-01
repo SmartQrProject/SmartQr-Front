@@ -45,11 +45,15 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
       description: initialData?.description || '',
       price: initialData?.price || 0,
       available: initialData?.available ?? true,
-      details: initialData?.details?.length ? initialData.details : [''],
+      details: initialData?.details?.length ? initialData.details : [],
       categoryId: initialData?.categoryId || '',
       file: undefined,
     },
   });
+
+  useEffect(() => {
+  console.log('Form errors:', errors);
+}, [errors]);
   
   const { fields, append, remove, replace } = useFieldArray({ control, name: 'details' as any });
   const fileSelected = watch('file')?.length > 0;
@@ -57,7 +61,7 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
 
   useEffect(() => {
     if (initialData) {
-      const details = initialData.details?.length ? initialData.details : [''];
+      const details = initialData.details?.length ? initialData.details : [];
       reset({
         name: initialData.name,
         description: initialData.description,
@@ -80,6 +84,7 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
   };
 
   const onSubmit = async (data: ProductFormDataCreate | ProductFormDataEdit) => {
+    console.log('Submit triggered with data:', data);
     setIsLoading(true);
     try {
 
