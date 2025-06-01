@@ -40,8 +40,12 @@ export default function ChatWindow({
     setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
 
-    const slug = window.location.pathname.split("/").pop() || "default";
-    // console.log("📝 Sending message:", input, "to slug:", slug); // optional debug
+    // const slug = window.location.pathname.split("/").pop() || "default";
+    const slug = localStorage.getItem("slug")
+    console.log("📝 Sending message:", input, "to slug:", slug); // optional debug
+
+     
+
     socket.emit("chat_message", { message: input, slug: slug });
     setInput("");
   };
