@@ -109,19 +109,19 @@ h6 {
 /* Estilos para el CHATBOT */
 
 .chatbot-button {
-    @apply p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition;
+    @apply p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition cursor-pointer;
 }
 
 .chatbot-window {
-    @apply bg-white border border-gray-300 shadow-xl rounded-xl w-80 h-96 flex flex-col;
+    @apply bg-white shadow-xl rounded-xl w-80 h-96 flex flex-col;
 }
 
 .chatbot-header {
-    @apply flex items-center justify-between p-3 border-b bg-blue-600 text-white rounded-t-xl;
+    @apply flex items-center justify-between p-3  bg-branding-600 text-white rounded-t-xl;
 }
 
 .chatbot-message-user {
-    @apply px-3 py-2 rounded-lg bg-blue-500 text-white;
+    @apply px-3 py-2 rounded-lg bg-blue-700 text-white;
 }
 
 .chatbot-message-bot {
@@ -129,9 +129,9 @@ h6 {
 }
 
 .chatbot-input {
-    @apply flex-1 border px-3 py-2 rounded-lg focus:outline-none text-sm;
+    @apply flex-1 border border-default-400 px-3 py-2 rounded-lg focus:outline-none text-sm;
 }
 
 .chatbot-send-button {
-    @apply ml-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg;
+    @apply ml-2 bg-branding-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer;
 }

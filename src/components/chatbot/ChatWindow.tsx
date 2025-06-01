@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import { socket } from "../../../lib/socket";
 import { Message, ChatWindowProps } from "./../../types";
+import { X } from "lucide-react";
 
 export default function ChatWindow({
   messages,
@@ -9,6 +10,13 @@ export default function ChatWindow({
 }: ChatWindowProps) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+  messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+
 
   useEffect(() => {
     socket.connect();
@@ -54,36 +62,35 @@ export default function ChatWindow({
     <div className="chatbot-window">
       <div className="chatbot-header">
         <span>Chat Bot</span>
-        <button onClick={close} className="text-xl">
-          ×
+        <button onClick={close} className="text-xl cursor-pointer">
+          <X/>
         </button>
       </div>
       <div className="flex-1 overflow-y-auto p-2 space-y-2">
-        {messages.map((m, i) => {
-          // console.log("🧾 Received message:", m); // optional debug
-          return (
+        {messages.map((m, i) => (
+          <div
+            key={i}
+            className={`flex ${
+              m.sender === "user" ? "justify-end" : "justify-start"
+            }`}
+          >
             <div
-              key={i}
-              className={`flex ${
-                m.sender === "user" ? "justify-end" : "justify-start"
+              className={`${
+                m.sender === "user"
+                  ? "chatbot-message-user"
+                  : "chatbot-message-bot"
               }`}
             >
-              <div
-                className={`${
-                  m.sender === "user"
-                    ? "chatbot-message-user"
-                    : "chatbot-message-bot"
-                }`}
-              >
-                {typeof m.text === "string" && m.text.trim()
-                  ? m.text
-                  : "[Empty message]"}
-              </div>
+              {typeof m.text === "string" && m.text.trim()
+                ? m.text
+                : "[Empty message]"}
             </div>
-          );
-        })}
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
       </div>
-      <div className="p-2 border-t flex items-center">
+
+      <div className="p-2  flex items-center">
         <input
           type="text"
           value={input}
