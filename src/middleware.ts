@@ -30,11 +30,10 @@ export async function middleware(request: NextRequest) {
         pathname === "/dashboard/restaurants" ||
         pathname === "/restaurants";
 
-    const session = request.cookies.get("adminSession")?.value;
+    const token = request.cookies.get("adminSession")?.value;
 
-    if (isProtectedRoute && !session) {
-        const loginUrl = new NextURL("/login", origin);
-        return NextResponse.redirect(loginUrl);
+    if (isProtectedRoute && !token) {
+    return NextResponse.redirect(new NextURL("/login", origin));
     }
 
     try {

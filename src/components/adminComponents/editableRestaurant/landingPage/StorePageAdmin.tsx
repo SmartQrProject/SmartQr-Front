@@ -2,48 +2,61 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import RestaurantPageClient from "@/components/adminComponents/editableRestaurant/landingPage/RestaurantPageClient";
 import EditableCategories from "@/components/adminComponents/editableRestaurant/landingPage/EditableCategories";
 import CategoryProductList from "./CategoryProductList";
 import StoreInfoModal from "./StoreInfoAdmin";
+import Cookies from "js-cookie";
+
+function parseJwt(token: string) {
+    try {
+        const base64Payload = token.split(".")[1];
+        const payload = atob(base64Payload);
+        return JSON.parse(payload);
+    } catch {
+        return null;
+    }
+}
 
 export default function StorePageAdmin() {
-    const { user } = useAuth();
     const router = useRouter();
 
     const [isStoreInfoModalOpen, setIsStoreInfoModalOpen] = useState(false);
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [checkingAuth, setCheckingAuth] = useState(true);
+    const [slug, setSlug] = useState("");
 
     const handleOpenModal = () => setIsStoreInfoModalOpen(true);
     const handleCloseModal = () => setIsStoreInfoModalOpen(false);
+
     useEffect(() => {
-        if (!user || !user.token) {
+        const token = Cookies.get("adminSession");
+        if (!token) {
             router.push("/");
             return;
         }
-        const role = user.payload?.roles;
-        const slug = user.payload?.slug;
 
-        if (role !== "owner" || !slug) {
+        const payload = parseJwt(token);
+        const role = payload?.roles;
+        const userSlug = payload?.slug;
+
+        if (role !== "owner" || !userSlug) {
             router.push("/admin/dashboard");
             return;
         }
 
+        setSlug(userSlug);
         setIsAuthorized(true);
         setCheckingAuth(false);
-    }, [user, router]);
+    }, [router]);
 
-    if (checkingAuth || !user) {
+    if (checkingAuth) {
         return <p className="p-4 text-center">Loading restaurant...</p>;
     }
 
     if (!isAuthorized) {
         return null;
     }
-
-    const slug = user.payload?.slug;
 
     return (
         <>

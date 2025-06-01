@@ -15,8 +15,6 @@ const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function EditRestaurantModal({ restaurant, onClose, onUpdated }: EditRestaurantModalProps) {
     const [name, setName] = useState(restaurant.name);
-    const [slug, setSlug] = useState(restaurant.slug);
-    const [ownerEmail, setOwnerEmail] = useState(restaurant.owner_email);
     const [isOpen, setIsOpen] = useState(true);
 
     const handleUpdate = async () => {
@@ -30,8 +28,6 @@ export default function EditRestaurantModal({ restaurant, onClose, onUpdated }: 
             const endpoint = `${APIURL}/restaurants/${restaurant.slug}`;
             const payload = {
                 name,
-                slug,
-                owner_email: ownerEmail,
             };
 
             const res = await fetch(endpoint, {
@@ -70,16 +66,6 @@ export default function EditRestaurantModal({ restaurant, onClose, onUpdated }: 
                         <div>
                             <label className="block text-sm font-medium">Restaurant Name</label>
                             <input type="text" className="w-full border p-2 rounded-md" value={name} onChange={(e) => setName(e.target.value)} />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium">Slug</label>
-                            <input type="text" className="w-full border p-2 rounded-md" value={slug} onChange={(e) => setSlug(e.target.value)} />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium">Owner Email</label>
-                            <input type="email" className="w-full border p-2 rounded-md" value={ownerEmail} onChange={(e) => setOwnerEmail(e.target.value)} />
                         </div>
                     </div>
 

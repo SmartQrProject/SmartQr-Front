@@ -10,6 +10,54 @@ type StoreInfoModalProps = {
     open: boolean;
     onClose: () => void;
 };
+function cleanPayload(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj
+      .map(cleanPayload)
+      .filter((v) => v !== undefined && v !== null && v !== "" && v !== 0);
+  } else if (typeof obj === "object" && obj !== null) {
+    const cleaned = Object.entries(obj).reduce((acc, [key, value]) => {
+      const cleanedValue = cleanPayload(value);
+
+      const isEmptyObject =
+        typeof cleanedValue === "object" &&
+        !Array.isArray(cleanedValue) &&
+        Object.keys(cleanedValue).length === 0;
+
+      const isEmptyArray = Array.isArray(cleanedValue) && cleanedValue.length === 0;
+
+      if (
+        cleanedValue !== undefined &&
+        cleanedValue !== null &&
+        cleanedValue !== "" &&
+        cleanedValue !== 0 &&
+        !isEmptyObject &&
+        !isEmptyArray
+      ) {
+        acc[key] = cleanedValue;
+      }
+
+      return acc;
+    }, {} as Record<string, any>);
+
+    // Si es un bloque con solo open o close, y el otro está faltando o vacío, lo eliminamos
+    const isTradingDay = (obj: any) =>
+      typeof obj === "object" && ("open" in obj || "close" in obj);
+
+    if (
+      isTradingDay(obj) &&
+      (!("open" in cleaned && "close" in cleaned) ||
+        cleaned.open === undefined ||
+        cleaned.close === undefined)
+    ) {
+      return undefined;
+    }
+
+    return cleaned;
+  }
+
+  return obj;
+}
 
 const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalProps) => {
     const [name, setName] = useState(restaurant.name || "");
@@ -57,7 +105,7 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                 description: description.trim() || undefined,
                 tags: tagArray.length > 0 ? tagArray : undefined,
                 latitude: typeof latitude === "number" ? latitude : undefined,
-longitude: typeof longitude === "number" ? longitude : undefined,
+                longitude: typeof longitude === "number" ? longitude : undefined,
                 trading_hours: showTradingHours
                     ? {
                         mondayToFriday: { open: monOpen, close: monClose },
@@ -67,8 +115,8 @@ longitude: typeof longitude === "number" ? longitude : undefined,
                     : undefined,
                 ordering_times: showOrderingTimes
                     ? {
-                        pickup,
-                        dinein,
+                        pickup: Number(pickup),
+                        dinein: Number(dinein),
                     }
                     : undefined,
             };
@@ -85,13 +133,15 @@ longitude: typeof longitude === "number" ? longitude : undefined,
                 banner: true,
             }).parse(payload);
 
+            console.log("Validated payload:", (cleanPayload(validatedPayload)));
+
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/restaurants/${slug}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(validatedPayload),
+                body: JSON.stringify(cleanPayload(validatedPayload)),
             });
 
             if (!res.ok) throw new Error("Failed to update restaurant");
@@ -228,12 +278,12 @@ longitude: typeof longitude === "number" ? longitude : undefined,
                             <>
                                 <div className="mb-4 mt-4">
                                     <label className="block text-md font-semibold mb-2">Pickup Time (min)</label>
-                                    <input type="number" value={pickup} onChange={(e) => setPickup(e.target.value)} className="bg-gray-200 p-2 rounded-md text-sm w-32" />
+                                    <input type="number" value={pickup} onChange={(e) => setPickup(Number(e.target.value))} className="bg-gray-200 p-2 rounded-md text-sm w-32" />
                                 </div>
 
                                 <div className="mb-4">
                                     <label className="block text-md font-semibold mb-2">Dine-in Time (min)</label>
-                                    <input type="number" value={dinein} onChange={(e) => setDinein(e.target.value)} className="bg-gray-200 p-2 rounded-md text-sm w-32" />
+                                    <input type="number" value={dinein} onChange={(e) => setDinein(Number(e.target.value))} className="bg-gray-200 p-2 rounded-md text-sm w-32" />
                                 </div>
                             </>
                         )}
