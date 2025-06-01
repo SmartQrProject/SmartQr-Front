@@ -159,7 +159,7 @@ export default function CategoryProductList({ slug }: Props) {
           }}
         >
           <CreateMenuForm
-            mode="edit"
+            mode= {editProduct ?"edit" : "create"}
             initialData={editProduct}
             onClose={() => {
               setIsProductModalOpen(false);

@@ -2,31 +2,49 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import MenuAdmin from "@/components/adminComponents/menudesplegabe/MenuAdmin";
 import NavbarAdmin from "@/components/adminComponents/navbar/NavbarAdmin";
 import PromoCodesContainer from "@/components/adminComponents/promoCodes/PromoCodesContainer";
 import Footer from "@/components/subscribers/footer/Footer";
+import Cookies from "js-cookie";
+
+function parseJwt(token: string) {
+    try {
+        const base64Payload = token.split(".")[1];
+        const payload = atob(base64Payload);
+        return JSON.parse(payload);
+    } catch (e) {
+        console.error("Invalid token");
+        return null;
+    }
+}
 
 const PromoCodesPage = () => {
-    const { user } = useAuth();
     const router = useRouter();
     const [authorized, setAuthorized] = useState(false);
     const [checkingAuth, setCheckingAuth] = useState(true);
 
     useEffect(() => {
-        if (!user || !user.token) {
+        const token = Cookies.get("adminSession");
+
+        if (!token) {
             router.push("/");
             return;
         }
-        const role = user?.payload?.roles;
-        if (role === "owner") {
+
+        const payload = parseJwt(token);
+
+        if (payload?.roles === "owner") {
             setAuthorized(true);
+
+           
+            localStorage.setItem("adminSession", JSON.stringify({ token, payload }));
         } else {
             router.push("/404");
         }
+
         setCheckingAuth(false);
-    }, [user, router]);
+    }, [router]);
 
     if (checkingAuth) {
         return <p className="p-4 text-center">Checking access...</p>;

@@ -46,10 +46,10 @@ export default function BillingComponent() {
             setToken(tokenFromSession);
 
             if (roleFromSession !== "owner") {
-                router.push("/admin/dashboard");
+                router.push("/login");
             }
         } else {
-            router.push("/admin/login");
+            router.push("/dashboard");
         }
 
         setCheckingAuth(false);
@@ -100,7 +100,7 @@ export default function BillingComponent() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                 },
-            });
+            }); 
 
             if (!res.ok) throw new Error("Failed to cancel subscription");
 

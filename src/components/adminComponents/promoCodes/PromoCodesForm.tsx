@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ButtonPrimary from "@/components/buttons/ButtonPrimary";
 import { schemaPromoCodes, FormPromoCodes } from "./PromoCodesSchema";
@@ -11,17 +11,21 @@ import toast from "react-hot-toast";
 
 const PromoCodeForm = ({ onCodeCreated }: { onCodeCreated?: () => void }) => {
   const [loading, setLoading] = useState(false);
+  const [slug, setSlug] = useState("");
+  const [token, setToken] = useState("");
 
-  const { slug, token } = (() => {
+  useEffect(() => {
     try {
       const session = localStorage.getItem("adminSession");
-      if (!session) return { slug: "", token: "" };
+      if (!session) return;
       const parsed = JSON.parse(session);
-      return { slug: parsed.payload?.slug || "", token: parsed.token || "" };
+      setSlug(parsed.payload?.slug || "");
+      setToken(parsed.token || "");
     } catch {
-      return { slug: "", token: "" };
+      setSlug("");
+      setToken("");
     }
-  })();
+  }, []);
 
   const {
     register,
