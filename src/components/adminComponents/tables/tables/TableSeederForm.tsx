@@ -23,10 +23,16 @@ const TableSeederForm: React.FC<TableSeederFormProps> = ({ slug, urlback, token,
             return;
         }
 
+        const numericCount = parseInt(count, 10);
+        if (isNaN(numericCount) || numericCount <= 0) {
+            toast.error("Number of tables must be a positive number.");
+            return;
+        }
+
         setLoading(true);
 
         try {
-            const response = await fetch(`${urlback}/${slug}/restaurant-tables/seeder/${count}/${prefix}`, {
+            const response = await fetch(`${urlback}/${slug}/restaurant-tables/seeder/${numericCount}/${prefix}`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
