@@ -56,8 +56,8 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                 phone: phone.trim() || undefined,
                 description: description.trim() || undefined,
                 tags: tagArray.length > 0 ? tagArray : undefined,
-                latitude: latitude ?? undefined,
-                longitude: longitude ?? undefined,
+                latitude: latitude ?? 0,
+                longitude: longitude ?? 0,
                 trading_hours: showTradingHours
                     ? {
                         mondayToFriday: { open: monOpen, close: monClose },
@@ -72,6 +72,8 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                     }
                     : undefined,
             };
+
+            console.log("Payload to update:", payload);
 
             // Validación Zod parcial (omite campos que no se modifican aquí)
             const validatedPayload = CompleteRestaurantsSchema.partial({
@@ -121,8 +123,8 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                         <AddressInput
                             onSelect={(selectedAddress, coords) => {
                                 setAddress(selectedAddress);
-                                setLongitude(coords[0]);
-                                setLatitude(coords[1]);
+                                setLongitude(Number(coords[0]));
+                                setLatitude(Number(coords[1]));
                             }}
                         />
                         {address && (
