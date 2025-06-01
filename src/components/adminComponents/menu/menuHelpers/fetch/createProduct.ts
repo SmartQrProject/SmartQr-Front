@@ -1,4 +1,4 @@
-const APIURL= process.env.NEXT_PUBLIC_API_URL;
+const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function createProduct({
   slug,
@@ -21,13 +21,8 @@ export async function createProduct({
   details: string[];
   token: string;
 }) {
-  const res = await fetch(`${APIURL}/${slug}/products`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
+  const productPayload = Object.fromEntries(
+    Object.entries({
       name,
       price,
       description,
@@ -35,9 +30,41 @@ export async function createProduct({
       categoryId,
       is_available,
       details,
-    }),
-  });
+    }).filter(
+      ([, v]) =>
+        v !== null &&
+        v !== undefined &&
+        !(typeof v === 'string' && v.trim() === '') &&
+        !(Array.isArray(v) && v.length === 0)
+    )
+  );
 
-  if (!res.ok) throw new Error('Error creating product');
-  return res.json();
+  console.log('📤 PAYLOAD', productPayload);
+
+  try {
+    const res = await fetch(`${APIURL}/${slug}/products`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(productPayload),
+    });
+
+    const data = await res.json().catch(() => null); // Por si no es JSON válido
+
+    if (!res.ok) {
+      console.error('❌ Error al crear el producto:', {
+        status: res.status,
+        statusText: res.statusText,
+        body: data,
+      });
+      throw new Error(data?.message || data?.error || 'Unknown error');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('❗ Error en la petición:', error);
+    throw error;
+  }
 }

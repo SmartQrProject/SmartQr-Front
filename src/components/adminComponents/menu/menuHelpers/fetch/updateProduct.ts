@@ -23,15 +23,25 @@ export async function updateProduct({
     details: string[];
     token: string;
 }) {
-    //  console.log("PAYLOAD",{
-    //     name,
-    //     price,
-    //     description,
-    //     image_url,
-    //     categoryId,
-    //     is_available,
-    //     details,
-    //   });
+    const productPayload = Object.fromEntries(
+    Object.entries({
+    name,
+    price,
+    description,
+    image_url,
+    categoryId,
+    is_available,
+    details,
+    }).filter(
+      ([, v]) =>
+        v !== null &&
+        v !== undefined &&
+        !(typeof v === 'string' && v.trim() === '') &&
+        !(Array.isArray(v) && v.length === 0)
+    )
+  );
+
+  console.log('📤 PAYLOAD', productPayload);
 
     const res = await fetch(`${APIURL}/${slug}/products/${productId}`, {
         method: "PATCH",
@@ -39,15 +49,7 @@ export async function updateProduct({
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({
-            name,
-            price,
-            description,
-            image_url,
-            categoryId,
-            is_available,
-            details,
-        }),
+        body: JSON.stringify(productPayload),
     });
 
     if (!res.ok) throw new Error("Error al actualizar producto");
