@@ -105,13 +105,13 @@ export const CompleteRestaurantsSchema = z.object({
   isTrial: z.boolean().optional(),
 
   latitude: z
-    .number({ invalid_type_error: 'Latitude must be a number' })
+    .string({ invalid_type_error: 'Latitude must be a number' })
     .min(-90)
     .max(90)
     .optional(),
 
   longitude: z
-    .number({ invalid_type_error: 'Longitude must be a number' })
+    .string({ invalid_type_error: 'Longitude must be a number' })
     .min(-180)
     .max(180)
     .optional(),
