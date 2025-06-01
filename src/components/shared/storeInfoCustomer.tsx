@@ -85,6 +85,7 @@ const PublicStoreInfoModal = ({ open, onClose, slug: slugProp }: StoreInfoModalP
                     <span className="text-xl font-bold mb-1">Store Info</span>
 
                     <div className="flex items-center justify-between gap-4 mb-4">
+                        {(restaurant.latitude !==0) && (restaurant.longitude !== 0) && (
                         <div className="flex-1 min-w-0">
                             <span className="text-sm font-medium mb-1">{restaurant.address || "Address"}</span>
                             {restaurant.latitude && restaurant.longitude && (
@@ -93,6 +94,7 @@ const PublicStoreInfoModal = ({ open, onClose, slug: slugProp }: StoreInfoModalP
                                 </div>
                             )}
                         </div>
+                )}
 
                         <div className="flex-1 min-w-0 flex flex-col space-y-4">
                             <div>
