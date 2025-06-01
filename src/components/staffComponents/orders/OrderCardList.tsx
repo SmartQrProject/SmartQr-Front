@@ -4,34 +4,49 @@ import { useEffect, useState } from "react";
 import { IOrder } from "@/types";
 import OrderCard from "./OrderCard";
 import toast from "react-hot-toast";
-import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+
+function parseJwt(token: string) {
+    try {
+        const base64Payload = token.split(".")[1];
+        const payload = atob(base64Payload);
+        return JSON.parse(payload);
+    } catch (e) {
+        console.error("Invalid token");
+        return null;
+    }
+}
 
 export default function OrderCardList() {
     const [orders, setOrders] = useState<IOrder[]>([]);
     const [tableNames, setTableNames] = useState<Record<string, string>>({});
     const [authorized, setAuthorized] = useState(false);
     const [checkingAuth, setCheckingAuth] = useState(true);
-
-    const { user } = useAuth();
-    const slug = user?.payload?.slug;
-    const token = user?.token;
+    const [slug, setSlug] = useState<string>("");
+    const [token, setToken] = useState<string>("");
     const router = useRouter();
-    useEffect(() => {
-        if (!user || !user.token) {
+
+   useEffect(() => {
+        const cookieToken = Cookies.get("adminSession");
+        if (!cookieToken) {
             router.push("/");
             return;
         }
 
-        const roles = user.payload?.roles;
-        if (!roles || (!roles.includes("owner") && !roles.includes("staff"))) {
+        const payload = parseJwt(cookieToken);
+        const role = payload?.roles;
+
+        if (role === "owner" || role === "staff") {
+            setToken(cookieToken);
+            setSlug(payload?.slug || "");
+            setAuthorized(true);
+        } else {
             router.push("/404");
-            return;
         }
 
-        setAuthorized(true);
         setCheckingAuth(false);
-    }, [user, router]);
+    }, [router]);
 
     useEffect(() => {
         if (!slug || !token || !authorized) return;

@@ -1,37 +1,58 @@
 "use client";
 
-import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserProfileFormInputs, UserProfileSchema } from "./SettingsSchema";
-import { updateProfile, getProfile } from "./fetchProfile";
+import { updateProfile } from "./fetchProfile";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary";
 import PasswordInput from "@/components/adminComponents/sessionInputs/PaswordInput";
+import Cookies from "js-cookie";
+
+function parseJwt(token: string) {
+    try {
+        const base64Payload = token.split(".")[1];
+        const payload = atob(base64Payload);
+        return JSON.parse(payload);
+    } catch (e) {
+        return null;
+    }
+}
 
 const Settings = () => {
-    const { user } = useAuth();
     const router = useRouter();
 
-    const token = user?.token;
-    const slug = user?.payload.slug;
-    const userId = user?.payload.sub;
-    const roles = user?.payload.roles;
-
+    const [token, setToken] = useState("");
+    const [slug, setSlug] = useState("");
+    const [userId, setUserId] = useState("");
+    const [email, setEmail] = useState("");
+    const [roles, setRoles] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
+    // ✅ Auth check & token load
     useEffect(() => {
-        if (!user || !user.token) {
+        const cookieToken = Cookies.get("adminSession");
+        if (!cookieToken) {
             router.push("/");
             return;
         }
-        if (!roles || (!roles.includes("owner") && !roles.includes("staff"))) {
+
+        const payload = parseJwt(cookieToken);
+        if (!payload || (!payload.roles?.includes("owner") && !payload.roles?.includes("staff"))) {
             router.push("/404");
+            return;
         }
-    }, [roles, router]);
+
+        setToken(cookieToken);
+        setSlug(payload.slug);
+        setUserId(payload.sub);
+        setEmail(payload.email);
+        setRoles(payload.roles);
+        setIsLoadingProfile(false);
+    }, [router]);
 
     const {
         register,
@@ -43,33 +64,23 @@ const Settings = () => {
         resolver: zodResolver(UserProfileSchema),
     });
 
+    // ✅ Prefill form once loaded
     useEffect(() => {
-        if (token && slug && userId) {
-            fetchProfileData();
-        }
-    }, [token, slug, userId]);
-
-    const fetchProfileData = async () => {
-        try {
-            setIsLoadingProfile(true);
-            const userData = user?.payload;
-            if (userData) {
-                setValue("name", userData.name || "");
-                setValue("phone", userData.phone || "");
+        if (!isLoadingProfile && token && slug && userId) {
+            const payload = parseJwt(token);
+            if (payload) {
+                setValue("name", payload.name || "");
+                setValue("phone", payload.phone || "");
                 setValue("password", "");
                 setValue("confirmPassword", "");
             }
-        } catch (error: any) {
-            toast.error(error.message || "Error fetching profile");
-        } finally {
-            setIsLoadingProfile(false);
         }
-    };
+    }, [token, slug, userId, isLoadingProfile, setValue]);
 
     const onSubmit = async (data: UserProfileFormInputs) => {
         setIsLoading(true);
         try {
-            const result = await updateProfile(token!, data, slug!, userId!);
+            const result = await updateProfile(token, data, slug, userId);
             if (result.success) {
                 toast.success("Profile updated successfully");
                 reset({
@@ -78,7 +89,7 @@ const Settings = () => {
                     password: "",
                     confirmPassword: "",
                 });
-                fetchProfileData();
+                // Optionally: reload page or re-fetch token
             } else {
                 toast.error(result.message || "Failed to update profile");
             }
@@ -104,7 +115,7 @@ const Settings = () => {
 
                 <div className="flex flex-col">
                     <label className="text-sm font-medium mb-1">Email</label>
-                    <input type="email" value={user?.payload.email || ""} disabled className="w-full p-2 bg-gray-100 rounded-md text-gray-500" />
+                    <input type="email" value={email} disabled className="w-full p-2 bg-gray-100 rounded-md text-gray-500" />
                     <p className="text-sm text-gray-500 mt-1">Email cannot be modified</p>
                 </div>
 

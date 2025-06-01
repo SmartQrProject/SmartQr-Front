@@ -37,10 +37,10 @@ const StaffCreation = () => {
             setToken(tokenFromSession);
 
             if (roleFromSession !== "owner") {
-                router.push("/admin/dashboard");
+                router.push("/login");
             }
         } else {
-            router.push("/admin/login");
+            router.push("/dashboard");
         }
         setCheckingAuth(false);
     }, [router]);
