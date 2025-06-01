@@ -37,10 +37,10 @@ const StaffCreation = () => {
             setToken(tokenFromSession);
 
             if (roleFromSession !== "owner") {
-                router.push("/admin/dashboard");
+                router.push("/login");
             }
         } else {
-            router.push("/admin/login");
+            router.push("/dashboard");
         }
         setCheckingAuth(false);
     }, [router]);
@@ -48,6 +48,7 @@ const StaffCreation = () => {
     const fetchUsers = async () => {
         if (!slug || !token) return;
         try {
+            setLoading(true);
             const response = await getUsers(slug, token, page, limit);
             setUsers(response.usuarios || []);
             setTotal(response.total || 0);
@@ -60,8 +61,10 @@ const StaffCreation = () => {
     };
 
     useEffect(() => {
-        fetchUsers();
-    }, [page, limit]);
+        if (slug && token) {
+            fetchUsers();
+        }
+    }, [slug, token, page, limit]);
 
     const totalPages = Math.ceil(total / limit);
 

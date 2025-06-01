@@ -18,18 +18,25 @@ const Reports = () => {
     const [checkingAuth, setCheckingAuth] = useState(true);
 
     useEffect(() => {
-        if (!user || !user.token) {
-            router.push("/");
-            return;
-        }
-        const role = user?.payload?.roles;
-        if (role === "owner") {
-            setAuthorized(true);
-        } else {
-            router.push("/404");
-        }
-        setCheckingAuth(false);
-    }, [user, router]);
+    const session = localStorage.getItem("adminSession");
+    if (!session) {
+        router.push("/");
+        return;
+    }
+
+    const parsed = JSON.parse(session);
+    const role = parsed.payload?.roles;
+    const token = parsed.token;
+
+    if (token && role === "owner") {
+        setAuthorized(true);
+    } else {
+        router.push("/404");
+    }
+
+    setCheckingAuth(false);
+    }, [router]);
+
 
     if (checkingAuth) {
         return <p className="p-4 text-center">Checking access...</p>;

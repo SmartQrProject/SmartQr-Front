@@ -65,7 +65,7 @@ export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
 
             setUser(sessionData);
             localStorage.setItem("adminSession", JSON.stringify(sessionData));
-            Cookies.set("adminSession", JSON.stringify(sessionData), {
+            Cookies.set("adminSession", data.access_token, {
                 sameSite: "Strict",
                 secure: true,
             });

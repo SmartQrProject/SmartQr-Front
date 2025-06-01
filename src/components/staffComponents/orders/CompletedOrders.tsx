@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { IOrder } from "@/types";
 import OrderCard from "./OrderCard";
 import toast from "react-hot-toast";
-import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const transformOrderFromApi = (order: any): IOrder => ({
     id: order.id,
@@ -25,31 +25,46 @@ const transformOrderFromApi = (order: any): IOrder => ({
     })),
 });
 
+function parseJwt(token: string) {
+    try {
+        const base64Payload = token.split(".")[1];
+        const payload = atob(base64Payload);
+        return JSON.parse(payload);
+    } catch {
+        return null;
+    }
+}
+
 export default function CompletedOrdersPage() {
     const [orders, setOrders] = useState<IOrder[]>([]);
     const [tableNames, setTableNames] = useState<Record<string, string>>({});
     const [authorized, setAuthorized] = useState(false);
     const [checkingAuth, setCheckingAuth] = useState(true);
-
-    const { user } = useAuth();
-    const slug = user?.payload?.slug;
-    const token = user?.token;
-    const roles = user?.payload?.roles;
+    const [slug, setSlug] = useState<string>("");
+    const [token, setToken] = useState<string>("");
     const router = useRouter();
 
-    useEffect(() => {
-        if (!user || !user.token) {
+     useEffect(() => {
+        const cookieToken = Cookies.get("adminSession");
+
+        if (!cookieToken) {
             router.push("/");
             return;
         }
+
+        const payload = parseJwt(cookieToken);
+        const roles = payload?.roles;
+
         if (!roles || (!roles.includes("owner") && !roles.includes("staff"))) {
             router.push("/404");
             return;
         }
 
+        setToken(cookieToken);
+        setSlug(payload.slug);
         setAuthorized(true);
         setCheckingAuth(false);
-    }, [user, roles, router]);
+    }, [router]);
 
     useEffect(() => {
         if (!slug || !token || !authorized) return;
