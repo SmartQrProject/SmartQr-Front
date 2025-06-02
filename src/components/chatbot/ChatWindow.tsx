@@ -79,7 +79,7 @@ export default function ChatWindow({
                 m.sender === "user"
                   ? "chatbot-message-user"
                   : "chatbot-message-bot"
-              }`}
+              } break-words whitespace-pre-wrap`}
             >
               {typeof m.text === "string" && m.text.trim()
                 ? m.text
