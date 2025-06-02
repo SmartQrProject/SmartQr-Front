@@ -85,9 +85,9 @@ const CartView = () => {
     };
 
     const handleCheckout = async () => {
-        const table = localStorage.getItem("tableNumber") || "00";
-        const paddedTable = table.padStart(2, "0");
-        const code = `${paddedTable}`;
+        const table = localStorage.getItem("tableNumber") || "counter";
+        const code = table === "counter" ? "counter" : table.padStart(2, "0");
+        
         if (loadingSession) {
             toast.loading("Checking login...");
             return;
@@ -116,10 +116,7 @@ const CartView = () => {
             const session = localStorage.getItem("customerSession");
             const token = session ? JSON.parse(session).token : null;
             if (!token) throw new Error("Missing auth token");
-
-            if (orderPayload.code === "00") {
-                orderPayload.code = "counter";
-            }
+            
             const res = await fetch(`${APIURL}/${slug}/orders`, {
                 method: "POST",
                 headers: {

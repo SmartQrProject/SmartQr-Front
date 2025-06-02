@@ -43,8 +43,15 @@ export default function CompletedOrdersPage() {
     const [slug, setSlug] = useState<string>("");
     const [token, setToken] = useState<string>("");
     const router = useRouter();
+    const getTableName = (order: IOrder) => {
+        if (!order.tableId || !tableNames[order.tableId]) {
+            return "Counter";
+        }
+        return tableNames[order.tableId];
+    };
 
-     useEffect(() => {
+
+    useEffect(() => {
         const cookieToken = Cookies.get("adminSession");
 
         if (!cookieToken) {
@@ -132,7 +139,7 @@ export default function CompletedOrdersPage() {
                             order={order}
                             onAdvanceStatus={() => {}}
                             onRetreatStatus={() => handleRetreatStatus(order.id)}
-                            tableName={tableNames[order.tableId] ?? "Unknown"}
+                            tableName={getTableName(order)}
                             allowRetreat={isRevertAllowed(order.created_at)}
                         />
                     ))}
