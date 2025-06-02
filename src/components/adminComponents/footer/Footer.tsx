@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react'
 import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa'
 
@@ -15,9 +16,9 @@ const FooterAdmin = () => {
         <div className="space-y-2">
           <h4 className="font-semibold text-base">Product</h4>
           <div className="flex flex-col gap-1 text-[#9CA3AF] text-sm">
-            <span>Features</span>
-            <span>Pricing</span>
-            <span>Integration</span>
+            <Link className="hover:text-blue-400 cursor-pointer" href="/features">Features</Link>
+            <Link className="hover:text-blue-400 cursor-pointer" href="/benefits">Benefits</Link>
+            <Link className="hover:text-blue-400 cursor-pointer" href="/pricing">Pricing</Link>
           </div>
         </div>
 
@@ -26,17 +27,19 @@ const FooterAdmin = () => {
           <div className="flex flex-col gap-1 text-[#9CA3AF] text-sm">
             <span>Documentation</span>
             <span>Blog</span>
-            <span>Support</span>
+            <a href="mailto:smartqr2@gmail.com?subject=Support Request&body=Hi, I need help with...">
+              <span className="hover:text-blue-400 cursor-pointer">Support</span>
+            </a>
           </div>
         </div>
         
         <div className="space-y-2">
           <h4 className="font-semibold text-base">Connect</h4>
           <div className="flex gap-4 text-xl text-[#9CA3AF]">
-            <a href="https://twitter.com/" aria-label="Twitter"><FaTwitter /></a>
-            <a href="https://linkedin.com/" aria-label="LinkedIn"><FaLinkedin /></a>
-            <a href="https://facebook.com/" aria-label="Facebook"><FaFacebook /></a>
-            <a href="https://instagram.com/" aria-label="Instagram"><FaInstagram /></a>
+            <a href="https://twitter.com/" aria-label="Twitter" className="hover:text-blue-400 cursor-pointer"><FaTwitter /></a>
+            <a href="https://linkedin.com/" aria-label="LinkedIn" className="hover:text-blue-400 cursor-pointer"><FaLinkedin /></a>
+            <a href="https://facebook.com/" aria-label="Facebook" className="hover:text-blue-400 cursor-pointer"><FaFacebook /></a>
+            <a href="https://instagram.com/" aria-label="Instagram" className="hover:text-blue-400 cursor-pointer"><FaInstagram /></a>
           </div>
         </div>
 
