@@ -79,7 +79,12 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
   const handlePreview = async () => {
     const values = getValues();
     const file = values.file;
-    const imageUrl = file ? URL.createObjectURL(file) : initialData?.image_url;
+
+    let imageUrl = initialData?.image_url || '';
+    if (file instanceof File) {
+      imageUrl = URL.createObjectURL(file);
+    }
+
     setPreview({ ...values, imageUrl });
     toast.success('Preview ready');
   };
@@ -96,7 +101,7 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
 
       let image_url = initialData?.image_url || '';
       const file = (data as ProductFormDataCreate).file;
-      if (file) {
+      if (file instanceof File) {
         const compressed = await imageCompression(file, { maxSizeMB: 0.2, maxWidthOrHeight: 800 });
         image_url = await uploadImage(compressed, token);
       }
@@ -192,15 +197,14 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
           <input
             type="file"
             id="imageUpload"
-            accept="image/*"
-            {...register('file')}
+            accept="image/png, image/jpeg, image/jpg"
             onChange={(e) => {
               const file = e.target.files?.[0];
               setValue('file', file, { shouldValidate: true });
             }}
             className="hidden"
           />
-          
+
           {errors.file && (
             <p className="text-red-500 text-sm">{errors.file.message as string}</p>
           )}
