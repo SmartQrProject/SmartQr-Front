@@ -6,6 +6,7 @@ import OrderCard from "./OrderCard";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { Loader2, Clock4, ChefHat, Bell } from "lucide-react";
 
 function parseJwt(token: string) {
     try {
@@ -27,7 +28,14 @@ export default function OrderCardList() {
     const [token, setToken] = useState<string>("");
     const router = useRouter();
 
-   useEffect(() => {
+    const getTableName = (order: IOrder) => {
+        if (!order.tableId || !tableNames[order.tableId]) {
+            return "Counter";
+        }
+        return tableNames[order.tableId];
+    };
+
+    useEffect(() => {
         const cookieToken = Cookies.get("adminSession");
         if (!cookieToken) {
             router.push("/");
@@ -109,30 +117,39 @@ export default function OrderCardList() {
         }
     };
 
-    const renderByStatus = (status: string, title: string) => (
-        <div>
-            <h2 className="text-lg font-bold mb-2">{title}</h2>
-            {orders
-                .filter((o) => o.status === status)
-                .map((order) => (
-                    <OrderCard
-                        key={order.id}
-                        order={order}
-                        tableName={tableNames[order.tableId] || "Unknown"}
-                        onAdvanceStatus={(id, st) => updateOrderStatus(id, st)}
-                        onRetreatStatus={(id, st) => updateOrderStatus(id, st)}
-                    />
-                ))}
+    const renderByStatus = (status: string, title: string, Icon: React.ElementType) => (
+        <div className="space-y-4">
+            <div className="flex items-center gap-2 text-xl font-semibold text-gray-700 mb-2">
+                <Icon className="h-6 w-6 text-sky-600" />
+                <span>{title}</span>
+            </div>
+            <div className="space-y-3">
+                {orders
+                    .filter((o) => o.status === status)
+                    .map((order) => (
+                        <OrderCard
+                            key={order.id}
+                            order={order}
+                            tableName={getTableName(order)}
+                            onAdvanceStatus={(id, st) => updateOrderStatus(id, st)}
+                            onRetreatStatus={(id, st) => updateOrderStatus(id, st)}
+                        />
+                    ))}
+            </div>
         </div>
     );
 
-    if (checkingAuth) return null;
+    if (checkingAuth) return (
+        <div className="flex justify-center items-center h-96">
+            <Loader2 className="h-8 w-8 animate-spin text-sky-600" />
+        </div>
+    );
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {renderByStatus("pending", "🕑 Pending")}
-            {renderByStatus("in-process", "🧑‍🍳 In process")}
-            {renderByStatus("ready", "🔔 Ready to serve")}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 px-4 py-6">
+            {renderByStatus("pending", "Pending", Clock4)}
+            {renderByStatus("in-process", "In Process", ChefHat)}
+            {renderByStatus("ready", "Ready to Serve", Bell)}
         </div>
     );
 }
