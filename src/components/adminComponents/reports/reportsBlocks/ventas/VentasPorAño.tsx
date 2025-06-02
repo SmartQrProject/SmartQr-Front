@@ -65,7 +65,7 @@ const VentasPorAño = () => {
       {/* Target input + complementary info */}
       <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:gap-6">
         <div>
-          <label className="block text-sm font-medium mb-1">
+          {/* <label className="block text-sm font-medium mb-1">
             Provisional yearly target ($):
           </label>
           <input
@@ -73,13 +73,13 @@ const VentasPorAño = () => {
             className="border rounded px-2 py-1 w-full max-w-xs"
             value={metaAnual}
             onChange={(e) => setMetaAnual(Number(e.target.value))}
-          />
+          /> */}
         </div>
 
         {/* Progress info */}
         {data.length > 0 && (
           <div className="mt-2 sm:mt-6 text-sm text-gray-700">
-            <p>
+            {/* <p>
               Remaining:{" "}
               <strong>
                 ${Math.max(metaAnual - data[0].total, 0).toFixed(2)}
@@ -101,7 +101,7 @@ const VentasPorAño = () => {
                 )}
                 %
               </strong>
-            </p>
+            </p> */}
           </div>
         )}
       </div>
@@ -130,7 +130,7 @@ const VentasPorAño = () => {
               formatter={(value: number) => [`$${value.toFixed(2)}`, "Sales"]}
             />
 
-            <ReferenceLine
+            {/* <ReferenceLine
               y={metaAnual}
               stroke="red"
               strokeDasharray="4 4"
@@ -140,7 +140,7 @@ const VentasPorAño = () => {
                 fill: "red",
                 fontSize: 12,
               }}
-            />
+            /> */}
 
             {hoverY !== null && (
               <ReferenceLine
