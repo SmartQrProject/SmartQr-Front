@@ -13,6 +13,9 @@ import { createProduct } from '../menuHelpers/fetch/createProduct';
 import { updateProduct } from '../menuHelpers/fetch/updateProduct';
 import { uploadImage } from '../menuHelpers/fetch/uploadImage';
 import { ProductFormDataCreate, ProductFormDataEdit, productSchemaCreate, productSchemaEdit } from '../menuHelpers/schemas/createProductSchema';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
+
 
 interface Props {
   initialData?: ProductFormDataCreate & { id?: string; image_url?: string };
@@ -72,7 +75,7 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
         details,
       });
       replace(details);
-      setPreview({ imageUrl: initialData.image_url });
+       //setPreview({ imageUrl: initialData.image_url });
     }
   }, [initialData, reset, replace]);
 
@@ -177,7 +180,7 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
         </label>
 
         <div className="flex flex-col gap-2">
-          <label
+          <label data-tooltip-id="my-tooltip" data-tooltip-content="Add a product photo"
             htmlFor="imageUpload"
             className={`cursor-pointer flex items-center justify-center gap-2 p-2 rounded-2xl transition-colors border-2 border-dashed
               ${fileSelected ? 'bg-green-100 border-green-500' : 'bg-gray-100 border-gray-400 hover:bg-gray-200'}
@@ -222,7 +225,7 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
 
         <div>
           <label className="font-semibold flex gap-2 mb-2">Tags</label>
-          <button type="button" onClick={() => append('')} className="mb-2 bg-default-700 text-white px-2 py-1 rounded cursor-pointer">+ Add Tags</button>
+          <button data-tooltip-id="my-tooltip" data-tooltip-place="top" data-tooltip-content="The chatbot is powered by the tags" type="button" onClick={() => append('')} className="mb-2 mt-4 bg-default-700 text-white px-2 py-1 rounded cursor-pointer">+ Add Tags</button>
           {fields.map((field, idx) => (
             <div key={field.id} className="flex gap-2 mb-2">
               <input {...register(`details.${idx}` as const)} className="w-full bg-white p-2 rounded" />
@@ -232,7 +235,7 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
         </div>
 
         <div className="flex gap-4">
-          <button type="button" onClick={handlePreview} className="w-full bg-default-800 text-white px-4 py-2 rounded cursor-pointer">Preview</button>
+          <button data-tooltip-id="my-tooltip" data-tooltip-content="To see the product preview" type="button" onClick={handlePreview} className="w-full bg-default-800 text-white px-4 py-2 rounded cursor-pointer">Preview</button>
           <button
             type="submit"
             disabled={isLoading}
@@ -242,6 +245,8 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
           </button>
         </div>
       </form>
+
+      <Tooltip id="my-tooltip" variant="light" place="top" offset={16} />
 
       {preview && (
         <div className="mt-6">
