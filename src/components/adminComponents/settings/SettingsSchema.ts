@@ -5,7 +5,7 @@ export const UserProfileSchema = z
     name: z
       .string()
       .min(5, "Name must be at least 5 characters")
-      .max(100, "Name must be at most 100 characters")
+      .max(100,  "Name must be at most 100 characters")
       .regex(/^[A-Za-z0-9 ]+$/, {
         message: "Name can only contain letters, numbers, and spaces",
       })

@@ -69,6 +69,7 @@ const Settings = () => {
         setValue,
     } = useForm<UserProfileFormInputs>({
         resolver: zodResolver(UserProfileSchema),
+        mode: "onChange",
     });
 
     useEffect(() => {
