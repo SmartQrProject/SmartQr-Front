@@ -6,6 +6,8 @@ import OrderCard from "./OrderCard";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { Loader2, Clock4, ChefHat, Bell } from "lucide-react";
+
 
 function parseJwt(token: string) {
     try {
@@ -27,7 +29,14 @@ export default function OrderCardList() {
     const [token, setToken] = useState<string>("");
     const router = useRouter();
 
-   useEffect(() => {
+    const getTableName = (order: IOrder) => {
+        if (!order.tableId || !tableNames[order.tableId]) {
+            return "Counter";
+        }
+        return tableNames[order.tableId];
+    };
+
+    useEffect(() => {
         const cookieToken = Cookies.get("adminSession");
         if (!cookieToken) {
             router.push("/");
@@ -108,31 +117,53 @@ export default function OrderCardList() {
             toast.error("Failed to update order");
         }
     };
+    
 
-    const renderByStatus = (status: string, title: string) => (
-        <div>
-            <h2 className="text-lg font-bold mb-2">{title}</h2>
-            {orders
-                .filter((o) => o.status === status)
-                .map((order) => (
+    const renderByStatus = (status: string, title: string, Icon: React.ElementType) => (
+        <section className="bg-white border border-gray-200 rounded-xl p-4 shadow-md min-h-[60vh] sm:min-h-[65vh] md:h-full overflow-hidden flex flex-col">
+            <div className="sticky top-0 bg-white z-10 pb-2 mb-2 border-b flex items-center gap-2 text-base font-semibold">
+            <Icon className="h-5 w-5 text-blue-600" />
+            <span>{title}</span>
+            </div>
+
+            <div className="overflow-x-auto md:overflow-y-auto w-full flex-1">
+            <div className="flex gap-4 md:flex-col">
+                
+                {orders
+                    .filter((o) => o.status === status)
+                    .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()) 
+                    .map((order) => (
+
+                    <div key={order.id} className="min-w-[90%] max-w-[90%] md:min-w-0 md:max-w-full">
                     <OrderCard
-                        key={order.id}
                         order={order}
-                        tableName={tableNames[order.tableId] || "Unknown"}
+                        tableName={getTableName(order)}
                         onAdvanceStatus={(id, st) => updateOrderStatus(id, st)}
                         onRetreatStatus={(id, st) => updateOrderStatus(id, st)}
                     />
+                    </div>
                 ))}
+            </div>
+            </div>
+        </section>
+    );
+
+
+
+    if (checkingAuth) return (
+        <div className="flex justify-center items-center h-96">
+            <Loader2 className="h-8 w-8 animate-spin text-sky-600" />
         </div>
     );
 
-    if (checkingAuth) return null;
-
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {renderByStatus("pending", "🕑 Pending")}
-            {renderByStatus("in-process", "🧑‍🍳 In process")}
-            {renderByStatus("ready", "🔔 Ready to serve")}
+        <div className="overflow-visible md:overflow-hidden h-auto md:h-[calc(100vh-100px)]">
+            <div className="grid md:grid-cols-3 gap-4 h-full px-4 py-6">
+                {renderByStatus("pending", "Pending", Clock4)}
+                {renderByStatus("in-process", "In Process", ChefHat)}
+                {renderByStatus("ready", "Ready to Serve", Bell)}
+            </div>
         </div>
+
     );
 }
