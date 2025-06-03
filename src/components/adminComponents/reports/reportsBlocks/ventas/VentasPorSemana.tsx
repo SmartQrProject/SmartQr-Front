@@ -65,7 +65,7 @@ const VentasPorSemana = () => {
       {/* Target input + complementary info */}
       <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:gap-6">
         <div>
-          <label className="block text-sm font-medium mb-1">
+          {/* <label className="block text-sm font-medium mb-1">
             Provisional weekly target ($):
           </label>
           <input
@@ -73,13 +73,13 @@ const VentasPorSemana = () => {
             className="border rounded px-2 py-1 w-full max-w-xs"
             value={metaSemanal}
             onChange={(e) => setMetaSemanal(Number(e.target.value))}
-          />
+          /> */}
         </div>
 
         {/* Progress info */}
         {data.length > 0 && (
           <div className="mt-2 sm:mt-6 text-sm text-gray-700">
-            <p>
+            {/* <p>
               Remaining:{" "}
               <strong>
                 ${Math.max(metaSemanal - data[0].total, 0).toFixed(2)}
@@ -102,7 +102,7 @@ const VentasPorSemana = () => {
                 ).toFixed(1)}
                 %
               </strong>
-            </p>
+            </p> */}
           </div>
         )}
       </div>
@@ -131,7 +131,7 @@ const VentasPorSemana = () => {
               formatter={(value: number) => [`$${value.toFixed(2)}`, "Sales"]}
             />
 
-            <ReferenceLine
+            {/* <ReferenceLine
               y={metaSemanal}
               stroke="red"
               strokeDasharray="4 4"
@@ -141,7 +141,7 @@ const VentasPorSemana = () => {
                 fill: "red",
                 fontSize: 12,
               }}
-            />
+            /> */}
 
             {hoverY !== null && (
               <ReferenceLine

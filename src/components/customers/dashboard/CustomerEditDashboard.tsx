@@ -25,6 +25,7 @@ const {
   formState: { errors, isSubmitting },
 } = useForm<UserProfileData>({
   resolver: zodResolver(UserProfileSchema),
+  mode: "onChange",
 });
 
 useEffect(() => {

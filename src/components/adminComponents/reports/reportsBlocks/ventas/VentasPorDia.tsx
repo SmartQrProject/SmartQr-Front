@@ -71,7 +71,7 @@ const VentasPorDia = ({
       {/* Target input + complementary info */}
       <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:gap-6">
         <div>
-          <label className="block text-sm font-medium mb-1">
+          {/* <label className="block text-sm font-medium mb-1">
             Provisional daily target ($):
           </label>
           <input
@@ -79,13 +79,13 @@ const VentasPorDia = ({
             className="border rounded px-2 py-1 w-full max-w-xs"
             value={metaDiaria}
             onChange={(e) => setMetaDiaria(Number(e.target.value))}
-          />
+          /> */}
         </div>
 
         {/* Progress info */}
         {data.length > 0 && (
           <div className="mt-2 sm:mt-6 text-sm text-gray-700">
-            <p>
+            {/* <p>
               Remaining:{" "}
               <strong>
                 ${Math.max(metaDiaria - data[0].total, 0).toFixed(2)}
@@ -107,7 +107,7 @@ const VentasPorDia = ({
                 )}
                 %
               </strong>
-            </p>
+            </p> */}
           </div>
         )}
       </div>
@@ -148,7 +148,7 @@ const VentasPorDia = ({
               formatter={(value: number) => [`$${value.toFixed(2)}`, "Sales"]}
             />
 
-            <ReferenceLine
+            {/* <ReferenceLine
               y={metaDiaria}
               stroke="red"
               strokeDasharray="4 4"
@@ -158,7 +158,7 @@ const VentasPorDia = ({
                 fill: "red",
                 fontSize: 12,
               }}
-            />
+            /> */}
 
             {hoverY !== null && (
               <ReferenceLine

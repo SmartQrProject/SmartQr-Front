@@ -13,35 +13,35 @@ type Props = {
 const ListUserResturant = ({ users, refreshUsers }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<IUserStaff | null>(null); 
 
-  const openConfirmDialog = (id: string) => {
-  setSelectedUserId(id);
-  setIsDialogOpen(true);
-};
+  const openConfirmDialog = (user: IUserStaff) => {
+    setSelectedUser(user);
+    setIsDialogOpen(true);
+  };
 
   const handleConfirmDelete = async () => {
-  if (!selectedUserId) return;
+    if (!selectedUser) return;
 
-  const storedData = localStorage.getItem("adminSession");
-  if (!storedData) return;
+    const storedData = localStorage.getItem("adminSession");
+    if (!storedData) return;
 
-  const parsed = JSON.parse(storedData);
-  const token = parsed.token;
-  const slug = parsed.payload?.slug;
+    const parsed = JSON.parse(storedData);
+    const token = parsed.token;
+    const slug = parsed.payload?.slug;
 
-  if (!token || !slug) return;
+    if (!token || !slug) return;
 
-  try {
-    await deleteUser(slug, selectedUserId, token);
-    refreshUsers(); 
-  } catch (err: any) {
-    setError(err.message || "Failed to delete user");
-  } finally {
-    setIsDialogOpen(false);
-    setSelectedUserId(null);
-  }
-};
+    try {
+      await deleteUser(slug, selectedUser.id, token);
+      refreshUsers();
+    } catch (err: any) {
+      setError(err.message || "Failed to delete user");
+    } finally {
+      setIsDialogOpen(false);
+      setSelectedUser(null);
+    }
+  };
 
   return (
     <div className="space-y-4 w-full max-w-md p-6 rounded-md bg-neutral-100 shadow mx-auto mb-8">
@@ -64,15 +64,29 @@ const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
                 <p className="text-sm text-gray-400">Phone: {user.phone}</p>
                 <p className="text-sm text-gray-400 italic">{user.role}</p>
               </div>
-              <button onClick={() => openConfirmDialog(user.id)} className="text-red-500 hover:text-red-700 font-bold text-sm">Delete</button>
-              
-              <ConfirmDialog isOpen={isDialogOpen} title="Confirm Deletion" message="Are you sure you want to delete this user?" onConfirm={handleConfirmDelete} onCancel={() => { setIsDialogOpen(false); setSelectedUserId(null); }}/>
+              <button
+                onClick={() => openConfirmDialog(user)}
+                className="text-red-500 hover:text-red-700 font-bold text-sm"
+              >
+                Delete
+              </button>
             </li>
           ))}
         </ul>
       ) : (
         <p className="text-center font-medium">No users found</p>
       )}
+
+      <ConfirmDialog
+        isOpen={isDialogOpen}
+        title="Confirm Deletion"
+        message={`Are you sure you want to delete this user "${selectedUser?.name}"?`}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => {
+          setIsDialogOpen(false);
+          setSelectedUser(null);
+        }}
+      />
     </div>
   );
 };

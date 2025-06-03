@@ -48,7 +48,7 @@ export default function StorePageClient({ data, slug }: StorePageClientProps) {
     }
   }, [slug, data.name, table]);
   return (
-   
+
     <>
      
       <BannerHero imageUrl={data.banner} title={data.name} />
@@ -57,7 +57,5 @@ export default function StorePageClient({ data, slug }: StorePageClientProps) {
      
     </>
 
-     
-   
   )
 }

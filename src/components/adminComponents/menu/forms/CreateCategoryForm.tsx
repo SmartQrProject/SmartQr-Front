@@ -15,6 +15,7 @@ const CreateCategoryForm = () => {
     formState: { errors },
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
+    mode: "onChange",
   });
 
     const onSubmit = async (data: CategoryFormData) => {

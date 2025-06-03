@@ -17,7 +17,15 @@ export const productSchemaCreate = z.object({
       message: "Description must be at least 5 characters or empty",
     }),
 
-  file: z.any().optional(),
+  file: z.instanceof(File)
+    .refine((file) => ["image/png", "image/jpeg", "image/jpg"].includes(file.type), {
+      message: "The file must be a PNG, JPG, or JPEG",
+    })
+    .refine((file) => file.size <= 200 * 1024, {
+      message: "The image must be less than 200KB",
+    })
+    .optional(),
+
   available: z.boolean().optional(),
 
   details: z

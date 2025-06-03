@@ -34,6 +34,7 @@ const PromoCodeForm = ({ onCodeCreated }: { onCodeCreated?: () => void }) => {
     formState: { errors },
   } = useForm<FormPromoCodes>({
     resolver: zodResolver(schemaPromoCodes),
+    mode: "onChange",
     defaultValues: { percentage: 10 },
   });
 
