@@ -214,7 +214,13 @@ const handleEditCategory = (category: ICategory) => {
         open={isProductModalOpen}
         onClose={() => setIsProductModalOpen(false)}
       >
-        <CreateMenuForm />
+        <CreateMenuForm
+                    onSuccess={() => {
+                        if (refetchProducts) refetchProducts();
+                        window.dispatchEvent(new Event("product:created"));
+                    }}
+                    onClose={() => setIsProductModalOpen(false)}
+                />
       </ProductModal>
 
       <ConfirmDialog
