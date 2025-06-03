@@ -89,7 +89,9 @@ export default function CategoryProductList({ slug }: Props) {
               </h3>
 
               {filtered.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
+
+
                   {filtered.map((product) => (
                     <div
                       key={product.id}
@@ -111,7 +113,7 @@ export default function CategoryProductList({ slug }: Props) {
                         categoryId={cat.id}
                       />
 
-                      <div className="flex justify-around gap-3 px-1">
+                      <div className="flex gap-3 px-1">
                         <button
                           onClick={() => {
                             setEditProduct({

@@ -8,6 +8,8 @@ import CategoryProductList from "./CategoryProductList";
 import StoreInfoModal from "./StoreInfoAdmin";
 import Cookies from "js-cookie";
 
+
+
 function parseJwt(token: string) {
     try {
         const base64Payload = token.split(".")[1];
@@ -25,6 +27,7 @@ export default function StorePageAdmin() {
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [checkingAuth, setCheckingAuth] = useState(true);
     const [slug, setSlug] = useState("");
+    const [token, setToken] = useState("");
 
     const handleOpenModal = () => setIsStoreInfoModalOpen(true);
     const handleCloseModal = () => setIsStoreInfoModalOpen(false);
@@ -46,12 +49,13 @@ export default function StorePageAdmin() {
         }
 
         setSlug(userSlug);
+        setToken(token);
         setIsAuthorized(true);
         setCheckingAuth(false);
     }, [router]);
 
     if (checkingAuth) {
-        return <p className="p-4 text-center">Loading restaurant...</p>;
+        return <p className="p-4 text-center"> Loading restaurant...</p>;
     }
 
     if (!isAuthorized) {
@@ -60,7 +64,7 @@ export default function StorePageAdmin() {
 
     return (
         <>
-            <div>
+            <div className="w-full flex justify-end px-4 py-2">
                 <button
                     onClick={handleOpenModal}
                     className="m-1 w-full max-w-[8rem] h-10 text-sm text-white font-semibold bg-default-800 rounded hover:bg-default-700 cursor-pointer"
@@ -70,7 +74,7 @@ export default function StorePageAdmin() {
                 <StoreInfoModal open={isStoreInfoModalOpen} onClose={handleCloseModal} slug={slug} />
             </div>
 
-            <RestaurantPageClient />
+            <RestaurantPageClient slug={slug} token={token} />
             <EditableCategories slug={slug} />
             <CategoryProductList slug={slug} />
         </>

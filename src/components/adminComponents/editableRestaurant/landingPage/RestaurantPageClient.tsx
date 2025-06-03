@@ -1,31 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getRestaurant } from "@/helper/restaurantFetch";
+import { getRestaurantWithMenu } from "@/helper/restaurantsSlugFetch";
 import { IRestaurant } from "@/types";
 import EditableBannerHero from "./EditableBanner";
-import { useAuth } from "@/app/(admin)/login/adminLoginContext";
-import { Store } from "lucide-react";
-import { getRestaurantWithMenu } from "@/helper/restaurantsSlugFetch";
 
-export default function RestaurantPageClient() {
-    const { user } = useAuth();
-    const slug = user?.payload?.slug;
+interface Props {
+  slug: string;
+  token: string;
+}
 
+export default function RestaurantPageClient({ slug, token }: Props) {
     const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!slug) {
-            setError("Missing restaurant slug");
-            return;
-        }
-
         getRestaurantWithMenu(slug)
-            .then((res) => {
-                // console.log("Fetched restaurant data:", res);
-                setRestaurant(res);
-            })
+            .then((res) => setRestaurant(res))
             .catch((err) => setError(err.message));
     }, [slug]);
 
@@ -34,7 +25,12 @@ export default function RestaurantPageClient() {
 
     return (
         <div className="mx-auto">
-            <EditableBannerHero title={restaurant.name} initialBanner={restaurant.banner ?? undefined} />
+            <EditableBannerHero
+                title={restaurant.name}
+                initialBanner={restaurant.banner ?? undefined}
+                slug={slug}
+                token={token}
+            />
         </div>
     );
 }
