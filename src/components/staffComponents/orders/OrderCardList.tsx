@@ -122,12 +122,9 @@ export default function OrderCardList() {
             toast.error("Failed to update order");
         }
     };
-<<<<<<< HEAD
 
     //Order updated to in-process
     
-=======
->>>>>>> 64d81d82624dbf1ffa36fffae60faf68c4d3bacb
 
     const renderByStatus = (status: string, title: string, Icon: React.ElementType) => (
         <section className="bg-white border border-gray-200 rounded-xl p-4 shadow-md min-h-[60vh] sm:min-h-[65vh] md:h-full overflow-hidden flex flex-col">
