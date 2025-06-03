@@ -8,6 +8,7 @@ import CategoryProductList from "./CategoryProductList";
 import StoreInfoModal from "./StoreInfoAdmin";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
+import { PencilIcon } from "lucide-react";
 
 function parseJwt(token: string) {
     try {
@@ -72,6 +73,7 @@ export default function StorePageAdmin() {
                         setIsAuthorized(true);
                     }
                 } catch (error) {
+        setToken(token);
                     toast.error("Invalid session data");
                 }
             }
@@ -90,8 +92,14 @@ export default function StorePageAdmin() {
     }, [token, slug]);
 
     if (checkingAuth) {
-        return <p className="p-4 text-center">Loading restaurant...</p>;
+        return (
+            <div className="flex gap-4 justify-center items-center h-40">
+                <p className=" text-sm md:text-2xl text-branding-900">Loading...</p>
+                <div className="w-8 h-8 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
     }
+
 
     if (!isAuthorized) {
         return null;
@@ -99,17 +107,18 @@ export default function StorePageAdmin() {
 
     return (
         <>
-            <div>
+            <div className="w-full flex justify-end px-4 py-2">
                 <button
                     onClick={handleOpenModal}
-                    className="m-1 w-full max-w-[8rem] h-10 text-sm text-white font-semibold bg-default-800 rounded hover:bg-default-700 cursor-pointer"
+                    className=" top-4 right-4 z-30 bg-branding-200/80 text-xs sm:text-sm md:text-base px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-branding-200 flex items-center gap-2 cursor-pointer "
                 >
+                    <PencilIcon className="w-4 h-4" />
                     Store Info
                 </button>
                 <StoreInfoModal open={isStoreInfoModalOpen} onClose={handleCloseModal} slug={slug} />
             </div>
 
-            <RestaurantPageClient />
+            <RestaurantPageClient slug={slug} token={token} />
             <EditableCategories slug={slug} refetchProducts={getProducts} />
             <CategoryProductList slug={slug} products={products} refetchProducts={getProducts} />
         </>

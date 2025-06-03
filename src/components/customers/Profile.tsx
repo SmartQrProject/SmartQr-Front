@@ -84,7 +84,16 @@ export default function CustomerProfile() {
         syncUser();
     }, [user, slug]);
 
-    if (!mounted || isLoading) return <p className="text-center mt-20">Loading...</p>;
+    if (!mounted || isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-40 mt-10 gap-3">
+            <div className="w-6 h-6 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+            <p className="text-sm text-branding-800">Loading...</p>
+            </div>
+        );
+    }
+
+
     if (!slug) return <p className="text-center mt-20">Error: Slug not available</p>;
     if (!user) return <p className="text-center mt-20">Not authenticated</p>;
 
