@@ -183,6 +183,7 @@ export default function CategoryProductList({ slug }: Props) {
           />
         </ProductModal>
       )}
+      
 
       <ConfirmDialog
         isOpen={confirmDeleteOpen}

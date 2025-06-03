@@ -85,10 +85,10 @@ export const CompleteRestaurantsSchema = z.object({
     .optional(),
 
   phone: z
-    .string()
-    .min(6, 'Phone number must be between 6 and 40 characters')
-    .max(40, 'Phone number must be between 6 and 40 characters')
-    .optional(),
+      .string()
+      .regex(/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number")
+      .optional()
+      .or(z.literal("")),
 
   description: z
     .string()

@@ -67,31 +67,10 @@ const OrderCard: React.FC<Props> = ({ order, tableName, onAdvanceStatus, onRetre
         }
     };
 
-    const updateStatusOnServer = async (newStatus: string, direction: "advance" | "retreat") => {
-        if (!slug || !token) return;
-
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/orders/${order.id}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-                body: JSON.stringify({ status: newStatus }),
-            });
-
-            if (!res.ok) throw new Error("Error al actualizar estado");
-
-            if (direction === "advance") onAdvanceStatus(order.id, newStatus);
-            else onRetreatStatus(order.id, newStatus);
-
-            toast.success(`Order updated to ${newStatus}`);
-            if (onStatusChange) onStatusChange();
-        } catch (error) {
-            console.error(error);
-            toast.error("Failed to update order status");
-        }
-    };
+    const updateStatusOnServer = (newStatus: string, direction: "advance" | "retreat") => {
+        if (direction === "advance") onAdvanceStatus(order.id, newStatus);
+        else onRetreatStatus(order.id, newStatus);
+        };
 
     const total = Array.isArray(order.items) ? order.items.reduce((acc: number, item: IOrderItem) => acc + item.price * item.quantity, 0) : 0;
 

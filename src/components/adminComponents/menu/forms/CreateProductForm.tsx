@@ -56,27 +56,30 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
   });
 
   useEffect(() => {
-    console.log('Form errors:', errors);
+   
   }, [errors]);
 
   const { fields, append, remove, replace } = useFieldArray({ control, name: 'details' as any });
   const fileSelected = !!watch('file');
   const selectedFileName = watch('file')?.name || '';
 
-  useEffect(() => {
-    if (initialData) {
-      const details = initialData.details?.length ? initialData.details : [];
-      reset({
-        name: initialData.name,
-        description: initialData.description,
-        price: initialData.price,
-        available: initialData.available,
-        categoryId: initialData.categoryId,
-        details,
-      });
-      replace(details);
-    }
-  }, [initialData, reset, replace]);
+    useEffect(() => {
+      if (initialData && categories.length > 0) {
+        const details = initialData.details?.length ? initialData.details : [];
+        reset({
+          name: initialData.name,
+          description: initialData.description,
+          price: initialData.price,
+          available: initialData.available,
+          categoryId: initialData.categoryId ?? '',
+          details,
+        });
+
+        setValue('categoryId', initialData.categoryId ?? '');
+        replace(details);
+      }
+    }, [initialData, categories, reset, replace, setValue]);
+
 
   const handlePreview = async () => {
     const values = getValues();

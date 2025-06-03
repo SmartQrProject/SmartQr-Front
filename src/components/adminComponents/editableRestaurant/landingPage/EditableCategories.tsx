@@ -18,11 +18,12 @@ interface EditableCategoriesProps {
 
 export default function EditableCategories({ slug }: EditableCategoriesProps) {
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
-    null
-  );
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<ICategory | null>(null);
 
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<ICategory | null>(null);
@@ -53,6 +54,40 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
 
     await fetchAllCategories();
     toast.success("Category added");
+  };
+
+  const handleEditCategory = (category: ICategory) => {
+    setCategoryToEdit(category);
+    setIsEditCategoryModalOpen(true);
+  };
+
+  const handleUpdateCategory = async (newName: string) => {
+    if (!categoryToEdit || newName.trim() === categoryToEdit.name.trim()) return;
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${categoryToEdit.id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: newName }),
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to update category');
+
+      toast.success('Category updated');
+      await fetchAllCategories();
+    } catch (err) {
+      console.error(err);
+      toast.error('Could not update category');
+    } finally {
+      setIsEditCategoryModalOpen(false);
+      setCategoryToEdit(null);
+    }
   };
 
   const promptDeleteCategory = (category: ICategory) => {
@@ -90,38 +125,6 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
     }
   };
 
-  const handleEditCategory = async (id: string) => {
-    const current = categories.find((c) => String(c.id) === String(id));
-    if (!current) return;
-
-    const newName = prompt("Edit category name:", current.name);
-    if (!newName || newName.trim() === current.name.trim()) return;
-
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name: newName }),
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error("Failed to update category");
-      }
-
-      toast.success("Category updated");
-      await fetchAllCategories();
-    } catch (err) {
-      console.error(err);
-      toast.error("Could not update category");
-    }
-  };
-
   return (
     <section className="p-4">
       <div className="flex gap-4 overflow-x-auto pb-4">
@@ -133,7 +136,7 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
             <div className="flex justify-between items-start">
               <span className="font-semibold truncate text-md">{cat.name}</span>
               <div className="flex gap-1 text-gray-600">
-                <button onClick={() => handleEditCategory(String(cat.id))}>
+                <button onClick={() => handleEditCategory(cat)}>
                   <Pencil className="w-4 h-4 hover:text-blue-600 cursor-pointer" />
                 </button>
                 <button onClick={() => promptDeleteCategory(cat)}>
@@ -158,9 +161,7 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
           className="min-w-[240px] h-[100px] flex flex-col justify-center items-center border border-dashed border-gray-400 rounded-lg cursor-pointer hover:bg-default-100"
         >
           <Plus className="w-6 h-6 mb-1 text-gray-600" />
-          <span className="text-sm font-medium text-gray-600">
-            Add Category
-          </span>
+          <span className="text-sm font-medium text-gray-600">Add Category</span>
         </div>
       </div>
 
@@ -168,6 +169,17 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
         open={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
         onSave={handleCreateCategory}
+        mode="create"
+      />
+      <AddCategoryModal
+        open={isEditCategoryModalOpen}
+        onClose={() => {
+          setIsEditCategoryModalOpen(false);
+          setCategoryToEdit(null);
+        }}
+        onSave={handleUpdateCategory}
+        initialName={categoryToEdit?.name}
+        mode="edit"
       />
 
       <ProductModal

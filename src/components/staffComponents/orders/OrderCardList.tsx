@@ -99,7 +99,7 @@ export default function OrderCardList() {
         fetchData();
     }, [slug, token, authorized]);
 
-    const updateOrderStatus = async (orderId: string, newStatus: string) => {
+        const updateOrderStatus = async (orderId: string, newStatus: string) => {
         if (!slug || !token) return;
 
         try {
@@ -111,12 +111,20 @@ export default function OrderCardList() {
                 },
                 body: JSON.stringify({ status: newStatus }),
             });
+
             toast.success(`Order updated to ${newStatus}`);
-            setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)));
+
+            setOrders((prev) =>
+                prev.map((o) =>
+                    o.id === orderId ? { ...o, status: newStatus } : o
+                )
+            );
         } catch (err) {
             toast.error("Failed to update order");
         }
     };
+
+    //Order updated to in-process
     
 
     const renderByStatus = (status: string, title: string, Icon: React.ElementType) => (
