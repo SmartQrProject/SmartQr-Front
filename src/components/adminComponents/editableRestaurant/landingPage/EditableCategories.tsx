@@ -26,23 +26,13 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
   const [categoryToDelete, setCategoryToDelete] = useState<ICategory | null>(null);
   const [isSticky, setIsSticky] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<ICategory | null>(null);
 
   const { user } = useAuth();
   const token = user?.token;
   const { createCategory } = userCreateCategory();
-  const { user } = useAuth();
-  const token = user?.token;
-  const { createCategory } = userCreateCategory();
 
-  const fetchAllCategories = async () => {
-    try {
-      const res = await getCategories(slug, token!);
-      setCategories(Array.isArray(res.categories) ? res.categories : []);
-    } catch (err) {
-      console.error("Error loading categories:", err);
-      toast.error("Error loading categories");
-    }
-  };
   const fetchAllCategories = async () => {
     try {
       const res = await getCategories(slug, token!);
@@ -79,15 +69,11 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
   const handleCreateCategory = async (name: string) => {
     const newCategory = await createCategory(name);
     if (!newCategory) return;
-  const handleCreateCategory = async (name: string) => {
-    const newCategory = await createCategory(name);
-    if (!newCategory) return;
 
     await fetchAllCategories();
-    toast.success("Category added");
+    
   };
-
-  const handleEditCategory = (category: ICategory) => {
+const handleEditCategory = (category: ICategory) => {
     setCategoryToEdit(category);
     setIsEditCategoryModalOpen(true);
   };
@@ -125,13 +111,7 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
     setCategoryToDelete(category);
     setConfirmDeleteOpen(true);
   };
-  const promptDeleteCategory = (category: ICategory) => {
-    setCategoryToDelete(category);
-    setConfirmDeleteOpen(true);
-  };
 
-  const confirmDelete = async () => {
-    if (!categoryToDelete) return;
   const confirmDelete = async () => {
     if (!categoryToDelete) return;
 
@@ -147,9 +127,7 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
         }
       );
 
-      if (!res.ok) {
-        throw new Error("Failed to delete category");
-      }
+      if (!res.ok) throw new Error("Failed to delete category");
 
       toast.success("Category deleted");
       await fetchAllCategories();
@@ -161,6 +139,7 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
       setCategoryToDelete(null);
     }
   };
+
 
   return (
     <section className="relative overflow-x-hidden">
@@ -182,7 +161,7 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
                 <div className="flex justify-between items-start">
                   <span className="font-semibold truncate text-md">{cat.name}</span>
                   <div className="flex gap-1 text-gray-600">
-                    <button onClick={() => handleEditCategory(String(cat.id))}>
+                    <button onClick={() => handleEditCategory(cat)}>
                       <Pencil className="w-4 h-4 hover:text-blue-600 cursor-pointer" />
                     </button>
                     <button onClick={() => promptDeleteCategory(cat)}>
@@ -235,26 +214,9 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
         open={isProductModalOpen}
         onClose={() => setIsProductModalOpen(false)}
       >
-        <CreateMenuForm 
-        onSuccess={() => {
-            if (refetchProducts) refetchProducts();
-            window.dispatchEvent(new Event("product:created"));
-            }}
-            onClose={() => setIsProductModalOpen(false)}/>
+        <CreateMenuForm />
       </ProductModal>
 
-      <ConfirmDialog
-        isOpen={confirmDeleteOpen}
-        title="Delete Category"
-        message={`Are you sure you want to delete the category "${categoryToDelete?.name}"?`}
-        onConfirm={confirmDelete}
-        onCancel={() => {
-          setConfirmDeleteOpen(false);
-          setCategoryToDelete(null);
-        }}
-      />
-    </section>
-  );
       <ConfirmDialog
         isOpen={confirmDeleteOpen}
         title="Delete Category"

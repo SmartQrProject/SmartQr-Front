@@ -39,7 +39,7 @@ export const StaffRegisterSchema = z
       .max(15, "Password must be at most 15 characters")
       .regex(passwordRegex, {
         message:
-          "Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (!@#$%^&*)",
+          "Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (!@$%^&*)",
       }),
 
     confirmPassword: z
@@ -49,7 +49,7 @@ export const StaffRegisterSchema = z
       .max(15, "Password must be at most 15 characters")
       .regex(passwordRegex, {
         message:
-          "Confirm Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (!@#$%^&*)",
+          "Confirm Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (!@$%^&*)",
       }),
   })
   .refine((data) => data.password === data.confirmPassword, {
