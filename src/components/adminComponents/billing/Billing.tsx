@@ -116,7 +116,13 @@ export default function BillingComponent() {
     };
 
     if (checkingAuth) {
-        return <p className="p-4 text-center">Checking access...</p>;
+        return(
+            <div className="flex gap-4 justify-center items-center h-40">
+                <p className=" text-sm md:text-2xl text-branding-900">Checking Access...</p>
+                <div className="w-8 h-8 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+            </div>
+        )
+         
     }
 
     if (role !== "owner") {
@@ -146,7 +152,10 @@ export default function BillingComponent() {
                     </p>
                 </div>
             ) : (
-                <p>Loading subscription details...</p>
+                <div className="flex gap-4 justify-center items-center h-40">
+                    <p className=" text-sm md:text-2xl text-branding-900">Loading suscription details...</p>
+                    <div className="w-8 h-8 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+                </div>
             )}
 
             <div className="pt-6">

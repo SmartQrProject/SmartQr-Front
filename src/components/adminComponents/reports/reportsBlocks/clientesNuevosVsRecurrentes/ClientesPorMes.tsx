@@ -53,7 +53,15 @@ const ClientesPorMes = () => {
     fetchData();
   }, [slug, token]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div className="flex gap-4 justify-center items-center h-40">
+        <p className="text-sm md:text-2xl text-branding-900">Loading Data...</p>
+        <div className="w-8 h-8 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   if (error || !data) return <p>There was a problem loading the data.</p>;
   if (data.newCustomers + data.returningCustomers === 0)
     return <p>No customers this month.</p>;

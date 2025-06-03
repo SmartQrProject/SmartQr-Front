@@ -57,7 +57,7 @@ export default function PublicCategoryNav({ categories }: Props) {
           isSticky ? 'fixed top-0 left-0 right-0 z-50 shadow-sm bg-white' : ''
         } transition-all`}
       >
-        <div className="flex gap-4 overflow-x-auto px-4 py-2 bg-white">
+        <div className="flex gap-4 overflow-x-auto px-4 py-4 bg-white">
           {visibleCategories.map((cat) => (
             <button
               key={cat.name}
