@@ -75,7 +75,6 @@ export default function CreateMenuForm({ initialData, mode = 'create', onClose, 
         details,
       });
       replace(details);
-       //setPreview({ imageUrl: initialData.image_url });
     }
   }, [initialData, reset, replace]);
 
