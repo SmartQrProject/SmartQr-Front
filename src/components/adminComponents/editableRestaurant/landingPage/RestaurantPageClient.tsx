@@ -23,7 +23,6 @@ export default function RestaurantPageClient() {
 
         getRestaurantWithMenu(slug)
             .then((res) => {
-                // console.log("Fetched restaurant data:", res);
                 setRestaurant(res);
             })
             .catch((err) => setError(err.message));

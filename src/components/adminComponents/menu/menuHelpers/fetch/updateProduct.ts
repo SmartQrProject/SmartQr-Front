@@ -24,24 +24,16 @@ export async function updateProduct({
     token: string;
 }) {
     const productPayload = Object.fromEntries(
-    Object.entries({
-    name,
-    price,
-    description,
-    image_url,
-    categoryId,
-    is_available,
-    details,
-    }).filter(
-      ([, v]) =>
-        v !== null &&
-        v !== undefined &&
-        !(typeof v === 'string' && v.trim() === '') &&
-        !(Array.isArray(v) && v.length === 0)
-    )
-  );
-
-  console.log('📤 PAYLOAD', productPayload);
+        Object.entries({
+            name,
+            price,
+            description,
+            image_url,
+            categoryId,
+            is_available,
+            details,
+        }).filter(([, v]) => v !== null && v !== undefined && !(typeof v === "string" && v.trim() === "") && !(Array.isArray(v) && v.length === 0)),
+    );
 
     const res = await fetch(`${APIURL}/${slug}/products/${productId}`, {
         method: "PATCH",

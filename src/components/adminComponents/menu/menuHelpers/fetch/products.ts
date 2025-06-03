@@ -36,8 +36,6 @@ export async function uploadImage(file: File, token: string): Promise<string> {
     const formData = new FormData();
     formData.append("file", file);
 
-    // console.log("Subiendo imagen:", file);
-
     const response = await fetch(`${APIURL}/cloudinary/uploadImage`, {
         method: "POST",
         headers: {
@@ -51,7 +49,7 @@ export async function uploadImage(file: File, token: string): Promise<string> {
     }
 
     const secureUrl = await response.text();
-    // console.log("Respuesta Cloudinary (texto plano):", secureUrl);
+
     return secureUrl;
 }
 
@@ -76,15 +74,6 @@ const createProduct = async ({
     details: string[];
     token: string;
 }) => {
-    // console.log("Enviando producto:", {
-    //     name,
-    //     description,
-    //     price,
-    //     categoryId,
-    //     image_url,
-    //     is_available,
-    //     details,
-    // });
     const res = await fetch(`${APIURL}/${slug}/products`, {
         method: "POST",
         headers: {
@@ -101,7 +90,7 @@ const createProduct = async ({
             details,
         }),
     });
-    // console.log("Respuesta del servidor:", res);
+
     if (!res.ok) throw new Error("Error al crear producto" + Error);
     return await res.json();
 };

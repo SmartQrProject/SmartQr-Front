@@ -37,8 +37,6 @@ export default function RegisterForm() {
                 isTrial: data.isTrial,
             };
 
-            console.log("🚀 Payload enviado al backend:", restaurantData);
-
             const createRes = await fetch(`${APIURL}/restaurants/create`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

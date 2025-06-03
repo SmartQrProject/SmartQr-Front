@@ -11,52 +11,37 @@ type StoreInfoModalProps = {
     onClose: () => void;
 };
 function cleanPayload(obj: any): any {
-  if (Array.isArray(obj)) {
-    return obj
-      .map(cleanPayload)
-      .filter((v) => v !== undefined && v !== null && v !== "" && v !== 0);
-  } else if (typeof obj === "object" && obj !== null) {
-    const cleaned = Object.entries(obj).reduce((acc, [key, value]) => {
-      const cleanedValue = cleanPayload(value);
+    if (Array.isArray(obj)) {
+        return obj.map(cleanPayload).filter((v) => v !== undefined && v !== null && v !== "" && v !== 0);
+    } else if (typeof obj === "object" && obj !== null) {
+        const cleaned = Object.entries(obj).reduce(
+            (acc, [key, value]) => {
+                const cleanedValue = cleanPayload(value);
 
-      const isEmptyObject =
-        typeof cleanedValue === "object" &&
-        !Array.isArray(cleanedValue) &&
-        Object.keys(cleanedValue).length === 0;
+                const isEmptyObject = typeof cleanedValue === "object" && !Array.isArray(cleanedValue) && Object.keys(cleanedValue).length === 0;
 
-      const isEmptyArray = Array.isArray(cleanedValue) && cleanedValue.length === 0;
+                const isEmptyArray = Array.isArray(cleanedValue) && cleanedValue.length === 0;
 
-      if (
-        cleanedValue !== undefined &&
-        cleanedValue !== null &&
-        cleanedValue !== "" &&
-        cleanedValue !== 0 &&
-        !isEmptyObject &&
-        !isEmptyArray
-      ) {
-        acc[key] = cleanedValue;
-      }
+                if (cleanedValue !== undefined && cleanedValue !== null && cleanedValue !== "" && cleanedValue !== 0 && !isEmptyObject && !isEmptyArray) {
+                    acc[key] = cleanedValue;
+                }
 
-      return acc;
-    }, {} as Record<string, any>);
+                return acc;
+            },
+            {} as Record<string, any>,
+        );
 
-    // Si es un bloque con solo open o close, y el otro está faltando o vacío, lo eliminamos
-    const isTradingDay = (obj: any) =>
-      typeof obj === "object" && ("open" in obj || "close" in obj);
+        // Si es un bloque con solo open o close, y el otro está faltando o vacío, lo eliminamos
+        const isTradingDay = (obj: any) => typeof obj === "object" && ("open" in obj || "close" in obj);
 
-    if (
-      isTradingDay(obj) &&
-      (!("open" in cleaned && "close" in cleaned) ||
-        cleaned.open === undefined ||
-        cleaned.close === undefined)
-    ) {
-      return undefined;
+        if (isTradingDay(obj) && (!("open" in cleaned && "close" in cleaned) || cleaned.open === undefined || cleaned.close === undefined)) {
+            return undefined;
+        }
+
+        return cleaned;
     }
 
-    return cleaned;
-  }
-
-  return obj;
+    return obj;
 }
 
 const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalProps) => {
@@ -110,50 +95,34 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                 longitude: typeof longitude === "number" ? longitude : undefined,
                 trading_hours: showTradingHours
                     ? {
-                        mondayToFriday: { open: monOpen, close: monClose },
-                        saturday: { open: satOpen, close: satClose },
-                        sunday: { open: sunOpen, close: sunClose },
-                    }
+                          mondayToFriday: { open: monOpen, close: monClose },
+                          saturday: { open: satOpen, close: satClose },
+                          sunday: { open: sunOpen, close: sunClose },
+                      }
                     : undefined,
                 ordering_times: showOrderingTimes
                     ? {
-                        pickup: Number(pickup),
-                        dinein: Number(dinein),
-                    }
+                          pickup: Number(pickup),
+                          dinein: Number(dinein),
+                      }
                     : undefined,
             };
 
-            console.log("Payload to update:", payload);
-
-            const result = CompleteRestaurantsSchema.partial({
-            owner_pass: true,
-            owner_name: true,
-            owner_email: true,
-            isTrial: true,
-            is_active: true,
-            banner: true,
-            }).safeParse(payload);
-
-            if (!result.success) {
-            const formattedErrors: Record<string, string> = {};
-            result.error.errors.forEach((err) => {
-                if (err.path.length > 0) {
-                formattedErrors[err.path.join(".")] = err.message;
-                }
-            });
-            setFormErrors(formattedErrors);
-            toast.error("There are errors in the form.");
-            return;
-            }
-
-            setFormErrors({});
-            const validatedPayload = result.data;
+            // Validación Zod parcial (omite campos que no se modifican aquí)
+            const validatedPayload = CompleteRestaurantsSchema.partial({
+                owner_pass: true,
+                owner_name: true,
+                owner_email: true,
+                isTrial: true,
+                is_active: true,
+                banner: true,
+            }).parse(payload);
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/restaurants/${slug}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(cleanPayload(validatedPayload)),
             });
@@ -309,8 +278,12 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                 </div>
 
                 <div className="flex justify-end gap-2 pt-4">
-                    <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
-                    <button onClick={handleUpdateEditable} className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Save</button>
+                    <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
+                        Cancel
+                    </button>
+                    <button onClick={handleUpdateEditable} className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                        Save
+                    </button>
                 </div>
             </div>
         </div>
