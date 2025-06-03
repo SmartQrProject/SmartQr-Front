@@ -1,73 +1,62 @@
-const APIURL = process.env.NEXT_PUBLIC_API_URL
+const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 interface CustomerData {
-  name?: string;
-  email?: string;
-  phone?: string;
-  password?: string;
-  reward?: number;
+    name?: string;
+    email?: string;
+    phone?: string;
+    password?: string;
+    reward?: number;
 }
 
-export async function modifyCustomersData(
-  slug: string,
-  token: string,
-  id: string,
-  data: CustomerData
-) {
-  try {
-    const response = await fetch(`${APIURL}/${slug}/customers/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    });
-    console.log("body:", JSON.stringify(data))
-    
+export async function modifyCustomersData(slug: string, token: string, id: string, data: CustomerData) {
+    try {
+        const response = await fetch(`${APIURL}/${slug}/customers/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+        });
 
-    const result = await response.json();
-    console.log(result)
-    if (!response.ok) {
-      return {
-        success: false,
-        message: result?.message || `Failed to modify user (status: ${response.status})`,
-      };
+        const result = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: result?.message || `Failed to modify user (status: ${response.status})`,
+            };
+        }
+
+        return { success: true, data: result };
+    } catch (error: any) {
+        return { success: false, message: error?.message || "Unexpected error occurred" };
     }
-
-    return { success: true, data: result };
-  } catch (error: any) {
-    return { success: false, message: error?.message || "Unexpected error occurred" };
-  }
 }
-
-
 
 export async function getCustomerById(token: string, slug: string, id: string) {
-  try {
-  
-    const url = `${APIURL}/${slug}/customers/${id}`;
-   
+    try {
+        const url = `${APIURL}/${slug}/customers/${id}`;
 
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+        const response = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!data || typeof data !== "object") {
+            throw new Error("No valid response data received from server.");
+        }
+
+        return { success: true, data };
+    } catch (error: any) {
+        // console.error("❌ Error fetching customer by ID:", error);
+        return { success: false, message: error.message };
     }
-
-    const data = await response.json();
-
-    if (!data || typeof data !== "object") {
-      throw new Error("No valid response data received from server.");
-    }
-
-    return { success: true, data };
-  } catch (error: any) {
-    // console.error("❌ Error fetching customer by ID:", error);
-    return { success: false, message: error.message };
-  }
 }

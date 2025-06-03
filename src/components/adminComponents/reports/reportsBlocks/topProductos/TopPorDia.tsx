@@ -32,7 +32,6 @@ const TopPorDia = () => {
                     quantity: Number(item.quantity),
                 }));
                 setProductos(parsed);
-                // console.log("Top products of the day:", parsed);
             } catch (err) {
                 console.error("Error fetching top products of the day:", err);
             } finally {
