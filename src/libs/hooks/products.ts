@@ -120,8 +120,6 @@ export async function updateProduct({
         }),
     });
 
-    // console.log("Product upd", res);
-
     if (!res.ok) throw new Error("Error al actualizar producto");
     return await res.json();
 }

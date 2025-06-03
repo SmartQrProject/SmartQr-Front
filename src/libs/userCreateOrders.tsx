@@ -16,8 +16,6 @@ export const useCreateOrder = () => {
                 },
                 body: JSON.stringify({ customerId, code, products }),
             });
-            // console.log("🔍 Order creation response:", { customerId, code, products } );
-            // console.log(token);
 
             const data = await res.json();
 

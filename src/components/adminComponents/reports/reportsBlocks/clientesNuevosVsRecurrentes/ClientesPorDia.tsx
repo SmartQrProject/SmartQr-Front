@@ -34,7 +34,6 @@ const ClientesPorDia = () => {
                     },
                 });
 
-                // console.log(res);
                 if (!res.ok) throw new Error("Server response error");
 
                 const result = await res.json();

@@ -15,78 +15,76 @@ import ConfirmDialog from "../../menu/menuHelpers/confirm/confirmDialog";
 const API = process.env.NEXT_PUBLIC_API_URL;
 
 interface Props {
-  slug: string;
+    slug: string;
+    products: any[];
+    refetchProducts: () => void;
 }
 
-export default function CategoryProductList({ slug }: Props) {
-  const { user } = useAuth();
-  const token = user?.token;
+export default function CategoryProductList({ slug, products, refetchProducts }: Props) {
+    const { user } = useAuth();
+    const token = user?.token;
 
-  const [categories, setCategories] = useState<ICategoryWithProducts[]>([]);
-  const [editProduct, setEditProduct] = useState<
-    (ProductFormData & { id?: string; image_url?: string }) | null
-  >(null);
-  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+    const [categories, setCategories] = useState<ICategoryWithProducts[]>([]);
+    const [editProduct, setEditProduct] = useState<(ProductFormData & { id?: string; image_url?: string }) | null>(null);
+    const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+    const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
 
-  const refetchCategories = async () => {
-    if (!slug || !token) return;
-    try {
-      const res = await getCategories(slug, token);
-      setCategories(Array.isArray(res?.categories) ? res.categories : []);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to load categories with products");
-    }
-  };
+    const refetchCategories = async () => {
+        if (!slug || !token) return;
+        try {
+            const res = await getCategories(slug, token);
+            setCategories(Array.isArray(res?.categories) ? res.categories : []);
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to load categories with products");
+        }
+    };
 
-  useEffect(() => {
-    refetchCategories();
-  }, [slug, token]);
+    useEffect(() => {
+        refetchCategories();
+    }, [slug, token, products]);
 
-  const promptDeleteProduct = (productId: string, productName: string) => {
-    setProductToDelete({ id: productId, name: productName });
-    setConfirmDeleteOpen(true);
-  };
+    const promptDeleteProduct = (productId: string, productName: string) => {
+        setProductToDelete({ id: productId, name: productName });
+        setConfirmDeleteOpen(true);
+    };
 
-  const confirmDeleteProduct = async () => {
-    if (!productToDelete) return;
+    const confirmDeleteProduct = async () => {
+        if (!productToDelete) return;
 
-    try {
-      await fetch(`${API}/${slug}/products/${productToDelete.id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+        try {
+            const res = await fetch(`${API}/${slug}/products/${productToDelete.id}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
+            });
 
-      await refetchCategories();
-      toast.success("Product deleted");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to delete product");
-    } finally {
-      setConfirmDeleteOpen(false);
-      setProductToDelete(null);
-    }
-  };
+            if (!res.ok) {
+                throw new Error("Error al eliminar producto");
+            }
 
-  return (
-    <section className="p-4">
-      <div className="space-y-10">
-        {categories.map((cat) => {
-          const filtered =
-            cat.products?.filter(
-              (product) =>
-                (product as any).exist !== false &&
-                (product as any).category?.exist !== false
-            ) || [];
+            await refetchCategories();
+            await refetchProducts();
+            toast.success("Product deleted");
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to delete product");
+        } finally {
+            setConfirmDeleteOpen(false);
+            setProductToDelete(null);
+        }
+    };
 
-          return (
-            <div key={cat.id} className="bg-white shadow rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-4 text-default-800">
-                {cat.name}
-              </h3>
+    return (
+        <section className="p-4">
+            <div className="space-y-10">
+                {categories.map((cat) => {
+                    const filtered = cat.products?.filter((product) => (product as any).exist !== false && (product as any).category?.exist !== false) || [];
+
+                    return (
+                        <div key={cat.id} className="bg-white shadow rounded-lg p-6">
+                            <h3 className="text-xl font-semibold mb-4 text-default-800">{cat.name}</h3>
 
               {filtered.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
@@ -164,38 +162,39 @@ export default function CategoryProductList({ slug }: Props) {
         })}
       </div>
 
-      {isProductModalOpen && editProduct && (
-        <ProductModal
-          open={isProductModalOpen}
-          onClose={() => {
-            setIsProductModalOpen(false);
-            setEditProduct(null);
-          }}
-        >
-          <CreateMenuForm
-            mode="edit"
-            initialData={editProduct}
-            onClose={() => {
-              setIsProductModalOpen(false);
-              setEditProduct(null);
-            }}
-            onSuccess={() => {
-              refetchCategories();
-            }}
-          />
-        </ProductModal>
-      )}
+            {isProductModalOpen && editProduct && (
+                <ProductModal
+                    open={isProductModalOpen}
+                    onClose={() => {
+                        setIsProductModalOpen(false);
+                        setEditProduct(null);
+                    }}
+                >
+                    <CreateMenuForm
+                        mode="edit"
+                        initialData={editProduct}
+                        onClose={() => {
+                            setIsProductModalOpen(false);
+                            setEditProduct(null);
+                        }}
+                        onSuccess={() => {
+                            refetchCategories();
+                            refetchProducts();
+                        }}
+                    />
+                </ProductModal>
+            )}
 
-      <ConfirmDialog
-        isOpen={confirmDeleteOpen}
-        title="Delete Product"
-        message={`Are you sure you want to delete the product "${productToDelete?.name}"?`}
-        onConfirm={confirmDeleteProduct}
-        onCancel={() => {
-          setConfirmDeleteOpen(false);
-          setProductToDelete(null);
-        }}
-      />
-    </section>
-  );
+            <ConfirmDialog
+                isOpen={confirmDeleteOpen}
+                title="Delete Product"
+                message={`Are you sure you want to delete the product "${productToDelete?.name}"?`}
+                onConfirm={confirmDeleteProduct}
+                onCancel={() => {
+                    setConfirmDeleteOpen(false);
+                    setProductToDelete(null);
+                }}
+            />
+        </section>
+    );
 }

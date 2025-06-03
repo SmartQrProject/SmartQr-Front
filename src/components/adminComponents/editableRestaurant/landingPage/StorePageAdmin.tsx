@@ -7,8 +7,7 @@ import EditableCategories from "@/components/adminComponents/editableRestaurant/
 import CategoryProductList from "./CategoryProductList";
 import StoreInfoModal from "./StoreInfoAdmin";
 import Cookies from "js-cookie";
-
-
+import { toast } from "react-hot-toast";
 
 function parseJwt(token: string) {
     try {
@@ -28,31 +27,68 @@ export default function StorePageAdmin() {
     const [checkingAuth, setCheckingAuth] = useState(true);
     const [slug, setSlug] = useState("");
     const [token, setToken] = useState("");
+    const [products, setProducts] = useState<any[]>([]);
 
     const handleOpenModal = () => setIsStoreInfoModalOpen(true);
     const handleCloseModal = () => setIsStoreInfoModalOpen(false);
 
+    const getProducts = async () => {
+        if (!token || !slug) return;
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/products`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (!res.ok) throw new Error(`Error al obtener productos: ${res.status}`);
+
+            const data = await res.json();
+            setProducts(data);
+        } catch (err) {
+            console.error("Error en getProducts:", err);
+            if (!(err instanceof Error && err.message.includes("404"))) {
+                toast.error("Error al cargar productos");
+            }
+        }
+    };
+
     useEffect(() => {
-        const token = Cookies.get("adminSession");
-        if (!token) {
-            router.push("/");
-            return;
-        }
+        if (typeof window !== "undefined") {
+            const sessionRaw = localStorage.getItem("adminSession");
+            if (sessionRaw) {
+                try {
+                    const session = JSON.parse(sessionRaw);
+                    const extractedToken = session.token;
+                    const extractedSlug = session.restaurant?.slug || session.payload?.restaurant?.slug || session.payload?.slug;
+                    const roles = session.payload?.roles;
 
-        const payload = parseJwt(token);
-        const role = payload?.roles;
-        const userSlug = payload?.slug;
+                    if (!roles || !roles.includes("owner")) {
+                        router.push("/404");
+                        return;
+                    }
 
-        if (role !== "owner" || !userSlug) {
-            router.push("/admin/dashboard");
-            return;
-        }
-
-        setSlug(userSlug);
+                    if (extractedToken && extractedSlug) {
+                        setSlug(extractedSlug);
+                        setToken(extractedToken);
+                        setIsAuthorized(true);
+                    }
+                } catch (error) {
         setToken(token);
-        setIsAuthorized(true);
-        setCheckingAuth(false);
+                    toast.error("Invalid session data");
+                }
+            }
+            setCheckingAuth(false);
+        }
     }, [router]);
+
+    useEffect(() => {
+        if (slug && token) getProducts();
+    }, [slug, token]);
+
+    useEffect(() => {
+        const handleProductCreated = () => getProducts();
+        window.addEventListener("product:created", handleProductCreated);
+        return () => window.removeEventListener("product:created", handleProductCreated);
+    }, [token, slug]);
 
     if (checkingAuth) {
         return <p className="p-4 text-center"> Loading restaurant...</p>;
@@ -75,8 +111,8 @@ export default function StorePageAdmin() {
             </div>
 
             <RestaurantPageClient slug={slug} token={token} />
-            <EditableCategories slug={slug} />
-            <CategoryProductList slug={slug} />
+            <EditableCategories slug={slug} refetchProducts={getProducts} />
+            <CategoryProductList slug={slug} products={products} refetchProducts={getProducts} />
         </>
     );
 }

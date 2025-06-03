@@ -16,16 +16,6 @@ export interface RestaurantCardProps {
 }
 
 const RestaurantCard: React.FC<RestaurantCardProps> = ({ id, slug, name, owner_email, owner_name, created_at, is_active, onToggleStatus, onEdit, onDelete }) => {
-    // console.log("🧾 RestaurantCard props:", {
-    //     id,
-    //     slug,
-    //     name,
-    //     owner_email,
-    //     owner_name,
-    //     created_at,
-    //     is_active,
-    // });
-
     return (
         <tr className="bg-white hover:bg-gray-50 transition">
             <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{name}</td>
