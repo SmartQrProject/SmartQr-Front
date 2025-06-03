@@ -7,11 +7,11 @@ export default function RestaurantBanner() {
                 <h2 className="text-3xl font-bold mb-4">Ready to Modernize Your Restaurant?</h2>
                 <p className="mb-8 text-lg">Join thousands of restaurants already using our platform to streamline their operations and delight their customers.</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center ">
-                    <Link href="/create-account" className="bg-white text-blue-500 font-semibold hover:bg-blue-400 hover:text-white  transition-colors px-6 py-3 rounded-full">
+                    <Link href="/signup" className="bg-white text-blue-500 font-semibold hover:bg-blue-400 hover:text-white  transition-colors px-6 py-3 rounded-full">
                         Create Account
                     </Link>
-                    <Link href="/schedule-demo" className="border border-white text-white font-semibold hover:bg-blue-400 transition-colors px-6 py-3 rounded-full">
-                        Schedule Demo
+                    <Link href="/features" className="border border-white text-white font-semibold hover:bg-blue-400 transition-colors px-6 py-3 rounded-full">
+                        What You Get
                     </Link>
                 </div>
             </div>

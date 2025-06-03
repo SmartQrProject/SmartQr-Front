@@ -46,8 +46,8 @@ const NavbarAdmin = () => {
   const storeLink = slug ? `https://www.smart-qr.tech/menu/${slug}` : "#";
 
   return (
-    <div>
-      <nav className="py-4 px-8 bg-[#f6f9fe]">
+    <div >
+      <nav className="py-4 px-8 bg-[#f6f9fe] ">
         <div className="flex justify-between items-center">
           <Link className="font-bold text-xl" href={"/"}>
             <img

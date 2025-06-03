@@ -21,6 +21,7 @@ export default function RegisterForm() {
         formState: { errors, isSubmitting },
     } = useForm<RegisterFormInputs>({
         resolver: zodResolver(AdminRegisterSchema),
+        mode: "onChange",
     });
 
     const onSubmit = async (data: RegisterFormInputs) => {

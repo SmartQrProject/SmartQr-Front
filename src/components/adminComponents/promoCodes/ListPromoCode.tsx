@@ -4,149 +4,159 @@ import { useEffect, useState } from "react";
 import { getPromoCodes, deletePromoCodes } from "./fetch";
 import { Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import ConfirmDialog from "../menu/menuHelpers/confirm/confirmDialog";
 
 type PromoCode = {
-    code: string;
-    percentage: number;
-    isActive: boolean;
-    id: string;
+  code: string;
+  percentage: number;
+  isActive: boolean;
+  id: string;
 };
 
 const PromoCodesList = ({ refreshTrigger }: { refreshTrigger: number }) => {
-    const [error, setError] = useState<string | null>(null);
-    const [codes, setCodes] = useState<PromoCode[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [showActive, setShowActive] = useState(false);
-    const [showInactive, setShowInactive] = useState(false);
-    const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [codes, setCodes] = useState<PromoCode[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [showActive, setShowActive] = useState(false);
+  const [showInactive, setShowInactive] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
-    const { slug, token } = (() => {
-        try {
-            const session = localStorage.getItem("adminSession");
-            if (!session) return { slug: "", token: "" };
-            const parsed = JSON.parse(session);
-            return { slug: parsed.payload?.slug || "", token: parsed.token || "" };
-        } catch {
-            return { slug: "", token: "" };
-        }
-    })();
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [promoToDelete, setPromoToDelete] = useState<PromoCode | null>(null);
 
-    const handleGetPromoCodes = async () => {
-        if (!slug || !token) return;
-        setLoading(true);
-        try {
-            const response = await getPromoCodes(slug, token);
-            setCodes(response || []);
-            setError(null);
-        } catch (err) {
-            console.error("❌ Error fetching promo codes:", err);
-            setError("Failed to load promo codes.");
-        } finally {
-            setLoading(false);
-        }
-    };
+  const { slug, token } = (() => {
+    try {
+      const session = localStorage.getItem("adminSession");
+      if (!session) return { slug: "", token: "" };
+      const parsed = JSON.parse(session);
+      return { slug: parsed.payload?.slug || "", token: parsed.token || "" };
+    } catch {
+      return { slug: "", token: "" };
+    }
+  })();
 
-    useEffect(() => {
-        handleGetPromoCodes();
-    }, [refreshTrigger]);
+  const fetchPromoCodes = async () => {
+    if (!slug || !token) return;
+    setLoading(true);
+    try {
+      const response = await getPromoCodes(slug, token);
+      setCodes(response || []);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching promo codes:", err);
+      setError("Failed to load promo codes.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const handleDelete = async (id: string) => {
-        if (!slug || !token) return;
+  useEffect(() => {
+    fetchPromoCodes();
+  }, [refreshTrigger]);
 
-        if (!confirm("Are you sure you want to delete this promo code?")) return;
+  const promptDelete = (promo: PromoCode) => {
+    setPromoToDelete(promo);
+    setConfirmDeleteOpen(true);
+  };
 
-        setDeletingId(id);
-        try {
-            const result = await deletePromoCodes(token, id, slug);
-            if (result.success) {
-                await handleGetPromoCodes();
-            } else {
-                toast.error(result.message || "Failed to delete promo code.");
-            }
-        } catch (error) {
-            toast.error("Unexpected error while deleting the promo code.");
-        } finally {
-            setDeletingId(null);
-        }
-    };
+  const confirmDelete = async () => {
+    if (!promoToDelete || !slug || !token) return;
 
-    const activeCodes = codes.filter((promo) => promo.isActive);
-    const inactiveCodes = codes.filter((promo) => !promo.isActive);
+    setDeletingId(promoToDelete.id);
+    try {
+      const result = await deletePromoCodes(token, promoToDelete.id, slug);
+      if (result.success) {
+        toast.success("Promo code deleted");
+        await fetchPromoCodes();
+      } else {
+        toast.error(result.message || "Failed to delete promo code");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Unexpected error deleting promo code");
+    } finally {
+      setDeletingId(null);
+      setPromoToDelete(null);
+      setConfirmDeleteOpen(false);
+    }
+  };
 
-    if (loading) return <p className="text-gray-600">Loading promo codes...</p>;
-    if (error) return <p className="text-red-500">{error}</p>;
+  const activeCodes = codes.filter((c) => c.isActive);
+  const inactiveCodes = codes.filter((c) => !c.isActive);
 
-    return (
-        <div className="mt-6 space-y-6">
-            <div>
-                <button
-                    onClick={() => setShowActive(!showActive)}
-                    className="w-full flex justify-between items-center px-4 py-2 bg-green-100 text-green-800 font-semibold rounded hover:bg-green-200 transition"
-                >
-                    Active Promo Codes
-                    <span>{showActive ? "▲" : "▼"}</span>
-                </button>
+  const renderPromoItem = (promo: PromoCode, color: "green" | "red") => (
+    <li
+      key={promo.id}
+      className={`border border-${color}-300 bg-${color}-50 text-${color}-800 px-4 py-2 rounded-md flex justify-between items-center`}
+    >
+      <strong>{promo.code}</strong>
+      <span className="ml-32">{promo.percentage}%</span>
+      <button
+        onClick={() => promptDelete(promo)}
+        disabled={deletingId === promo.id}
+        className="text-red-500 hover:text-red-700"
+      >
+        <Trash2 className="h-5 w-5" />
+      </button>
+    </li>
+  );
 
-                {showActive && (
-                    <div className="mt-2">
-                        {activeCodes.length === 0 ? (
-                            <p className="text-sm text-gray-500">No active promo codes.</p>
-                        ) : (
-                            <ul className="space-y-2 mt-2">
-                                {activeCodes.map((promo) => (
-                                    <li key={promo.id} className="border border-green-300 bg-green-50 text-green-800 px-4 py-2 rounded-md flex justify-between items-center">
-                                        <div>
-                                            <strong>{promo.code}</strong>
-                                        </div>
-                                        <div>
-                                            <span className="ml-32">{promo.percentage}%</span>
-                                        </div>
-                                        <button onClick={() => handleDelete(promo.id)} disabled={deletingId === promo.id} className="text-red-500 hover:text-red-700 mt-2 sm:mt-0">
-                                            <Trash2 className="h-5 w-5" />
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                )}
-            </div>
+  if (loading) return <p className="text-gray-600">Loading promo codes...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
-            <div>
-                <button
-                    onClick={() => setShowInactive(!showInactive)}
-                    className="w-full flex justify-between items-center px-4 py-2 bg-red-100 text-red-800 font-semibold rounded hover:bg-red-200 transition"
-                >
-                    Inactive Promo Codes
-                    <span>{showInactive ? "▲" : "▼"}</span>
-                </button>
+  return (
+    <div className="mt-6 space-y-6">
 
-                {showInactive && (
-                    <div className="mt-2">
-                        {inactiveCodes.length === 0 ? (
-                            <p className="text-sm text-gray-500">No inactive promo codes.</p>
-                        ) : (
-                            <ul className="space-y-2 mt-2">
-                                {inactiveCodes.map((promo) => (
-                                    <li key={promo.id} className="border border-red-300 bg-red-50 text-red-800 px-4 py-2 rounded-md flex justify-between items-center">
-                                        <div>
-                                            <strong>{promo.code}</strong>
-                                        </div>
-                                        <div>
-                                            <span className="ml-32">{promo.percentage}%</span>
-                                        </div>
-                                        <button onClick={() => handleDelete(promo.id)} disabled={deletingId === promo.id} className="text-red-500 hover:text-red-700 mt-2 sm:mt-0">
-                                            <Trash2 className="h-5 w-5" />
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                )}
-            </div>
-        </div>
-    );
+      <div>
+        <button
+          onClick={() => setShowActive(!showActive)}
+          className="w-full flex justify-between items-center px-4 py-2 bg-green-100 text-green-800 font-semibold rounded hover:bg-green-200"
+        >
+          Active Promo Codes
+          <span>{showActive ? "▲" : "▼"}</span>
+        </button>
+        {showActive && (
+          <ul className="space-y-2 mt-2">
+            {activeCodes.length === 0 ? (
+              <p className="text-sm text-gray-500">No active promo codes.</p>
+            ) : (
+              activeCodes.map((p) => renderPromoItem(p, "green"))
+            )}
+          </ul>
+        )}
+      </div>
+
+      <div>
+        <button
+          onClick={() => setShowInactive(!showInactive)}
+          className="w-full flex justify-between items-center px-4 py-2 bg-red-100 text-red-800 font-semibold rounded hover:bg-red-200"
+        >
+          Inactive Promo Codes
+          <span>{showInactive ? "▲" : "▼"}</span>
+        </button>
+        {showInactive && (
+          <ul className="space-y-2 mt-2">
+            {inactiveCodes.length === 0 ? (
+              <p className="text-sm text-gray-500">No inactive promo codes.</p>
+            ) : (
+              inactiveCodes.map((p) => renderPromoItem(p, "red"))
+            )}
+          </ul>
+        )}
+      </div>
+
+      <ConfirmDialog
+        isOpen={confirmDeleteOpen}
+        title="Delete Promo Code"
+        message={`Are you sure you want to delete the code "${promoToDelete?.code}"?`}
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setConfirmDeleteOpen(false);
+          setPromoToDelete(null);
+        }}
+      />
+    </div>
+  );
 };
 
 export default PromoCodesList;

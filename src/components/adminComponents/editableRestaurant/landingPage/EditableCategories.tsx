@@ -10,6 +10,7 @@ import { userCreateCategory } from "@/libs/hooks/userCreateCategory";
 import AddCategoryModal from "@/components/adminComponents/editableRestaurant/landingPage/AddCategoryModal";
 import CreateMenuForm from "../../menu/forms/CreateProductForm";
 import ProductModal from "@/components/adminComponents/editableRestaurant/landingPage/ProducModal";
+import ConfirmDialog from "../../menu/menuHelpers/confirm/confirmDialog";
 
 interface EditableCategoriesProps {
   slug: string;
@@ -22,6 +23,9 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
   );
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<ICategory | null>(null);
 
   const { user } = useAuth();
   const token = user?.token;
@@ -51,13 +55,17 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
     toast.success("Category added");
   };
 
-  const handleDeleteCategory = async (id: string) => {
-    const confirmed = confirm("Delete this category?");
-    if (!confirmed) return;
+  const promptDeleteCategory = (category: ICategory) => {
+    setCategoryToDelete(category);
+    setConfirmDeleteOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!categoryToDelete) return;
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${categoryToDelete.id}`,
         {
           method: "DELETE",
           headers: {
@@ -76,6 +84,9 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
     } catch (error) {
       console.error(error);
       toast.error("Could not delete category");
+    } finally {
+      setConfirmDeleteOpen(false);
+      setCategoryToDelete(null);
     }
   };
 
@@ -125,7 +136,7 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
                 <button onClick={() => handleEditCategory(String(cat.id))}>
                   <Pencil className="w-4 h-4 hover:text-blue-600 cursor-pointer" />
                 </button>
-                <button onClick={() => handleDeleteCategory(String(cat.id))}>
+                <button onClick={() => promptDeleteCategory(cat)}>
                   <Trash2 className="w-4 h-4 hover:text-red-600 cursor-pointer" />
                 </button>
               </div>
@@ -165,6 +176,17 @@ export default function EditableCategories({ slug }: EditableCategoriesProps) {
       >
         <CreateMenuForm />
       </ProductModal>
+
+      <ConfirmDialog
+        isOpen={confirmDeleteOpen}
+        title="Delete Category"
+        message={`Are you sure you want to delete the category "${categoryToDelete?.name}"?`}
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setConfirmDeleteOpen(false);
+          setCategoryToDelete(null);
+        }}
+      />
     </section>
   );
 }

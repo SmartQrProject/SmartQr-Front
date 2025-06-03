@@ -10,6 +10,7 @@ import ProductModal from "@/components/adminComponents/editableRestaurant/landin
 import CreateMenuForm from "@/components/adminComponents/menu/forms/CreateProductForm";
 import { ICategoryWithProducts } from "@/components/adminComponents/menu/menuTypes/menuTypes";
 import { ProductFormData } from "@/components/adminComponents/menu/menuHelpers/schemas/createProductSchema";
+import ConfirmDialog from "../../menu/menuHelpers/confirm/confirmDialog";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,11 +21,15 @@ interface Props {
 export default function CategoryProductList({ slug }: Props) {
   const { user } = useAuth();
   const token = user?.token;
+
   const [categories, setCategories] = useState<ICategoryWithProducts[]>([]);
   const [editProduct, setEditProduct] = useState<
     (ProductFormData & { id?: string; image_url?: string }) | null
   >(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
 
   const refetchCategories = async () => {
     if (!slug || !token) return;
@@ -41,12 +46,16 @@ export default function CategoryProductList({ slug }: Props) {
     refetchCategories();
   }, [slug, token]);
 
-  const handleDeleteProduct = async (productId: string) => {
-    const confirmed = confirm("Delete this product?");
-    if (!confirmed) return;
+  const promptDeleteProduct = (productId: string, productName: string) => {
+    setProductToDelete({ id: productId, name: productName });
+    setConfirmDeleteOpen(true);
+  };
+
+  const confirmDeleteProduct = async () => {
+    if (!productToDelete) return;
 
     try {
-      await fetch(`${API}/${slug}/products/${productId}`, {
+      await fetch(`${API}/${slug}/products/${productToDelete.id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -56,6 +65,9 @@ export default function CategoryProductList({ slug }: Props) {
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete product");
+    } finally {
+      setConfirmDeleteOpen(false);
+      setProductToDelete(null);
     }
   };
 
@@ -129,7 +141,7 @@ export default function CategoryProductList({ slug }: Props) {
                         </button>
                         <button
                           onClick={() =>
-                            handleDeleteProduct(String(product.id))
+                            promptDeleteProduct(String(product.id), product.name)
                           }
                           className="flex items-center justify-center gap-1 text-sm text-default-800 hover:text-red-600 cursor-pointer"
                         >
@@ -159,7 +171,7 @@ export default function CategoryProductList({ slug }: Props) {
           }}
         >
           <CreateMenuForm
-            mode= {editProduct ?"edit" : "create"}
+            mode="edit"
             initialData={editProduct}
             onClose={() => {
               setIsProductModalOpen(false);
@@ -171,6 +183,17 @@ export default function CategoryProductList({ slug }: Props) {
           />
         </ProductModal>
       )}
+
+      <ConfirmDialog
+        isOpen={confirmDeleteOpen}
+        title="Delete Product"
+        message={`Are you sure you want to delete the product "${productToDelete?.name}"?`}
+        onConfirm={confirmDeleteProduct}
+        onCancel={() => {
+          setConfirmDeleteOpen(false);
+          setProductToDelete(null);
+        }}
+      />
     </section>
   );
 }
