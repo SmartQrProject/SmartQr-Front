@@ -4,62 +4,57 @@ import { useEffect, useState } from "react";
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 export function useSyncCustomerSession(slug: string | null) {
-  const { user } = useUser();
-  const [sessionReady, setSessionReady] = useState(false);
-  
+    const { user } = useUser();
+    const [sessionReady, setSessionReady] = useState(false);
 
-  useEffect(() => {
-    const syncUser = async () => {
-      if (!user || !slug) return;
+    useEffect(() => {
+        const syncUser = async () => {
+            if (!user || !slug) return;
 
+            try {
+                const token = await getAccessToken();
 
+                const res = await fetch(`${APIURL}/${slug}/customers/sincronizar`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        name: user.name,
+                        email: user.email,
+                        auth0Id: user.sub,
+                        picture: user.picture,
+                    }),
+                });
 
-      try {
-        const token = await getAccessToken();
+                if (!res.ok) {
+                    const errText = await res.text();
+                    console.error("Detalles:", errText);
+                    return;
+                }
 
-        
-        const res = await fetch(`${APIURL}/${slug}/customers/sincronizar`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            name: user.name,
-            email: user.email,
-            auth0Id: user.sub,
-            picture: user.picture,
-          }),
-        });
+                const data = await res.json();
 
-        if (!res.ok) {
-          const errText = await res.text();
-          console.error("Detalles:", errText);
-          return;
-        }
+                const customerSession = {
+                    token,
+                    payload: {
+                        picture: data.picture,
+                        id: data?.id,
+                    },
+                };
 
-        const data = await res.json();
-        console.log(data)
+                localStorage.setItem("customerSession", JSON.stringify(customerSession));
+                window.dispatchEvent(new Event("customerSessionUpdated"));
 
-        const customerSession = {
-          token,
-          payload: {
-            picture: data.picture,
-            id: data?.id,
-          },
+                setSessionReady(true);
+            } catch (err) {
+                console.error("Error syncing user:", err);
+            }
         };
 
-        localStorage.setItem("customerSession", JSON.stringify(customerSession));
-        window.dispatchEvent(new Event("customerSessionUpdated"));
+        syncUser();
+    }, [user, slug]);
 
-        setSessionReady(true);
-      } catch (err) {
-        console.error("Error syncing user:", err);
-      }
-    }
-
-    syncUser();
-  }, [user, slug]);
-
-  return sessionReady;
+    return sessionReady;
 }

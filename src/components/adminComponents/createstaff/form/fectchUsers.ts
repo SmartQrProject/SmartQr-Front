@@ -40,8 +40,6 @@ export async function getUsers(slug: string, token: string, page = 1, limit = 5)
 
         const data = await response.json();
 
-        // console.log("Respuesta del backend:", data);
-
         return data;
     } catch (error: any) {
         throw new Error(error.message || "Error fetching users");
@@ -50,7 +48,6 @@ export async function getUsers(slug: string, token: string, page = 1, limit = 5)
 
 export const deleteUser = async (slug: string, userId: string, token: string) => {
     const url = `${APIURL}/users/${slug}/${userId}`;
-    // console.log("Deleting user with URL:", url);
 
     const res = await fetch(url, {
         method: "DELETE",
@@ -60,8 +57,6 @@ export const deleteUser = async (slug: string, userId: string, token: string) =>
         },
     });
 
-    // console.log("Respuesta status:", res.status);
-
     const text = await res.text();
 
     let data;
@@ -70,8 +65,6 @@ export const deleteUser = async (slug: string, userId: string, token: string) =>
     } catch {
         data = text;
     }
-
-    // console.log("Respuesta body:", data);
 
     if (!res.ok) {
         const errMsg = (data && data.message) || data || "Failed to delete user";

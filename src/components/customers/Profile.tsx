@@ -18,7 +18,7 @@ export default function CustomerProfile() {
     const [slug, setSlug] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
     const [sessionReady, setSessionReady] = useState(false);
-    const [customerData, setCustomerData] = useState({name:"", picture:"", phone:""});
+    const [customerData, setCustomerData] = useState({ name: "", picture: "", phone: "" });
 
     useEffect(() => {
         const storedSlug = localStorage.getItem("slug");
@@ -28,67 +28,61 @@ export default function CustomerProfile() {
         setMounted(true);
     }, [params?.slug]);
 
-useEffect(() => {
-  const syncUser = async () => {
-    if (!user || !slug) return;
+    useEffect(() => {
+        const syncUser = async () => {
+            if (!user || !slug) return;
 
-  
+            try {
+                const token = await getAccessToken();
 
-    try {
-      const token = await getAccessToken();
-      
+                const res = await fetch(`${APIURL}/${slug}/customers/sincronizar`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        name: user.name,
+                        email: user.email,
+                        auth0Id: user.sub,
+                        picture: user.picture,
+                    }),
+                });
 
-      const res = await fetch(`${APIURL}/${slug}/customers/sincronizar`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          name: user.name,
-          email: user.email,
-          auth0Id: user.sub,
-          picture: user.picture,
-        }),
-      });
+                if (!res.ok) {
+                    const errText = await res.text();
+                    console.error("Detalles:", errText);
+                    return;
+                }
 
-      if (!res.ok) {
-        
-        const errText = await res.text();
-        console.error("Detalles:", errText);
-        return;
-      }
+                const data = await res.json();
 
-      const data = await res.json();
-      console.log(data)
+                const customerData = {
+                    name: data.name,
+                    picture: data.picture,
+                    phone: data.phone,
+                };
 
-      const customerData = {
-        name: data.name,
-        picture: data.picture,
-        phone: data.phone,
-      }
+                setCustomerData(customerData);
+                const customerSession = {
+                    token: token,
+                    payload: {
+                        picture: customerData.picture,
+                        id: data?.id,
+                    },
+                };
 
-      setCustomerData(customerData)
-      const customerSession = {
-        token: token,
-        payload: {
-          picture: customerData.picture,
-          id: data?.id,
-        },
-      };
+                localStorage.setItem("customerSession", JSON.stringify(customerSession));
+                window.dispatchEvent(new Event("customerSessionUpdated"));
 
-      localStorage.setItem("customerSession", JSON.stringify(customerSession));
-      window.dispatchEvent(new Event("customerSessionUpdated"));
-      
-      setSessionReady(true);
-      
-    } catch (err) {
-      console.error("Error syncing user:", err);
-    }
-  };
+                setSessionReady(true);
+            } catch (err) {
+                console.error("Error syncing user:", err);
+            }
+        };
 
-  syncUser();
-}, [user, slug]);
+        syncUser();
+    }, [user, slug]);
 
     if (!mounted || isLoading) return <p className="text-center mt-20">Loading...</p>;
     if (!slug) return <p className="text-center mt-20">Error: Slug not available</p>;
@@ -102,9 +96,7 @@ useEffect(() => {
             </h1>
             <h2 className="text-center text-xl ">Hi, {customerData.name}</h2>
             <div className="relative w-20 h-20 mx-auto mt-4 mb-6">
-                {customerData.picture && (
-                <img src={customerData.picture} alt="Foto" className="rounded-full w-20 h-20 object-cover" />
-                )}
+                {customerData.picture && <img src={customerData.picture} alt="Foto" className="rounded-full w-20 h-20 object-cover" />}
                 <Link
                     href={`/customer/dashboard/edit`}
                     className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md hover:bg-gray-200 flex items-center justify-center"

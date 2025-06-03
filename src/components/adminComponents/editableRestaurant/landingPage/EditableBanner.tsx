@@ -76,7 +76,7 @@ export default function EditableBannerHero({ title, initialBanner }: EditableBan
             setImageSrc(null);
 
             const updated = await getRestaurantWithMenu(slug);
-            // console.log("Refetched restaurant after update:", updated);
+
             if (updated?.banner) {
                 setBannerUrl(updated.banner);
             }
