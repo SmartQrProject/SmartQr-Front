@@ -54,6 +54,9 @@ export default function CreateMenuForm({ initialData, mode = "create", onClose, 
         },
     });
 
+  useEffect(() => {
+   
+  }, [errors]);
     useEffect(() => {
         if (Object.keys(errors).length > 0) {
             console.log("Form errors:", errors);
@@ -65,19 +68,22 @@ export default function CreateMenuForm({ initialData, mode = "create", onClose, 
     const selectedFileName = watch("file")?.name || "";
 
     useEffect(() => {
-        if (initialData) {
-            const details = initialData.details?.length ? initialData.details : [];
-            reset({
-                name: initialData.name,
-                description: initialData.description,
-                price: initialData.price,
-                available: initialData.available,
-                categoryId: initialData.categoryId,
-                details,
-            });
-            replace(details);
-        }
-    }, [initialData, reset, replace]);
+      if (initialData && categories.length > 0) {
+        const details = initialData.details?.length ? initialData.details : [];
+        reset({
+          name: initialData.name,
+          description: initialData.description,
+          price: initialData.price,
+          available: initialData.available,
+          categoryId: initialData.categoryId ?? '',
+          details,
+        });
+
+        setValue('categoryId', initialData.categoryId ?? '');
+        replace(details);
+      }
+    }, [initialData, categories, reset, replace, setValue]);
+
 
     const handlePreview = async () => {
         const values = getValues();

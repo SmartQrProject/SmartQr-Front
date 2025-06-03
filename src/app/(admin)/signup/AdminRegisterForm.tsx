@@ -66,7 +66,7 @@ export default function RegisterForm() {
         <div className="max-w-md mx-auto mt-10 mb-10 p-6 bg-default-50 rounded-xl">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-sm">
                 <div>
-                    <label htmlFor="ownerName">Name</label>
+                    <label htmlFor="ownerName">Name and Last Name</label>
                     <input id="ownerName" {...register("ownerName")} className="w-full p-2 bg-white rounded-md" placeholder="John Smith" />
                     {errors.ownerName && <p className="text-red-500">{errors.ownerName.message}</p>}
                 </div>

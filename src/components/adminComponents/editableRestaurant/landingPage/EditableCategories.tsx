@@ -26,6 +26,8 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
   const [categoryToDelete, setCategoryToDelete] = useState<ICategory | null>(null);
   const [isSticky, setIsSticky] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<ICategory | null>(null);
 
   const { user } = useAuth();
   const token = user?.token;
@@ -71,6 +73,39 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
     await fetchAllCategories();
     
   };
+const handleEditCategory = (category: ICategory) => {
+    setCategoryToEdit(category);
+    setIsEditCategoryModalOpen(true);
+  };
+
+  const handleUpdateCategory = async (newName: string) => {
+    if (!categoryToEdit || newName.trim() === categoryToEdit.name.trim()) return;
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${categoryToEdit.id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: newName }),
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to update category');
+
+      toast.success('Category updated');
+      await fetchAllCategories();
+    } catch (err) {
+      console.error(err);
+      toast.error('Could not update category');
+    } finally {
+      setIsEditCategoryModalOpen(false);
+      setCategoryToEdit(null);
+    }
+  };
 
   const promptDeleteCategory = (category: ICategory) => {
     setCategoryToDelete(category);
@@ -105,35 +140,6 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
     }
   };
 
-  const handleEditCategory = async (id: string) => {
-    const current = categories.find((c) => String(c.id) === String(id));
-    if (!current) return;
-
-    const newName = prompt("Edit category name:", current.name);
-    if (!newName || newName.trim() === current.name.trim()) return;
-
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/${slug}/categories/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name: newName }),
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to update category");
-
-      toast.success("Category updated");
-      await fetchAllCategories();
-    } catch (err) {
-      console.error(err);
-      toast.error("Could not update category");
-    }
-  };
 
   return (
     <section className="relative overflow-x-hidden">
@@ -155,7 +161,7 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
                 <div className="flex justify-between items-start">
                   <span className="font-semibold truncate text-md">{cat.name}</span>
                   <div className="flex gap-1 text-gray-600">
-                    <button onClick={() => handleEditCategory(String(cat.id))}>
+                    <button onClick={() => handleEditCategory(cat)}>
                       <Pencil className="w-4 h-4 hover:text-blue-600 cursor-pointer" />
                     </button>
                     <button onClick={() => promptDeleteCategory(cat)}>
@@ -191,19 +197,24 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
         open={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
         onSave={handleCreateCategory}
+        mode="create"
+      />
+      <AddCategoryModal
+        open={isEditCategoryModalOpen}
+        onClose={() => {
+          setIsEditCategoryModalOpen(false);
+          setCategoryToEdit(null);
+        }}
+        onSave={handleUpdateCategory}
+        initialName={categoryToEdit?.name}
+        mode="edit"
       />
 
       <ProductModal
         open={isProductModalOpen}
         onClose={() => setIsProductModalOpen(false)}
       >
-        <CreateMenuForm
-          onSuccess={() => {
-              if (refetchProducts) refetchProducts();
-              window.dispatchEvent(new Event("product:created"));
-          }}
-          onClose={() => setIsProductModalOpen(false)}
-        />
+        <CreateMenuForm />
       </ProductModal>
 
       <ConfirmDialog

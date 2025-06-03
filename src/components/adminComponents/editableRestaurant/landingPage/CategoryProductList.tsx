@@ -60,10 +60,6 @@ export default function CategoryProductList({ slug, products, refetchProducts }:
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            if (!res.ok) {
-                throw new Error("Error al eliminar producto");
-            }
-
             await refetchCategories();
             await refetchProducts();
             toast.success("Product deleted");
