@@ -34,7 +34,7 @@ const NavbarAdmin = () => {
     }
   }, []);
 
-  if (role === undefined) return <div>Loading...</div>;
+  if (role === undefined) return ;
   if (!validRoles.includes(role as any)) return <div>No autorizado</div>;
 
   const logOutHandler = () => {

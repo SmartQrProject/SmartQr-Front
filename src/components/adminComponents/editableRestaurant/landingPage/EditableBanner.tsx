@@ -93,7 +93,7 @@ export default function EditableBannerHero({
   }, [initialBanner]);
 
   return (
-    <div className="relative w-full min-h-[240px] sm:min-h-[300px] md:min-h-[360px] flex items-center justify-center overflow-hidden">
+    <div className="relative w-full min-h-[250px] sm:min-h-[300px] md:min-h-[600px] flex items-center justify-center overflow-hidden">
       {bannerUrl && (
         <img
           src={bannerUrl}
@@ -107,7 +107,7 @@ export default function EditableBannerHero({
       </h1>
       <button
         onClick={() => inputRef.current?.click()}
-        className="absolute top-4 right-4 z-30 bg-white/80 text-xs sm:text-sm md:text-base px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-white flex items-center gap-2"
+        className="absolute top-4 right-4 z-30 bg-white/80 text-xs sm:text-sm md:text-base px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-white flex items-center gap-2 cursor-pointer"
       >
         <PencilIcon className="w-4 h-4" />
         Edit Banner
@@ -132,7 +132,7 @@ export default function EditableBannerHero({
 
       {imageSrc && (
         <div className="absolute inset-0 z-50 bg-white/95 flex flex-col items-center justify-center p-4">
-          <div className="relative w-full max-w-5xl aspect-[3/1]">
+          <div className="relative w-full max-w-4xl aspect-[3/1] md:aspect-[3/1]">
             <Cropper
               image={imageSrc}
               crop={crop}
@@ -143,7 +143,7 @@ export default function EditableBannerHero({
               onCropComplete={onCropComplete}
             />
           </div>
-          <div className="w-full max-w-md mt-4 flex flex-col items-center gap-4 bg-white p-4 rounded shadow">
+          <div className="w-full max-w-md mt-2 flex  items-center gap-2 bg-white p-2 rounded shadow">
             <label className="text-sm font-medium">Zoom</label>
             <input
               type="range"
@@ -152,18 +152,18 @@ export default function EditableBannerHero({
               step={0.1}
               value={zoom}
               onChange={(e) => setZoom(Number(e.target.value))}
-              className="w-full"
+              className="w-full cursor-pointer"
             />
-            <div className="flex flex-col sm:flex-row gap-2 mt-4 w-full">
+            <div className="flex sm:flex-row gap-2 mt-2 w-full">
               <button
                 onClick={handleSave}
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full sm:w-auto"
+                className="bg-branding-600 text-white px-4 py-2 rounded hover:bg-branding-500 w-full sm:w-auto cursor-pointer"
               >
-                Save Image
+                Save
               </button>
               <button
                 onClick={() => setImageSrc(null)}
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 w-full sm:w-auto"
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 w-full sm:w-auto cursor-pointer"
               >
                 Cancel
               </button>

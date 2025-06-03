@@ -69,7 +69,7 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
     if (!newCategory) return;
 
     await fetchAllCategories();
-    toast.success("Category added");
+    
   };
 
   const promptDeleteCategory = (category: ICategory) => {

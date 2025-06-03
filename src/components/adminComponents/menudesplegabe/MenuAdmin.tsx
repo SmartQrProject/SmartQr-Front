@@ -12,7 +12,7 @@ import {
   HiOutlineCheckCircle,
 } from "react-icons/hi2";
 import { GiHamburgerMenu, GiChart } from "react-icons/gi";
-import { MdOutlineReceipt, MdOutlineTableBar } from "react-icons/md";
+import { MdErrorOutline, MdOutlineReceipt, MdOutlineTableBar } from "react-icons/md";
 import { useUserRole } from "../hooks/useUserRole";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { RiCoupon3Line } from "react-icons/ri";
@@ -30,7 +30,7 @@ const MenuAdmin = () => {
     const checkMobile = () => {
       const mobile = window.innerWidth < 640;
       setIsMobile(mobile);
-      setIsOpen(!mobile); // open by default on larger screens
+      setIsOpen(!mobile); 
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -48,8 +48,19 @@ const MenuAdmin = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  if (role === undefined) return <div>Loading...</div>;
-  if (!validRoles.includes(role as any)) return <div>No autorizado</div>;
+ if (role === undefined) {
+  return 
+}
+
+if (!validRoles.includes(role as any)) {
+  return (
+    <div className="flex items-center gap-2 text-red-600 p-4">
+      <MdErrorOutline className="w-5 h-5" />
+      <span>Sorry, not authorized</span>
+    </div>
+  );
+}
+
 
   const handleLinkClick = () => {
     if (isMobile) setIsOpen(false);
@@ -68,7 +79,7 @@ const MenuAdmin = () => {
 
   return (
     <>
-      {/* Mobile toggle button (when collapsed) */}
+   
       {!isOpen && isMobile && (
         <button
           onClick={() => setIsOpen(true)}
