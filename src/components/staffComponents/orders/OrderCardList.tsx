@@ -126,6 +126,7 @@ export default function OrderCardList() {
             <div className="space-y-3">
                 {orders
                     .filter((o) => o.status === status)
+                    .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
                     .map((order) => (
                         <OrderCard
                             key={order.id}
@@ -139,11 +140,12 @@ export default function OrderCardList() {
         </div>
     );
 
-    if (checkingAuth) return (
-        <div className="flex justify-center items-center h-96">
-            <Loader2 className="h-8 w-8 animate-spin text-sky-600" />
-        </div>
-    );
+    if (checkingAuth)
+        return (
+            <div className="flex justify-center items-center h-96">
+                <Loader2 className="h-8 w-8 animate-spin text-sky-600" />
+            </div>
+        );
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 px-4 py-6">
