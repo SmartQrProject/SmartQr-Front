@@ -144,13 +144,13 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
             isSticky ? "fixed top-0 left-0 right-0 z-50 shadow-sm" : ""
           }`}
         >
-        {/* Safe Horizontal Scroll Box */}
+        
         <div className="overflow-x-auto w-full max-w-screen overflow-y-hidden">
           <div className="inline-flex gap-4 px-4 py-2">
             {categories.map((cat) => (
               <div
                 key={cat.id}
-                className="min-w-[240px] flex-shrink-0 h-[100px] bg-default-100 rounded-lg p-3 flex flex-col justify-between"
+                className="min-w-[240px] flex-shrink-0 h-[100px] bg-branding-50 rounded-lg p-3 flex flex-col justify-between"
               >
                 <div className="flex justify-between items-start">
                   <span className="font-semibold truncate text-md">{cat.name}</span>
@@ -168,19 +168,19 @@ export default function EditableCategories({ slug, refetchProducts  }: EditableC
                     setSelectedCategory(cat);
                     setIsProductModalOpen(true);
                   }}
-                  className="mt-2 py-1 text-sm text-white font-semibold bg-default-800 rounded hover:bg-default-700 cursor-pointer"
+                  className="mt-2 py-1 text-sm text-white font-semibold bg-branding-600 rounded hover:bg-branding-500 cursor-pointer"
                 >
                   Add Product
                 </button>
               </div>
             ))}
 
-            {/* Add Category */}
+            
             <div
               onClick={() => setIsCategoryModalOpen(true)}
-              className="min-w-[240px] flex-shrink-0 h-[100px] flex flex-col justify-center items-center border border-dashed border-gray-400 rounded-lg cursor-pointer hover:bg-default-100"
+              className="min-w-[240px] flex-shrink-0 h-[100px] flex flex-col justify-center items-center border border-dashed border-branding-400 rounded-lg cursor-pointer hover:bg-branding-100/50"
             >
-              <Plus className="w-6 h-6 mb-1 text-gray-600" />
+              <Plus className="w-6 h-6 mb-1 text-branding-600" />
               <span className="text-sm font-medium text-gray-600">Add Category</span>
             </div>
           </div>
