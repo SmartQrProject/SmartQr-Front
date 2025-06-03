@@ -67,8 +67,6 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
 
     const [pickup, setPickup] = useState(restaurant.ordering_times?.pickup || "");
     const [dinein, setDinein] = useState(restaurant.ordering_times?.dinein || "");
-    const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-
 
     const handleUpdateEditable = async () => {
         try {
@@ -171,7 +169,6 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                         <div>
                             <label className="text-md font-semibold mr-4">Name</label>
                             <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="input bg-gray-300 p-2 rounded-md" />
-                            {formErrors["name"] && ( <p className="text-red-500 text-xs mt-1">{formErrors["name"]}</p>)}
                         </div>
 
                         <div className="flex flex-col w-full max-w-xl">
@@ -182,7 +179,6 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                                 placeholder="Separate tags with commas, e.g. Italian, Pizza, Vegan"
                                 className="w-full p-2 rounded-md min-h-[100px] resize-none bg-gray-300 text-sm"
                             />
-                            {formErrors["tags"] && ( <p className="text-red-500 text-xs mt-1">{formErrors["tags"]}</p>)}
                         </div>
 
                         <div className="flex flex-col w-full max-w-xl">
@@ -192,13 +188,11 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                                 onChange={(e) => setDescription(e.target.value)}
                                 className="text-sm w-full p-2 rounded-md min-h-[100px] resize-none bg-gray-300 "
                             />
-                            {formErrors["description"] && ( <p className="text-red-500 text-xs mt-1">{formErrors["description"]}</p>)}
                         </div>
 
                         <div>
                             <label className="text-md font-semibold mr-4">Phone</label>
                             <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="input bg-gray-300 p-2 rounded-md text-sm" />
-                            {formErrors["phone"] && ( <p className="text-red-500 text-xs mt-1">{formErrors["phone"]}</p>)}
                         </div>
 
                         <div className="flex items-center gap-2 mt-4">
