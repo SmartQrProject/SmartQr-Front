@@ -139,7 +139,7 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
 
     return (
         <div className="fixed inset-0 z-50 flex items-start justify-center pt-24  overflow-y-auto">
-            <div className="relative w-full max-w-xl rounded-xl p-6 mx-4 bg-white border shadow-lg overflow-y-auto">
+            <div className="relative w-full max-w-xl rounded-xl p-6 mx-4 bg-white  shadow-lg overflow-y-auto">
                 <div className="absolute top-3 right-3 flex gap-2">
                     <button onClick={onClose} className="text-gray-900 hover:text-red-500 cursor-pointer" aria-label="Close">
                         <XIcon className="w-5 h-5" />
@@ -168,7 +168,7 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                     <div className="flex-1 flex flex-col space-y-4">
                         <div>
                             <label className="text-md font-semibold mr-4">Name</label>
-                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="input bg-gray-300 p-2 rounded-md" />
+                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="input bg-gray-100 p-2 rounded-md" />
                         </div>
 
                         <div className="flex flex-col w-full max-w-xl">
@@ -177,7 +177,7 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                                 value={tags}
                                 onChange={(e) => setTags(e.target.value)}
                                 placeholder="Separate tags with commas, e.g. Italian, Pizza, Vegan"
-                                className="w-full p-2 rounded-md min-h-[100px] resize-none bg-gray-300 text-sm"
+                                className="w-full p-2 rounded-md min-h-[100px] resize-none bg-gray-100 text-sm"
                             />
                         </div>
 
@@ -186,13 +186,13 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                             <textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                className="text-sm w-full p-2 rounded-md min-h-[100px] resize-none bg-gray-300 "
+                                className="text-sm w-full p-2 rounded-md min-h-[100px] resize-none bg-gray-100 "
                             />
                         </div>
 
-                        <div>
+                        <div className="flex flex-col w-full max-w-xl">
                             <label className="text-md font-semibold mr-4">Phone</label>
-                            <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="input bg-gray-300 p-2 rounded-md text-sm" />
+                            <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="input bg-gray-100 p-2 rounded-md text-sm" />
                         </div>
 
                         <div className="flex items-center gap-2 mt-4">
@@ -209,11 +209,11 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                                     <div className="flex items-center gap-4">
                                         <div className="flex flex-col">
                                             <span className="text-xs text-gray-600 mb-1">Open</span>
-                                            <input type="time" value={monOpen} onChange={(e) => setMonOpen(e.target.value)} className="bg-gray-200 p-2 rounded-md text-sm" />
+                                            <input type="time" value={monOpen} onChange={(e) => setMonOpen(e.target.value)} className="bg-gray-100 p-2 rounded-md text-sm" />
                                         </div>
                                         <div className="flex flex-col">
                                             <span className="text-xs text-gray-600 mb-1">Close</span>
-                                            <input type="time" value={monClose} onChange={(e) => setMonClose(e.target.value)} className="bg-gray-200 p-2 rounded-md text-sm" />
+                                            <input type="time" value={monClose} onChange={(e) => setMonClose(e.target.value)} className="bg-gray-100 p-2 rounded-md text-sm" />
                                         </div>
                                     </div>
                                 </div>
@@ -223,11 +223,11 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                                     <div className="flex items-center gap-4">
                                         <div className="flex flex-col">
                                             <span className="text-xs text-gray-600 mb-1">Open</span>
-                                            <input type="time" value={satOpen} onChange={(e) => setSatOpen(e.target.value)} className="bg-gray-200 p-2 rounded-md text-sm" />
+                                            <input type="time" value={satOpen} onChange={(e) => setSatOpen(e.target.value)} className="bg-gray-100 p-2 rounded-md text-sm" />
                                         </div>
                                         <div className="flex flex-col">
                                             <span className="text-xs text-gray-600 mb-1">Close</span>
-                                            <input type="time" value={satClose} onChange={(e) => setSatClose(e.target.value)} className="bg-gray-200 p-2 rounded-md text-sm" />
+                                            <input type="time" value={satClose} onChange={(e) => setSatClose(e.target.value)} className="bg-gray-100 p-2 rounded-md text-sm" />
                                         </div>
                                     </div>
                                 </div>
@@ -237,11 +237,11 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                                     <div className="flex items-center gap-4">
                                         <div className="flex flex-col">
                                             <span className="text-xs text-gray-600 mb-1">Open</span>
-                                            <input type="time" value={sunOpen} onChange={(e) => setSunOpen(e.target.value)} className="bg-gray-200 p-2 rounded-md text-sm" />
+                                            <input type="time" value={sunOpen} onChange={(e) => setSunOpen(e.target.value)} className="bg-gray-100 p-2 rounded-md text-sm" />
                                         </div>
                                         <div className="flex flex-col">
                                             <span className="text-xs text-gray-600 mb-1">Close</span>
-                                            <input type="time" value={sunClose} onChange={(e) => setSunClose(e.target.value)} className="bg-gray-200 p-2 rounded-md text-sm" />
+                                            <input type="time" value={sunClose} onChange={(e) => setSunClose(e.target.value)} className="bg-gray-100 p-2 rounded-md text-sm" />
                                         </div>
                                     </div>
                                 </div>
@@ -259,12 +259,12 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                             <>
                                 <div className="mb-4 mt-4">
                                     <label className="block text-md font-semibold mb-2">Pickup Time (min)</label>
-                                    <input type="number" value={pickup} onChange={(e) => setPickup(Number(e.target.value))} className="bg-gray-200 p-2 rounded-md text-sm w-32" />
+                                    <input type="number" value={pickup} onChange={(e) => setPickup(Number(e.target.value))} className="bg-gray-100 p-2 rounded-md text-sm w-32" />
                                 </div>
 
                                 <div className="mb-4">
                                     <label className="block text-md font-semibold mb-2">Dine-in Time (min)</label>
-                                    <input type="number" value={dinein} onChange={(e) => setDinein(Number(e.target.value))} className="bg-gray-200 p-2 rounded-md text-sm w-32" />
+                                    <input type="number" value={dinein} onChange={(e) => setDinein(Number(e.target.value))} className="bg-gray-100 p-2 rounded-md text-sm w-32" />
                                 </div>
                             </>
                         )}
@@ -272,10 +272,10 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                 </div>
 
                 <div className="flex justify-end gap-2 pt-4">
-                    <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
+                    <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-100 cursor-pointer">
                         Cancel
                     </button>
-                    <button onClick={handleUpdateEditable} className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                    <button onClick={handleUpdateEditable} className="px-4 py-2 bg-branding-600 text-white rounded-md hover:bg-branding-500 cursor-pointer">
                         Save
                     </button>
                 </div>

@@ -20,10 +20,10 @@ export default function AddCategoryModal({ open, onClose, onSave }: AddCategoryM
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div className="fixed inset-0  flex items-center justify-center z-50">
       <form
         onSubmit={handleSubmit}
-        className="bg-default-100 text-default-800 p-6 rounded shadow-lg w-[90%] max-w-md"
+        className="bg-gray-50 text-branding-900 p-6 rounded shadow-lg w-[90%] max-w-md"
       >
         <h2 className="text-xl font-semibold mb-4">Add New Category</h2>
 
@@ -32,20 +32,20 @@ export default function AddCategoryModal({ open, onClose, onSave }: AddCategoryM
           placeholder="Category name"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full mb-4 px-3 py-2 rounded bg-default-50 placeholder-default-800"
+          className="w-full mb-4 px-3 py-2 rounded bg-default-100 placeholder-default-800"
         />
 
         <div className="flex justify-end space-x-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 border-2 border-default-800 text-default-800 rounded hover:bg-default-700 hover:text-white"
+            className="px-4 py-2 border-2 border-branding-500 text-branding-500 rounded hover:bg-branding-600 hover:text-white cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="px-4 py-2 bg-default-800 rounded hover:bg-default-700 text-white"
+            className="px-4 py-2 bg-branding-600 rounded hover:bg-branding-500 text-white cursor-pointer"
           >
             Add
           </button>
