@@ -60,10 +60,6 @@ export default function CategoryProductList({ slug, products, refetchProducts }:
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            if (!res.ok) {
-                throw new Error("Error al eliminar producto");
-            }
-
             await refetchCategories();
             await refetchProducts();
             toast.success("Product deleted");
@@ -86,59 +82,81 @@ export default function CategoryProductList({ slug, products, refetchProducts }:
                         <div key={cat.id} className="bg-white shadow rounded-lg p-6">
                             <h3 className="text-xl font-semibold mb-4 text-default-800">{cat.name}</h3>
 
-                            {filtered.length > 0 ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {filtered.map((product) => (
-                                        <div key={product.id} className="flex flex-col items-stretch gap-2">
-                                            <CardView
-                                                name={product.name}
-                                                description={product.description}
-                                                price={product.price}
-                                                file={typeof product.image_url === "string" ? product.image_url : ""}
-                                                details={Array.isArray(product.detail) ? product.detail : []}
-                                                is_available={product.is_available ?? false}
-                                                categoryId={cat.id}
-                                            />
+              {filtered.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
 
-                                            <div className="flex justify-around gap-3 px-1">
-                                                <button
-                                                    onClick={() => {
-                                                        setEditProduct({
-                                                            id: String(product.id),
-                                                            name: product.name,
-                                                            description: product.description,
-                                                            price: product.price,
-                                                            available: product.is_available ?? true,
-                                                            categoryId: cat.id,
-                                                            details: product.detail ? product.detail.map((d: any) => (typeof d === "string" ? d : d.name)) : [],
-                                                            image_url: typeof product.image_url === "string" ? product.image_url : "",
-                                                        });
-                                                        setIsProductModalOpen(true);
-                                                    }}
-                                                    title="Edit"
-                                                    className="flex items-center justify-center gap-1 text-sm text-default-800 hover:text-sky-600 cursor-pointer"
-                                                >
-                                                    <Pencil className="w-4 h-4" />
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    onClick={() => promptDeleteProduct(String(product.id), product.name)}
-                                                    className="flex items-center justify-center gap-1 text-sm text-default-800 hover:text-red-600 cursor-pointer"
-                                                >
-                                                    <Trash2 className="w-4 h-4" />
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="text-sm text-gray-500 italic">No products in this category.</p>
-                            )}
-                        </div>
-                    );
-                })}
+
+                  {filtered.map((product) => (
+                    <div
+                      key={product.id}
+                      className="flex flex-col items-stretch gap-2"
+                    >
+                      <CardView
+                        name={product.name}
+                        description={product.description}
+                        price={product.price}
+                        file={
+                          typeof product.image_url === "string"
+                            ? product.image_url
+                            : ""
+                        }
+                        details={
+                          Array.isArray(product.detail) ? product.detail : []
+                        }
+                        is_available={product.is_available ?? false}
+                        categoryId={cat.id}
+                      />
+
+                      <div className="flex gap-3 px-1">
+                        <button
+                          onClick={() => {
+                            setEditProduct({
+                              id: String(product.id),
+                              name: product.name,
+                              description: product.description,
+                              price: product.price,
+                              available: product.is_available ?? true,
+                              categoryId: cat.id,
+                              details: product.detail
+                                ? product.detail.map((d: any) =>
+                                    typeof d === "string" ? d : d.name
+                                  )
+                                : [],
+                              image_url:
+                                typeof product.image_url === "string"
+                                  ? product.image_url
+                                  : "",
+                            });
+                            setIsProductModalOpen(true);
+                          }}
+                          title="Edit"
+                          className="flex items-center justify-center gap-1 text-sm text-default-800 hover:text-sky-600 cursor-pointer"
+                        >
+                          <Pencil className="w-4 h-4" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() =>
+                            promptDeleteProduct(String(product.id), product.name)
+                          }
+                          className="flex items-center justify-center gap-1 text-sm text-default-800 hover:text-red-600 cursor-pointer"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500 italic">
+                  No products in this category.
+                </p>
+              )}
             </div>
+          );
+        })}
+      </div>
 
             {isProductModalOpen && editProduct && (
                 <ProductModal
