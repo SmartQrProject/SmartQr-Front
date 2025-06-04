@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ITables } from "@/types";
 import EditTableButton from "../tables/buttonsTable/EditTableButton";
 import DeleteTableButton from "../tables/buttonsTable/DeleteTableButton";
 import ToggleActiveSwitch from "../tables/buttonsTable/ToggleActiveSwitch";
 import { useQRCode } from "next-qrcode";
 import { Download, Printer } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface TableProps extends ITables {
   slug: string;
@@ -14,53 +15,71 @@ interface TableProps extends ITables {
   onTableEdited: () => void;
 }
 
-const Table: React.FC<TableProps> = ({
-  id,
-  code,
-  created_at,
-  is_active,
-  slug,
-  onTableDeleted,
-  onTableEdited,
-}) => {
-  const { Canvas } = useQRCode();
-  const qrRef = useRef<HTMLDivElement>(null);
-  const qrUrl = `https://smart-qr.tech/menu/${slug}?table=${code}`;
+const Table: React.FC<TableProps> = ({ id, code, created_at, is_active, slug, onTableDeleted, onTableEdited }) => {
+    const { Canvas } = useQRCode();
+    const qrRef = useRef<HTMLDivElement>(null);
+    const [qrImage, setQrImage] = useState<string | null>(null);
+    const qrUrl = `https://smart-qr.tech/menu/${slug}?table=${code}`;
 
-  const handleDownload = () => {
-    const canvas = qrRef.current?.querySelector("canvas");
-    if (canvas) {
-      const link = document.createElement("a");
-      link.download = `QR_Table_${code}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    }
-  };
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            const canvas = qrRef.current?.querySelector("canvas");
+            if (canvas) {
+                const dataUrl = canvas.toDataURL("image/png");
+                setQrImage(dataUrl);
+            }
+        }, 100); // leve delay para esperar render
+
+        return () => clearTimeout(timeout);
+    }, []);
+
+    const handleDownload = () => {
+        if (!qrImage) {
+            toast.error("QR no está listo aún");
+            return;
+        }
+        const link = document.createElement("a");
+        link.download = `QR_Table_${code}.png`;
+        link.href = qrImage;
+        link.click();
+    };
 
     const handlePrint = () => {
-        const canvas = qrRef.current?.querySelector("canvas");
-        if (canvas) {
-           
-            setTimeout(() => {
-            const dataUrl = canvas.toDataURL("image/png");
-            const windowContent = `
-                <html>
-                <head><title>Print QR - Table ${code}</title></head>
-                <body style="text-align:center;padding:40px">
-                    <h2>Table ${code}</h2>
-                    <img src="${dataUrl}" style="width:200px;height:auto" />
-                    <p>${qrUrl}</p>
-                </body>
-                </html>`;
-            const printWindow = window.open("", "", "width=400,height=600");
-            if (printWindow) {
-                printWindow.document.write(windowContent);
-                printWindow.document.close();
-                printWindow.focus();
-                printWindow.print();
-                printWindow.close();
-            }
-            }, 900);
+        if (!qrImage) {
+            toast.error("QR no está listo para imprimir");
+            return;
+        }
+
+        const windowContent = `
+    <html>
+      <head><title>Print QR - Table ${code}</title></head>
+      <body style="text-align:center;padding:40px">
+        <h2>Table ${code}</h2>
+        <img id="qr-image" src="${qrImage}" style="width:200px;height:auto" />
+        <p>${qrUrl}</p>
+      </body>
+    </html>`;
+
+        const printWindow = window.open("", "", "width=400,height=600");
+        if (printWindow) {
+            printWindow.document.write(windowContent);
+            printWindow.document.close();
+
+            // Asegurarse de que la imagen cargue antes de imprimir
+            printWindow.onload = () => {
+                const img = printWindow.document.getElementById("qr-image") as HTMLImageElement;
+                if (img && !img.complete) {
+                    img.onload = () => {
+                        printWindow.focus();
+                        printWindow.print();
+                        printWindow.close();
+                    };
+                } else {
+                    printWindow.focus();
+                    printWindow.print();
+                    printWindow.close();
+                }
+            };
         }
     };
 
