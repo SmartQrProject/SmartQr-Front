@@ -11,8 +11,8 @@ import { FaChair } from "react-icons/fa";
 interface Props {
     order: IOrder;
     tableName: string;
-    onAdvanceStatus: (orderId: string, newStatus: string) => void;
-    onRetreatStatus: (orderId: string, newStatus: string) => void;
+    onAdvanceStatus: (orderId: string, newStatus: string) => void | Promise<void>;
+    onRetreatStatus: (orderId: string, newStatus: string) => void | Promise<void>;
     onStatusChange?: () => void;
     allowRetreat?: boolean; 
 }
@@ -67,10 +67,10 @@ const OrderCard: React.FC<Props> = ({ order, tableName, onAdvanceStatus, onRetre
         }
     };
 
-    const updateStatusOnServer = (newStatus: string, direction: "advance" | "retreat") => {
-        if (direction === "advance") onAdvanceStatus(order.id, newStatus);
-        else onRetreatStatus(order.id, newStatus);
-        };
+    const updateStatusOnServer = async (newStatus: string, direction: "advance" | "retreat") => {
+        if (direction === "advance") await onAdvanceStatus(order.id, newStatus);
+        else await onRetreatStatus(order.id, newStatus);
+    };
 
     const total = Array.isArray(order.items) ? order.items.reduce((acc: number, item: IOrderItem) => acc + item.price * item.quantity, 0) : 0;
 
