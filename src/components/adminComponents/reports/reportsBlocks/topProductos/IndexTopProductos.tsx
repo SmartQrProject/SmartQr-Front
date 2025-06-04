@@ -10,50 +10,46 @@ import TopCustom from "./TopCustom";
 const Tabs = ["Day", "Week", "Month", "Year", "Custom"];
 
 const IndexTopProductos = () => {
-  const [tab, setTab] = useState("Day");
+    const [tab, setTab] = useState("Day");
 
-  const renderTab = () => {
-    switch (tab) {
-      case "Day":
-        return <TopPorDia />;
-      case "Week":
-        return <TopPorSemana />;
-      case "Month":
-        return <TopPorMes />;
-      case "Year":
-        return <TopPorAño />;
-      case "Custom":
-        return <TopCustom />;
-      default:
-        return null;
-    }
-  };
+    const renderTab = () => {
+        switch (tab) {
+            case "Day":
+                return <TopPorDia />;
+            case "Week":
+                return <TopPorSemana />;
+            case "Month":
+                return <TopPorMes />;
+            case "Year":
+                return <TopPorAño />;
+            case "Custom":
+                return <TopCustom />;
+            default:
+                return null;
+        }
+    };
 
-  return (
-    <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-center">Top Products</h2>
+    return (
+        <div className="bg-white p-4 sm:p-6 rounded-xl w-full max-w-8xl mx-auto mb-6">
+            <h2 className="text-lg sm:text-xl font-bold mb-6 text-center sm:text-left">Top Products</h2>
 
-      {/* Tabs */}
-      <div className="flex flex-wrap justify-center gap-2 mb-8">
-        {Tabs.map((item) => (
-          <button
-            key={item}
-            onClick={() => setTab(item)}
-            className={`px-4 py-2 rounded-full border transition ${
-              tab === item
-                ? "bg-black text-white shadow"
-                : "bg-gray-100 text-black hover:bg-gray-200"
-            }`}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
+            <div className="flex justify-center sm:justify-start mb-6">
+                <select
+                    value={tab}
+                    onChange={(e) => setTab(e.target.value)}
+                    className="border border-gray-300 px-4 py-2 rounded-full text-sm font-medium w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg focus:outline-none focus:ring-2 focus:ring-branding-500"
+                >
+                    {Tabs.map((item) => (
+                        <option key={item} value={item}>
+                            {item}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
-      {/* Content */}
-      <div>{renderTab()}</div>
-    </div>
-  );
+            <div>{renderTab()}</div>
+        </div>
+    );
 };
 
 export default IndexTopProductos;

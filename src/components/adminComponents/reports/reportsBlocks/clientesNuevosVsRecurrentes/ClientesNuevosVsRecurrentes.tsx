@@ -9,50 +9,44 @@ import ClientesPorAño from "./ClientesPorAño";
 const tabs = ["Week", "Month", "Year"]; // Day is disabled
 
 const ClientesNuevosVsRecurrentes = () => {
-  const [tab, setTab] = useState("Week");
+    const [tab, setTab] = useState("Week");
 
-  const renderTab = () => {
-    switch (tab) {
-      // case "Day":
-      //   return <ClientesPorDia />;
-      case "Week":
-        return <ClientesPorSemana />;
-      case "Month":
-        return <ClientesPorMes />;
-      case "Year":
-        return <ClientesPorAño />;
-      default:
-        return null;
-    }
-  };
+    const renderTab = () => {
+        switch (tab) {
+            // case "Day":
+            //   return <ClientesPorDia />;
+            case "Week":
+                return <ClientesPorSemana />;
+            case "Month":
+                return <ClientesPorMes />;
+            case "Year":
+                return <ClientesPorAño />;
+            default:
+                return null;
+        }
+    };
 
-  return (
-    <div className="p-6 rounded-xl border shadow-sm bg-white max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-center">
-        New vs Recurring Customers
-      </h2>
+    return (
+        <div className="bg-white p-4 sm:p-6 rounded-xl w-full max-w-7xl mx-auto mb-6">
+            <h2 className="text-lg sm:text-xl font-bold mb-6 text-center sm:text-left">New vs Recurring Customers</h2>
 
-      {/* Tabs */}
-      <div className="flex flex-wrap justify-center gap-2 mb-8">
-        {tabs.map((item) => (
-          <button
-            key={item}
-            onClick={() => setTab(item)}
-            className={`px-4 py-2 rounded-full border transition ${
-              tab === item
-                ? "bg-black text-white shadow"
-                : "bg-gray-100 text-black hover:bg-gray-200"
-            }`}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
+            <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                <select
+                    value={tab}
+                    onChange={(e) => setTab(e.target.value)}
+                    className="border px-4 py-2 rounded-full text-sm w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg focus:outline-none focus:ring-2 focus:ring-branding-500"
+                >
+                    {tabs.map((item) => (
+                        <option key={item} value={item}>
+                            {item}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
-      {/* Content */}
-      <div>{renderTab()}</div>
-    </div>
-  );
+            <div>{renderTab()}</div>
+        </div>
+    );
 };
 
 export default ClientesNuevosVsRecurrentes;
