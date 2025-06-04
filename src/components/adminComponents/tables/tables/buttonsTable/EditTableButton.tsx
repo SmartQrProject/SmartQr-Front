@@ -62,8 +62,8 @@ const EditTableButton: React.FC<Props> = ({ tableId, currentCode, isActive, onTa
 
     return (
         <>
-            <button title="Edit table" onClick={() => setShowModal(true)} className="p-1 rounded hover:bg-blue-100 transition">
-                <Pencil className="w-4 h-4 text-gray-500" />
+            <button title="Edit table" onClick={() => setShowModal(true)} className="p-1 rounded transition cursor-pointer">
+                <Pencil className="w-4 h-4 text-gray-500  hover:text-branding-600" />
             </button>
 
             {showModal && (

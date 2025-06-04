@@ -6,6 +6,11 @@ import OrderCard from "./OrderCard";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { Box } from "lucide-react";
+import { MdTakeoutDining } from "react-icons/md";
+import { RiTakeawayFill, RiTakeawayLine } from "react-icons/ri";
+import { GiBoxUnpacking } from "react-icons/gi";
+import { CgMenuBoxed } from "react-icons/cg";
 
 const transformOrderFromApi = (order: any): IOrder => ({
     id: order.id,
@@ -130,7 +135,7 @@ export default function CompletedOrdersPage() {
 
     return (
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">📦 Completed Orders</h1>
+            <h2 className="text-2xl font-bold mb-4 flex gap-2 items-center"><CgMenuBoxed/> Completed Orders</h2>
             {getOrdersByStatus("completed").length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {getOrdersByStatus("completed").map((order) => (

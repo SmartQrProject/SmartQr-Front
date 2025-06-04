@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import AuthLinks from '@/components/auth0/AuthLinks';
-import { StoreIcon } from 'lucide-react';
+import { Map, MapPin, Menu, PinIcon, StoreIcon } from 'lucide-react';
 import Link from 'next/link';
 import { FiShoppingCart } from 'react-icons/fi';
 import { HiOutlineUser } from 'react-icons/hi';
 import PublicStoreInfoModal from '@/components/shared/storeInfoCustomer';
+import { MdDinnerDining } from 'react-icons/md';
+import { IoRestaurantSharp } from 'react-icons/io5';
 
 interface NavbarCustomerProps {
   slug?: string;
@@ -113,6 +115,14 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
           >
             <FiShoppingCart className="text-xl text-black" />
           </Link>
+          <Link
+            href={`/menu/${displaySlug}?table=${tableNumber}`}
+            className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition"
+            title="Back to Menu"
+          >
+            <IoRestaurantSharp/>
+          </Link>
+
 
           <button onClick={toggleMenu} type="button" className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-gray-200"
             aria-controls="navbar-hamburger"
@@ -132,7 +142,7 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
 >
   <div>
     {/* Header con nombre y botón cerrar */}
-    <div className="flex items-center gap-4 flex-row justify-between mb-2">
+    <div className="flex items-center gap-4 flex-row justify-between mb-">
       <span className="text-xl font-semibold text-gray-800 flex items-center gap-2">
         <StoreIcon className="w-6 h-6 text-sky-800" /> {displayName || 'Store'}
       </span>
@@ -148,9 +158,9 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
     {/* Botón Store Info debajo del nombre */}
     <button
       onClick={handleOpenModal}
-      className="mt-2 py-2 px-3 rounded-sm hover:bg-gray-300 cursor-pointer w-full text-left text-gray-800"
+      className="mt-2 py-2 px-3 rounded-sm hover:bg-gray-300 cursor-pointer w-full text-left text-gray-800 flex gap-2"
     >
-      Store Info
+      <MapPin/>Store Info
     </button>
     <PublicStoreInfoModal
       open={isStoreInfoModalOpen}
@@ -158,6 +168,15 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
       slug={displaySlug}
     />
   </div>
+  <Link
+    href={`/menu/${displaySlug}?table=${tableNumber}`}
+    className="mt-2 py-2 px-3 rounded-sm hover:bg-gray-300 cursor-pointer w-full text-left text-gray-800 flex gap-2"
+    title="Back to Menu"
+  >
+    <IoRestaurantSharp/>Store Menu
+  </Link>
+
+
 
   {/* Footer con links de auth */}
   <div className="flex flex-row gap-3 mt-auto mb-20">

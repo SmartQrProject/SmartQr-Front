@@ -118,7 +118,7 @@ const PromoCodesList = ({ refreshTrigger }: { refreshTrigger: number }) => {
       <div>
         <button
           onClick={() => setShowActive(!showActive)}
-          className="w-full flex justify-between items-center px-4 py-2 bg-green-100 text-green-800 font-semibold rounded hover:bg-green-200"
+          className="w-full flex justify-between items-center px-4 py-2 bg-green-100/40 text-green-800 font-semibold rounded hover:bg-green-200"
         >
           Active Promo Codes
           <span>{showActive ? "▲" : "▼"}</span>
@@ -137,7 +137,7 @@ const PromoCodesList = ({ refreshTrigger }: { refreshTrigger: number }) => {
       <div>
         <button
           onClick={() => setShowInactive(!showInactive)}
-          className="w-full flex justify-between items-center px-4 py-2 bg-red-100 text-red-800 font-semibold rounded hover:bg-red-200"
+          className="w-full flex justify-between items-center px-4 py-2 bg-red-100/40 text-red-800 font-semibold rounded hover:bg-red-200"
         >
           Inactive Promo Codes
           <span>{showInactive ? "▲" : "▼"}</span>

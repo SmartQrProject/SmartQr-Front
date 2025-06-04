@@ -4,6 +4,7 @@ import { IUserStaff } from '@/types';
 import { deleteUser } from '../form/fectchUsers';
 import { useState } from 'react';
 import ConfirmDialog from '../../menu/menuHelpers/confirm/confirmDialog';
+import { Trash, Trash2 } from 'lucide-react';
 
 type Props = {
   users: IUserStaff[];
@@ -44,8 +45,8 @@ const ListUserResturant = ({ users, refreshUsers }: Props) => {
   };
 
   return (
-    <div className="space-y-4 w-full max-w-md p-6 rounded-md bg-neutral-100 shadow mx-auto mb-8">
-      <h2 className="text-3xl md:text-4xl font-bold text-center text-[#4f89f5]">
+    <div className="space-y-4 w-full max-w-md p-6 rounded-md mx-auto mb-8">
+      <h2 className="text-2xl md:text-3xl font-bold text-center text-[#4f89f5]">
         User List
       </h2>
 
@@ -56,7 +57,7 @@ const ListUserResturant = ({ users, refreshUsers }: Props) => {
           {users.map((user) => (
             <li
               key={user.id}
-              className="bg-white rounded-xl shadow flex items-center justify-between px-3 py-2"
+              className="bg-neutral-50 rounded-xl shadow flex items-center justify-between px-3 py-2"
             >
               <div>
                 <p className="font-semibold">{user.name}</p>
@@ -66,9 +67,9 @@ const ListUserResturant = ({ users, refreshUsers }: Props) => {
               </div>
               <button
                 onClick={() => openConfirmDialog(user)}
-                className="text-red-500 hover:text-red-700 font-bold text-sm"
+                className="text-red-600 hover:text-red-500 font-bold text-sm cursor-pointer"
               >
-                Delete
+                <Trash2/>
               </button>
             </li>
           ))}
