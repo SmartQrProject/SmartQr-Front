@@ -33,11 +33,11 @@ const AddressInput: React.FC<AddressInputProps> = ({ onSelect }) => {
         type="text"
         value={query}
         onChange={(e) => handleSearch(e.target.value)}
-        placeholder="Ingresa una dirección"
-        className="border rounded px-3 py-2 w-full bg-gray-300 text-sm"
+        placeholder="Enter an Address"
+        className="rounded px-3 py-2 w-full bg-gray-100 text-sm"
       />
       {results.length > 0 && (
-        <ul className="border rounded mt-1 bg-white shadow">
+        <ul className="rounded mt-1 bg-white shadow">
           {results.map((place) => (
             <li
               key={place.id}

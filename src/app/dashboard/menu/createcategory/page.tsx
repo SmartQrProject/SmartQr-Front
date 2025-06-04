@@ -10,18 +10,16 @@ const page = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <NavbarAdmin />
-      <div className="flex flex-1 flex-col lg:flex-row">
+      <div className="pt-[4rem] flex flex-1">
         <MenuAdmin />
-        <div className="flex-1 p-4">
+        <div className="flex-1 p-4 ml-0 md:ml-64 transition-all duration-300">
           <h1 className="text-2xl mb-4">Menu</h1>
           <Sidebar />
-          <h1 className="text-xl font-semibold ">Categories</h1>
-
+          <h2 className="text-xl font-semibold">Categories</h2>
           <div className="flex flex-col lg:flex-row lg:justify-center lg:items-start gap-6">
             <CategoriesList />
             <CreateCategoryForm />
           </div>
-
         </div>
       </div>
       <FooterAdmin />

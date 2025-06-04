@@ -66,7 +66,14 @@ const TablesView: React.FC = () => {
         }
     }, [router]);
 
-    if (loading) return <p className="text-center mt-10 text-gray-600">Loading session data...</p>;
+    if (loading) {
+    return (
+        <div className="flex gap-4 justify-center items-center h-40">
+            <p className="text-sm md:text-2xl text-branding-900">Loading Session Data...</p>
+            <div className="w-8 h-8 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+        </div>
+        );
+    }
 
     if (!slug || !token || !authorized) {
         return <p className="text-center mt-10 text-red-600">Unable to retrieve token or slug. Please check login.</p>;

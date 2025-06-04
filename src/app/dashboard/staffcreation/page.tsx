@@ -69,7 +69,13 @@ const StaffCreation = () => {
     const totalPages = Math.ceil(total / limit);
 
     if (checkingAuth) {
-        return <p className="p-4 text-center">Checking access...</p>;
+        return(
+            <div className="flex gap-4 justify-center items-center h-40">
+                <p className=" text-sm md:text-2xl text-branding-900">Checking Access...</p>
+                <div className="w-8 h-8 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+            </div>
+        )
+         
     }
 
     if (role !== "owner") {
@@ -127,7 +133,16 @@ const StaffCreation = () => {
                             </div>
                         </div>
                     </div>
-                    {loading && <p className="mt-4">Loading users...</p>}
+                    {loading && 
+                  
+                        <div className="flex gap-4 justify-center items-center h-40">
+                            <p className=" text-sm md:text-2xl text-branding-900">Loading Users...</p>
+                            <div className="w-8 h-8 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+                        </div>
+                    }
+                    
+                
+                    
                 </div>
             </div>
             <FooterAdmin />
@@ -136,3 +151,4 @@ const StaffCreation = () => {
 };
 
 export default StaffCreation;
+
