@@ -55,8 +55,8 @@ const DeleteTableButton: React.FC<Props> = ({ tableId, onTableDeleted }) => {
 
     return (
         <>
-            <button title="Delete table" onClick={() => setShowConfirm(true)} className="p-1 rounded hover:bg-red-100 transition">
-                <Trash2 className="w-4 h-4 text-gray-500" />
+            <button title="Delete table" onClick={() => setShowConfirm(true)} className="p-1 rounded transition">
+                <Trash2 className="w-4 h-4 text-gray-500 hover:text-red-500 cursor-pointer" />
             </button>
 
             {showConfirm && (

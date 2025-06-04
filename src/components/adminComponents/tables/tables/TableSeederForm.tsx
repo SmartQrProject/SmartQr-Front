@@ -71,7 +71,7 @@ const TableSeederForm: React.FC<TableSeederFormProps> = ({ slug, urlback, token,
                     onChange={(e) => setPrefix(e.target.value)}
                     className="border border-gray-300 rounded px-4 py-2 w-full md:w-1/3"
                 />
-                <button type="submit" disabled={loading} className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 w-full md:w-auto">
+                <button type="submit" disabled={loading} className="bg-branding-600 text-white px-6 py-2 rounded hover:bg-branding-500 w-full md:w-auto cursor-pointer">
                     {loading ? "Creating..." : "Create tables"}
                 </button>
             </form>

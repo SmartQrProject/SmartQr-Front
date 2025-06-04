@@ -71,15 +71,17 @@ const PromoCodeForm = ({ onCodeCreated }: { onCodeCreated?: () => void }) => {
 
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex items-end gap-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row items-start sm:items-end gap-4 w-full">
+
       <div className="flex flex-col">
         <label className="text-sm font-medium mb-1">Percentage</label>
         <input
           type="number"
           placeholder="10"
           {...register("percentage", { valueAsNumber: true })}
-          className="border rounded px-3 py-2 w-32"
+          className="border border-gray-300 rounded px-3 py-2 w-full sm:w-32"
         />
+
         {errors.percentage && (
           <p className="text-sm text-red-500">{errors.percentage.message}</p>
         )}

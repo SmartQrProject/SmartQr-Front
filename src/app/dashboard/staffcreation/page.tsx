@@ -83,55 +83,60 @@ const StaffCreation = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col mx-auto">
             <NavbarAdmin />
-            <div className="flex flex-1 flex-col lg:flex-row">
+            <div className="flex flex-1 flex-col gap-6 md:flex-row lg:gap-4 ">
                 <MenuAdmin />
                 <div className="flex-1 p-4">
-                    <h1 className="text-2xl mb-4">User Creation</h1>
+
                     <div className="flex flex-col lg:flex-row gap-6">
-                        <div className="lg:w-1/3">
+                        <div className="lg:w-1/2 w-full">
+                            <div className=" rounded-2xl sp-4">
                             <StaffRegisterForm setUsers={setUsers} />
+                            </div>
                         </div>
-                        <div className="lg:w-2/3 bg-white rounded-2xl shadow-md p-6 space-y-6">
+                        <div className="lg:w-2/3 w-full rounded-2xl  p-4 space-y-6">
                             <ListUserResturantView users={users} refreshUsers={fetchUsers} />
-                            <div className="flex items-center justify-end gap-2">
+
+                            <div className="flex items-center justify-center gap-2">
                                 <label className="text-sm font-medium">Users per page</label>
                                 <select
-                                    value={limit}
-                                    onChange={(e) => {
-                                        setLimit(Number(e.target.value));
-                                        setPage(1);
-                                    }}
-                                    className="border rounded px-1 py-1 text-sm focus:outline-none focus:ring-2"
+                                value={limit}
+                                onChange={(e) => {
+                                    setLimit(Number(e.target.value));
+                                    setPage(1);
+                                }}
+                                className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-branding-600"
                                 >
-                                    {LIMIT_OPTIONS.map((opt) => (
-                                        <option key={opt} value={opt}>
-                                            {opt}
-                                        </option>
-                                    ))}
+                                {LIMIT_OPTIONS.map((opt) => (
+                                    <option key={opt} value={opt}>
+                                    {opt}
+                                    </option>
+                                ))}
                                 </select>
                             </div>
+
                             <div className="flex justify-center items-center gap-4">
                                 <button
-                                    className="px-4 py-2 bg-gray-200 text-sm rounded hover:bg-gray-300 disabled:opacity-50"
-                                    disabled={page === 1}
-                                    onClick={() => setPage((p) => p - 1)}
+                                className="px-4 py-2 bg-branding-600 text-white rounded hover:bg-branding-700 disabled:opacity-50 transition"
+                                disabled={page === 1}
+                                onClick={() => setPage((p) => p - 1)}
                                 >
-                                    Previous
+                                Previous
                                 </button>
                                 <span className="text-sm text-gray-700">
-                                    Page {page} of {totalPages}
+                                Page {page} of {totalPages}
                                 </span>
                                 <button
-                                    className="px-4 py-2 bg-gray-200 text-sm rounded hover:bg-gray-300 disabled:opacity-50"
-                                    disabled={page === totalPages}
-                                    onClick={() => setPage((p) => p + 1)}
+                                className="px-4 py-2 bg-branding-600 text-white rounded hover:bg-branding-700 disabled:opacity-50 transition"
+                                disabled={page === totalPages}
+                                onClick={() => setPage((p) => p + 1)}
                                 >
-                                    Next
+                                Next
                                 </button>
                             </div>
                         </div>
+
                     </div>
                     {loading && 
                   
