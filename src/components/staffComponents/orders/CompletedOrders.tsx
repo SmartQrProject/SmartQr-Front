@@ -113,12 +113,31 @@ export default function CompletedOrdersPage() {
         fetchData();
     }, [slug, token, authorized]);
 
-    const updateOrderStatus = (orderId: string, newStatus: string) => {
-        setOrders((prevOrders) => prevOrders.map((order) => (order.id === orderId ? { ...order, status: newStatus } : order)));
+    const updateOrderStatus = async (orderId: string, newStatus: string) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/orders/${orderId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status: newStatus }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update order status");
+            }
+
+            setOrders((prevOrders) => prevOrders.map((order) => (order.id === orderId ? { ...order, status: newStatus } : order)));
+            toast.success(`Order updated to ${newStatus}`);
+        } catch (err) {
+            toast.error("Failed to update order status");
+            console.error("Error updating order status:", err);
+        }
     };
 
-    const handleRetreatStatus = (orderId: string) => {
-        updateOrderStatus(orderId, "ready");
+    const handleRetreatStatus = async (orderId: string) => {
+        await updateOrderStatus(orderId, "ready");
     };
 
     const getOrdersByStatus = (status: string) => orders.filter((o) => o.status === status).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
