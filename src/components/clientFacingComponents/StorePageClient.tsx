@@ -45,6 +45,8 @@ export default function StorePageClient({ data, slug }: StorePageClientProps) {
     }
     if (table) {
       localStorage.setItem('tableNumber', table);
+    }else {
+      localStorage.setItem('tableNumber', 'counter');
     }
   }, [slug, data.name, table]);
   return (
