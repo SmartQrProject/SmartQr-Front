@@ -1,17 +1,17 @@
-import { ReactNode } from "react";
+import React from "react";
 
 interface ReportBlockProps {
-  title: string;
-  children: ReactNode;
+    title: string;
+    children: React.ReactNode;
 }
 
 const ReportBlock = ({ title, children }: ReportBlockProps) => {
-  return (
-    <div className="p-4 rounded-xl border shadow-sm mb-6">
-      <h2 className="text-lg font-semibold mb-2">{title}</h2>
-      {children}
-    </div>
-  );
+    return (
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md mb-6 w-full">
+            <h2 className="text-lg sm:text-xl font-bold mb-4 text-left sm:text-center">{title}</h2>
+            {children}
+        </div>
+    );
 };
 
 export default ReportBlock;
