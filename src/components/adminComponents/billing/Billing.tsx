@@ -150,7 +150,7 @@ export default function BillingComponent() {
             </div>
 
             {showConfirm && (
-                <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
+                <div className="fixed inset-0 bg-black/30 bg-opacity-30 z-50 flex items-center justify-center">
                     <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full space-y-4">
                         <h2 className="text-xl font-semibold text-gray-800">Cancel Subscription</h2>
                         <p className="text-sm text-gray-600">Are you sure you want to cancel your subscription? This change will take effect at the end of your current billing period.</p>

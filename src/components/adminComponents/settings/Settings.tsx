@@ -73,12 +73,21 @@ const Settings = () => {
     });
 
     useEffect(() => {
-        if (!isLoadingProfile) {
-            setValue("name", name);
-            setValue("phone", phone);
-            setValue("password", "");
-            setValue("confirmPassword", "");
-        }
+    const sessionData = localStorage.getItem("adminSession");
+    let sessionDataParsed;
+
+    if (sessionData) {
+        sessionDataParsed = JSON.parse(sessionData);
+      
+        
+    }
+
+    if (!isLoadingProfile && sessionDataParsed) {
+        setValue("name", sessionDataParsed.payload.name);
+        setValue("phone", sessionDataParsed.payload.phone);
+        setValue("password", "");
+        setValue("confirmPassword", "");
+    }
     }, [isLoadingProfile, name, phone, setValue]);
 
     const onSubmit = async (data: UserProfileFormInputs) => {
@@ -91,7 +100,10 @@ const Settings = () => {
                 confirmPassword: data.confirmPassword?.trim() || "",
             };
 
+
+
             const result = await updateProfile(token, sanitizedData, slug, userId);
+            
 
             if (result.success) {
                 toast.success("Profile updated successfully");
@@ -143,6 +155,7 @@ const Settings = () => {
                     <label className="text-sm font-medium mb-1">Name</label>
                     <input
                         {...register("name")}
+                       
                         className="w-full p-2 bg-white rounded-md"
                         placeholder="Enter your name"
                     />
@@ -156,8 +169,10 @@ const Settings = () => {
                     <input
                         type="tel"
                         {...register("phone")}
+                        
                         className="w-full p-2 bg-white rounded-md"
                         placeholder="+1234567890"
+
                     />
                     {errors.phone && (
                         <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
