@@ -68,7 +68,7 @@ const ToggleActiveSwitch: React.FC<Props> = ({ tableId, isActive, onToggle }) =>
     return (
         <div
             onClick={toggle}
-            className={`w-10 h-5 flex items-center rounded-full p-1 cursor-pointer transition ${active ? "bg-green-400" : "bg-gray-400"} ${loading ? "opacity-50" : ""}`}
+            className={`w-10 h-5 flex items-center rounded-full p-1 cursor-pointer transition ${active ? "bg-green-600" : "bg-gray-400"} ${loading ? "opacity-50" : ""}`}
         >
             <div className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${active ? "translate-x-5" : "translate-x-0"}`} />
         </div>

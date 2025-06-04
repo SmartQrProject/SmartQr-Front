@@ -1,7 +1,8 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   HiOutlineHome,
   HiOutlineBuildingStorefront,
@@ -11,10 +12,20 @@ import {
   HiOutlineClipboardDocumentList,
   HiOutlineCheckCircle,
 } from "react-icons/hi2";
-import { GiHamburgerMenu, GiChart } from "react-icons/gi";
-import { MdErrorOutline, MdOutlineReceipt, MdOutlineTableBar } from "react-icons/md";
+import {
+  GiHamburgerMenu,
+  GiChart
+} from "react-icons/gi";
+import {
+  MdErrorOutline,
+  MdOutlineReceipt,
+  MdOutlineTableBar
+} from "react-icons/md";
 import { useUserRole } from "../hooks/useUserRole";
-import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import {
+  IoChevronBack,
+  IoChevronForward
+} from "react-icons/io5";
 import { RiCoupon3Line } from "react-icons/ri";
 
 const MenuAdmin = () => {
@@ -23,15 +34,18 @@ const MenuAdmin = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [restaurantName, setRestaurantName] = useState("Restaurant");
 
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
   const role = useUserRole();
   const validRoles = ["owner", "staff", "superAdmin"] as const;
 
   useEffect(() => {
     const checkMobile = () => {
-      const mobile = window.innerWidth < 640;
+      const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      setIsOpen(!mobile); 
+      setIsOpen(!mobile);
     };
+
     checkMobile();
     window.addEventListener("resize", checkMobile);
 
@@ -48,19 +62,32 @@ const MenuAdmin = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
- if (role === undefined) {
-  return 
-}
+  // 👇 Detect outside click to close on mobile
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        isMobile &&
+        isOpen &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isMobile, isOpen]);
 
-if (!validRoles.includes(role as any)) {
-  return (
-    <div className="flex items-center gap-2 text-red-600 p-4">
-      <MdErrorOutline className="w-5 h-5" />
-      <span>Sorry, not authorized</span>
-    </div>
-  );
-}
+  if (role === undefined) return null;
 
+  if (!validRoles.includes(role as any)) {
+    return (
+      <div className="flex items-center gap-2 text-red-600 p-4">
+        <MdErrorOutline className="w-5 h-5" />
+        <span>Sorry, not authorized</span>
+      </div>
+    );
+  }
 
   const handleLinkClick = () => {
     if (isMobile) setIsOpen(false);
@@ -79,7 +106,6 @@ if (!validRoles.includes(role as any)) {
 
   return (
     <>
-   
       {!isOpen && isMobile && (
         <button
           onClick={() => setIsOpen(true)}
@@ -90,8 +116,9 @@ if (!validRoles.includes(role as any)) {
       )}
 
       <div
-        className={`transition-all duration-300 bg-white shadow-md h-screen z-40 
-        ${isMobile ? "fixed top-[4rem] left-0" : ""}
+        ref={sidebarRef}
+        className={`transition-all duration-300 bg-white shadow-md z-40 min-h-full  
+        ${isMobile ? "fixed top-[4rem] left-0" : "sticky top-[4rem]"}
         ${isOpen ? "w-64" : "w-16"} 
         ${isMobile && !isOpen ? "-translate-x-full" : "translate-x-0"}
         `}

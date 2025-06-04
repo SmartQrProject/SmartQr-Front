@@ -25,15 +25,33 @@ export async function updateProfile(token: string, data: UserProfileFormInputs, 
     });
 
     const result = await response.json();
-
+    
     if (!response.ok) {
       return {
         success: false,
         message: result.message || "Failed to update profile",
       };
     }
+    
+    const sessionData = localStorage.getItem("adminSession", )
+    if(sessionData){
+      try {
+        const session = JSON.parse(sessionData);
 
+        session.payload.name = result.name;
+        session.payload.phone = result.phone;
+
+        
+        
+        localStorage.setItem("adminSession", JSON.stringify(session));
+        
+      } catch (error) {
+        
+      }
+    }
+    
     return { success: true, data: result };
+
   } catch (error: any) {
     return { 
       success: false, 

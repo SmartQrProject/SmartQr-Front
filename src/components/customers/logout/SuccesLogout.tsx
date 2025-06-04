@@ -32,7 +32,7 @@ export default function StaticLogoutPage() {
   if (!slug || !tableNumber) return;
 
   if (counter <= 0) {
-    router.push(`/menu/${slug}?table=${tableNumber}` || `/menu/${slug}?table=`);
+    router.push(`/menu/${slug}?table=${tableNumber}` || `/menu/${slug}`);
     return;
   }
 

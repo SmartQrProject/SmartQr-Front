@@ -57,7 +57,6 @@ export default function BillingComponent() {
 
     useEffect(() => {
         const fetchSubscriptions = async () => {
-            
             if (!slug || !token) return;
 
             try {
@@ -66,16 +65,12 @@ export default function BillingComponent() {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-             
 
                 if (!res.ok) throw new Error("Failed to fetch subscription");
 
                 const data: SubscriptionData = await res.json();
                 setSubscription(data);
                 setCancelled(data.cancelAtPeriodEnd);
-
-               
-            
             } catch (error) {
                 toast.error("Failed to load subscription data");
                 console.error(error);
@@ -86,7 +81,6 @@ export default function BillingComponent() {
     }, [slug, token]);
 
     const handleCancelSubscription = async () => {
- 
         if (!slug || !token) {
             toast.error("Missing credentials to cancel subscription.");
             return;
@@ -98,9 +92,9 @@ export default function BillingComponent() {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
-            }); 
+            });
 
             if (!res.ok) throw new Error("Failed to cancel subscription");
 
@@ -116,63 +110,61 @@ export default function BillingComponent() {
     };
 
     if (checkingAuth) {
-        return(
-            <div className="flex gap-4 justify-center items-center h-40">
-                <p className=" text-sm md:text-2xl text-branding-900">Checking Access...</p>
-                <div className="w-8 h-8 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+        return (
+            <div className="flex items-center justify-center h-40 gap-3">
+                <p className="text-lg font-medium text-branding-900">Checking access...</p>
+                <div className="w-6 h-6 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
             </div>
-        )
-         
+        );
     }
 
-    if (role !== "owner") {
-        return null;
-    }
+    if (role !== "owner") return null;
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-6">
-            <h2 className="text-2xl font-bold">Billing Summary</h2>
+        <div className="max-w-3xl mx-auto p-6 space-y-8">
+            <h1 className="text-3xl font-semibold text-gray-900">Billing Summary</h1>
 
             {subscription ? (
-                <div className="border rounded-xl bg-white shadow p-4 space-y-2">
-                    <p>
-                        <strong>Plan:</strong> {subscription.planStripeId}
-                    </p>
-                    <p>
-                        <strong>Status:</strong> {subscription.status}
-                    </p>
-                    <p>
-                        <strong>Trial:</strong> {subscription.isTrial ? "Yes" : "No"}
-                    </p>
-                    <p>
-                        <strong>Next Billing Date:</strong> {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
-                    </p>
-                    <p>
-                        <strong>Created At:</strong> {new Date(subscription.createdAt).toLocaleDateString()}
-                    </p>
+                <div className="bg-white rounded-2xl shadow-md p-6 space-y-3">
+                    <p><span className="font-semibold">Plan:</span> {subscription.planStripeId}</p>
+                    <p><span className="font-semibold">Status:</span> {subscription.status}</p>
+                    <p><span className="font-semibold">Trial:</span> {subscription.isTrial ? "Yes" : "No"}</p>
+                    <p><span className="font-semibold">Next Billing Date:</span> {new Date(subscription.currentPeriodEnd).toLocaleDateString()}</p>
+                    <p><span className="font-semibold">Created At:</span> {new Date(subscription.createdAt).toLocaleDateString()}</p>
                 </div>
             ) : (
-                <div className="flex gap-4 justify-center items-center h-40">
-                    <p className=" text-sm md:text-2xl text-branding-900">Loading suscription details...</p>
-                    <div className="w-8 h-8 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+                <div className="flex items-center justify-center h-40 gap-3">
+                    <p className="text-lg text-branding-900">Loading subscription details...</p>
+                    <div className="w-6 h-6 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
                 </div>
             )}
 
-            <div className="pt-6">
-                <ButtonPrimary disabled={isCancelling || cancelled} loading={isCancelling} onClick={() => setShowConfirm(true)}>
+            <div>
+                <ButtonPrimary
+                    disabled={isCancelling || cancelled}
+                    loading={isCancelling}
+                    onClick={() => setShowConfirm(true)}
+                >
                     {cancelled ? "Cancellation Scheduled" : "Cancel Subscription"}
                 </ButtonPrimary>
             </div>
 
             {showConfirm && (
-                <div className="fixed inset-0 bg-opacity-50 z-50 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded-lg max-w-sm shadow-lg">
-                        <h3 className="text-lg font-bold mb-4">Are you sure you want to cancel your subscription?</h3>
-                        <div className="flex justify-end gap-4">
-                            <button className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400" onClick={() => setShowConfirm(false)}>
+                <div className="fixed inset-0 bg-black/30 bg-opacity-30 z-50 flex items-center justify-center">
+                    <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full space-y-4">
+                        <h2 className="text-xl font-semibold text-gray-800">Cancel Subscription</h2>
+                        <p className="text-sm text-gray-600">Are you sure you want to cancel your subscription? This change will take effect at the end of your current billing period.</p>
+                        <div className="flex justify-end gap-4 pt-4">
+                            <button
+                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300"
+                                onClick={() => setShowConfirm(false)}
+                            >
                                 No
                             </button>
-                            <button className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700" onClick={handleCancelSubscription}>
+                            <button
+                                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
+                                onClick={handleCancelSubscription}
+                            >
                                 Yes, Cancel
                             </button>
                         </div>

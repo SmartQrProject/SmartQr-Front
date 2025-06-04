@@ -18,10 +18,10 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ isOpen, title, message, o
         {title && <h2 className="text-xl font-semibold mb-4">{title}</h2>}
         <p className="mb-6">{message}</p>
         <div className="flex justify-end space-x-4">
-          <button onClick={onCancel} className="px-4 py-2 text-default-800 border-default-800 border-2 rounded hover:bg-default-600 hover:text-white transition cursor-pointer">
+          <button onClick={onCancel} className="px-4 py-2 text-branding-600 border-branding-600 border-2 rounded hover:bg-branding-500 hover:text-white transition cursor-pointer">
             Cancel
           </button>
-          <button onClick={onConfirm} className="px-4 py-2 bg-default-800 text-white rounded hover:bg-default-700 transition cursor-pointer">
+          <button onClick={onConfirm} className="px-4 py-2 bg-branding-600 text-white rounded hover:bg-branding-500 transition cursor-pointer">
             Confirm
           </button>
         </div>

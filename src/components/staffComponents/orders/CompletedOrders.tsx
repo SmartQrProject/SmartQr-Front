@@ -6,6 +6,11 @@ import OrderCard from "./OrderCard";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { Box } from "lucide-react";
+import { MdTakeoutDining } from "react-icons/md";
+import { RiTakeawayFill, RiTakeawayLine } from "react-icons/ri";
+import { GiBoxUnpacking } from "react-icons/gi";
+import { CgMenuBoxed } from "react-icons/cg";
 
 const transformOrderFromApi = (order: any): IOrder => ({
     id: order.id,
@@ -108,12 +113,31 @@ export default function CompletedOrdersPage() {
         fetchData();
     }, [slug, token, authorized]);
 
-    const updateOrderStatus = (orderId: string, newStatus: string) => {
-        setOrders((prevOrders) => prevOrders.map((order) => (order.id === orderId ? { ...order, status: newStatus } : order)));
+    const updateOrderStatus = async (orderId: string, newStatus: string) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${slug}/orders/${orderId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status: newStatus }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update order status");
+            }
+
+            setOrders((prevOrders) => prevOrders.map((order) => (order.id === orderId ? { ...order, status: newStatus } : order)));
+            toast.success(`Order updated to ${newStatus}`);
+        } catch (err) {
+            toast.error("Failed to update order status");
+            console.error("Error updating order status:", err);
+        }
     };
 
-    const handleRetreatStatus = (orderId: string) => {
-        updateOrderStatus(orderId, "ready");
+    const handleRetreatStatus = async (orderId: string) => {
+        await updateOrderStatus(orderId, "ready");
     };
 
     const getOrdersByStatus = (status: string) => orders.filter((o) => o.status === status).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
@@ -130,7 +154,7 @@ export default function CompletedOrdersPage() {
 
     return (
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">📦 Completed Orders</h1>
+            <h2 className="text-2xl font-bold mb-4 flex gap-2 items-center"><CgMenuBoxed/> Completed Orders</h2>
             {getOrdersByStatus("completed").length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {getOrdersByStatus("completed").map((order) => (
