@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Description from "./Description";
 
 interface TeamMember {
     name: string;
@@ -43,8 +44,11 @@ const team: TeamMember[] = [
 
 export default function TeamPage() {
     return (
-        <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold text-center mb-10 text-gray-800">Our Team</h1>
+        <div className="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+                <Description/>
+            </div>
+            <h1 className="text-3xl font-bold text-center mb-10 text-gray-800 mt-8">Our Team</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
                 {team.map((member, index) => (
                     <div key={index} className="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center text-center">
@@ -54,6 +58,7 @@ export default function TeamPage() {
                     </div>
                 ))}
             </div>
+            
         </div>
     );
 }
