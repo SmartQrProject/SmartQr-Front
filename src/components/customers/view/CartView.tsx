@@ -148,7 +148,7 @@ const CartView = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
                 <div className="bg-white p-6 rounded-lg shadow-md">
                     <h2 className="text-center text-2xl font-bold mb-4 flex gap-2 justify-center items-center">
-                        <ShoppingCart className="h-6 w-6 text-sky-600" /> Products
+                        <ShoppingCart className="h-6 w-6 text-branding-600" /> Products
                     </h2>
 
                     <div className="grid gap-4">
@@ -169,11 +169,11 @@ const CartView = () => {
                                                 disabled={product.quantity <= 1}
                                                 className="disabled:opacity-50"
                                             >
-                                                <MinusCircle className="h-5 w-5 text-sky-700 hover:text-sky-500" />
+                                                <MinusCircle className="h-5 w-5 text-branding-600 hover:text-branding-500" />
                                             </button>
                                             <span className="font-semibold">{product.quantity}</span>
                                             <button onClick={() => updateQuantity(product.id, product.quantity + 1)}>
-                                                <PlusCircle className="h-5 w-5 text-sky-700 hover:text-sky-500" />
+                                                <PlusCircle className="h-5 w-5 text-branding-600 hover:text-branding-500" />
                                             </button>
                                         </div>
                                     </div>
@@ -189,7 +189,7 @@ const CartView = () => {
                 {/* Order Summary */}
                 <div className="bg-white p-6 rounded-lg shadow-md">
                     <h2 className="text-center text-2xl font-bold mb-4 flex gap-2 justify-center items-center">
-                        <Receipt className="h-6 w-6 text-sky-600" /> Order Summary
+                        <Receipt className="h-6 w-6 text-branding-600" /> Order Summary
                     </h2>
 
                     <div className="flex justify-between mb-2">
@@ -218,9 +218,9 @@ const CartView = () => {
                                 value={promoCode}
                                 onChange={(e) => setPromoCode(e.target.value)}
                                 placeholder="Enter code"
-                                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-branding-500"
                             />
-                            <button onClick={applyPromoCode} className="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-sky-600 font-semibold cursor-pointer">
+                            <button onClick={applyPromoCode} className="bg-branding-600 text-white px-4 py-2 rounded-lg hover:bg-branding-500 font-semibold cursor-pointer">
                                 Apply
                             </button>
                         </div>
@@ -248,14 +248,14 @@ const CartView = () => {
                         <div className="mt-6 flex flex-col gap-2">
                             <button
                                 onClick={handleCheckout}
-                                className="bg-sky-700 hover:bg-sky-600 text-white py-2 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-pointer"
+                                className="bg-branding-700 hover:bg-branding-600 text-white py-2 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 <CreditCard className="h-6 w-6" /> Proceed to Checkout
                             </button>
 
                             <button
                                 onClick={() => router.push(`/menu/${slug}`)}
-                                className="text-sky-700 hover:bg-sky-600 hover:text-white hover:border-0 border-2 border-sky-700 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-pointer"
+                                className="text-branding-700 hover:bg-branding-600 hover:text-white hover:border-0 border-2 border-branding-500 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 <ShoppingCart className="h-6 w-6" /> Continue Shopping
                             </button>
