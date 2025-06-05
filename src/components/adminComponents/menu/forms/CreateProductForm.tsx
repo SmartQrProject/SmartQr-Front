@@ -59,7 +59,7 @@ export default function CreateMenuForm({ initialData, mode = "create", onClose, 
   }, [errors]);
     useEffect(() => {
         if (Object.keys(errors).length > 0) {
-            console.log("Form errors:", errors);
+            // console.log("Form errors:", errors);
         }
     }, [errors]);
 

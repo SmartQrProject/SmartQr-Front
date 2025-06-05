@@ -3,6 +3,12 @@ import { StaffFormInputs } from "./SchemaStaff";
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function staffRegister(token: string, data: StaffFormInputs, slug: string) {
+    const { phone, ...rest } = data;
+
+    const preparedData = {
+    ...rest,
+    ...(phone !== undefined && phone !== null ? { phone: String(phone) } : {}),
+    };
     try {
         const response = await fetch(`${APIURL}/users/${slug}/signup`, {
             method: "POST",
@@ -10,9 +16,9 @@ export async function staffRegister(token: string, data: StaffFormInputs, slug: 
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`,
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(preparedData),
         });
-
+        // console.log(preparedData)
         const result = await response.json();
 
         if (!response.ok) {
