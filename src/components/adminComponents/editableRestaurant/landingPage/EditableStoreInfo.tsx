@@ -123,7 +123,7 @@ const EditableStoreInfoModal = ({ restaurant, open, onClose }: StoreInfoModalPro
                     : undefined,
             };
 
-            console.log("Payload to update:", payload);
+            // console.log("Payload to update:", payload);
 
             const result = CompleteRestaurantsSchema.partial({
             owner_pass: true,
