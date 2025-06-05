@@ -64,13 +64,13 @@ const VentasPorMes = () => {
                             }}
                             onMouseLeave={() => setHoverY(null)}
                         >
-                            <CartesianGrid strokeDasharray="3 3" />
+                            {/* <CartesianGrid strokeDasharray="3 3" /> */}
                             <XAxis dataKey="name" />
                             <YAxis domain={[0, Math.max(metaMensual, data[0].total) + 300]} />
                             <Tooltip formatter={(value: number) => [`$${value.toFixed(2)}`, "Sales"]} />
                             {hoverY !== null && <ReferenceLine y={hoverY} stroke="gray" strokeDasharray="2 2" ifOverflow="extendDomain" />}
-                            <Bar dataKey="total" fill="#ffc658" animationDuration={700}>
-                                <LabelList dataKey="total" position="top" formatter={(v: number) => `$${v}`} />
+                            <Bar dataKey="total" fill="#00ab66" animationDuration={700}>
+                                <LabelList dataKey="total" stroke="black" position="top" formatter={(v: number) => `$${v}`} />
                             </Bar>
                         </BarChart>
                     </ResponsiveContainer>

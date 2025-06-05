@@ -50,12 +50,12 @@ const VentasCustom = () => {
 
             <div className="mb-4">
                 <label className="block mb-1 font-medium">From:</label>
-                <input type="date" className="border p-2 rounded w-full" value={from} onChange={(e) => setFrom(e.target.value)} />
+                <input type="date" className="border p-2 rounded " value={from} onChange={(e) => setFrom(e.target.value)} />
             </div>
 
             <div className="mb-4">
                 <label className="block mb-1 font-medium">To:</label>
-                <input type="date" className="border p-2 rounded w-full" value={to} onChange={(e) => setTo(e.target.value)} />
+                <input type="date" className="border p-2 rounded " value={to} onChange={(e) => setTo(e.target.value)} />
             </div>
 
             <button onClick={handleSearch} className="bg-branding-500 text-white px-4 py-2 rounded-full mb-4 w-full sm:w-auto">
@@ -106,7 +106,7 @@ const VentasCustom = () => {
                                 }}
                                 onMouseLeave={() => setHoverY(null)}
                             >
-                                <CartesianGrid strokeDasharray="3 3" />
+                                {/* <CartesianGrid strokeDasharray="3 3" /> */}
                                 <XAxis dataKey="name" />
                                 <YAxis domain={[0, Math.max(metaPersonalizada, total ?? 0) + 400]} />
                                 <Tooltip formatter={(value: number) => [`$${value.toFixed(2)}`, "Sales"]} />
@@ -122,7 +122,7 @@ const VentasCustom = () => {
                                     }}
                                 />
                                 {hoverY !== null && <ReferenceLine y={hoverY} stroke="gray" strokeDasharray="2 2" ifOverflow="extendDomain" />}
-                                <Bar dataKey="total" fill="#a4de6c" animationDuration={700}>
+                                <Bar dataKey="total" fill="#00ab66" animationDuration={700}>
                                     <LabelList dataKey="total" position="top" formatter={(v: number) => `$${v}`} />
                                 </Bar>
                             </BarChart>

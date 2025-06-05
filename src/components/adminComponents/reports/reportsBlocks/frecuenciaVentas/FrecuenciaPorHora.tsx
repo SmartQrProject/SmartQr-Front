@@ -1,8 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LabelList } from "recharts";
+import {
+    BarChart, Bar, XAxis, YAxis, Tooltip,
+    ResponsiveContainer, CartesianGrid, LabelList
+} from "recharts";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+
+// Responsive hook
+function useWindowWidth() {
+    const [width, setWidth] = useState<number | null>(null);
+    useEffect(() => {
+        const handleResize = () => setWidth(window.innerWidth);
+        setWidth(window.innerWidth);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+    return width;
+}
 
 type PuntoHora = {
     label: string; // "13:00", "14:00", etc.
@@ -13,6 +28,7 @@ const FrecuenciaPorHora = () => {
     const { user } = useAuth();
     const slug = user?.payload?.slug;
     const token = user?.token;
+    const screenWidth = useWindowWidth();
 
     const [data, setData] = useState<PuntoHora[]>([]);
     const [loading, setLoading] = useState(true);
@@ -23,7 +39,9 @@ const FrecuenciaPorHora = () => {
 
         const fetchData = async () => {
             try {
-                const res = await fetch(`${APIURL}/${slug}/reports/sales-frequency?group=hour`, { headers: { Authorization: `Bearer ${token}` } });
+                const res = await fetch(`${APIURL}/${slug}/reports/sales-frequency?group=hour`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 const json = await res.json();
                 setData(Array.isArray(json) ? json : []);
             } catch {
@@ -36,8 +54,10 @@ const FrecuenciaPorHora = () => {
         fetchData();
     }, [slug, token]);
 
+    const xTickFontSize = screenWidth !== null && screenWidth < 480 ? 10 : 12;
+
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-xl w-full mb-6">
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md w-full mb-6">
             <h3 className="text-lg sm:text-xl font-bold mb-4 text-center sm:text-left">Hourly Sales Frequency</h3>
 
             {loading ? (
@@ -48,14 +68,23 @@ const FrecuenciaPorHora = () => {
             ) : data.length === 0 ? (
                 <p className="text-sm text-gray-500 text-center">No sales data by hour.</p>
             ) : (
-                <div className="h-[400px]">
+                <div className="h-[400px] overflow-hidden">
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="label" tick={{ fontSize: 11 }} angle={-45} textAnchor="end" height={60} />
+                        <BarChart
+                            data={data}
+                            margin={{ top: 20, right: 20, left: 0, bottom: 70 }}
+                        >
+                            {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                            <XAxis
+                                dataKey="label"
+                                tick={{ fontSize: xTickFontSize }}
+                                angle={-45}
+                                textAnchor="end"
+                                height={90}
+                            />
                             <YAxis allowDecimals={false} />
                             <Tooltip formatter={(value: number) => [`${value}`, "Sales"]} />
-                            <Bar dataKey="count" fill="#8884d8">
+                            <Bar dataKey="count" fill="#007aa5">
                                 <LabelList dataKey="count" position="top" formatter={(v: number) => `${v}`} />
                             </Bar>
                         </BarChart>

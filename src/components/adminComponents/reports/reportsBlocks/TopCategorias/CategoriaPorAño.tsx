@@ -2,8 +2,33 @@
 
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LabelList, PieChart, Pie, Cell, Legend } from "recharts";
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    Tooltip,
+    ResponsiveContainer,
+    CartesianGrid,
+    LabelList,
+    PieChart,
+    Pie,
+    Cell,
+    Legend,
+} from "recharts";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+
+// Safe width hook (avoids SSR issues)
+function useWindowWidth() {
+    const [width, setWidth] = useState<number | null>(null);
+    useEffect(() => {
+        const handleResize = () => setWidth(window.innerWidth);
+        setWidth(window.innerWidth);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+    return width;
+}
 
 type Categoria = {
     category: string;
@@ -13,12 +38,17 @@ type Categoria = {
     average_price: number;
 };
 
-const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#a4de6c", "#d0ed57", "#8dd1e1", "#83a6ed", "#8e4585", "#ffbb28", "#00C49F", "#FF8042"];
+const COLORS = [
+    "#4E79A7", "#F28E2B", "#E15759", "#76B7B2",
+    "#59A14F", "#EDC948", "#B07AA1", "#FF9DA7",
+    "#9C755F", "#BAB0AC", "#86BCB6", "#FABFD2",
+];
 
 const CategoriaPorAño = () => {
     const { user } = useAuth();
     const slug = user?.payload?.slug;
     const token = user?.token;
+    const screenWidth = useWindowWidth();
 
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [loading, setLoading] = useState(true);
@@ -35,9 +65,7 @@ const CategoriaPorAño = () => {
         const fetchData = async () => {
             try {
                 const res = await fetch(`${APIURL}/${slug}/reports/sales-by-category?from=${start}&to=${end}&sort=${sort}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
 
                 if (!res.ok) {
@@ -47,15 +75,14 @@ const CategoriaPorAño = () => {
                 }
 
                 const data = await res.json();
-
                 if (Array.isArray(data)) {
                     setCategorias(data);
                 } else {
-                    console.error("Unexpected server response:", data);
+                    console.error("Unexpected response:", data);
                     setCategorias([]);
                 }
             } catch (err) {
-                console.error("Error fetching category report:", err);
+                console.error("Error fetching report:", err);
                 setCategorias([]);
             } finally {
                 setLoading(false);
@@ -65,8 +92,12 @@ const CategoriaPorAño = () => {
         fetchData();
     }, [slug, token, sort]);
 
+    const yAxisWidth = screenWidth !== null && screenWidth < 500 ? 60 : 130;
+    const tickFontSize = screenWidth !== null && screenWidth < 500 ? 11 : 12;
+    const showPieLabels = screenWidth !== null && screenWidth >= 500;
+
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-xl w-full mb-6">
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md w-full mb-6">
             <h3 className="text-lg sm:text-xl font-bold mb-4 text-left sm:text-center">Sales by Category (Year)</h3>
             <p className="text-sm mb-4 text-center">
                 From <strong>{start}</strong> to <strong>{end}</strong>
@@ -90,12 +121,17 @@ const CategoriaPorAño = () => {
             ) : (
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                        <div className="h-[400px]">
+                        <div className="h-[400px] overflow-hidden max-w-full">
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart layout="vertical" data={categorias} margin={{ top: 0, right: 40, left: 80, bottom: 0 }}>
-                                    <CartesianGrid strokeDasharray="3 3" />
+                                <BarChart layout="vertical" data={categorias} margin={{ top: 0, right: 40, left: 10, bottom: 0 }}>
+                                    {/* <CartesianGrid strokeDasharray="3 3" /> */}
                                     <XAxis type="number" />
-                                    <YAxis dataKey="category" type="category" width={130} tick={{ fontSize: 12 }} />
+                                    <YAxis
+                                        dataKey="category"
+                                        type="category"
+                                        width={yAxisWidth}
+                                        tick={{ fontSize: tickFontSize }}
+                                    />
                                     <Tooltip
                                         formatter={(value: number, name: string) => {
                                             if (name === "total") return [`$${value.toFixed(2)}`, "Total sold"];
@@ -103,14 +139,14 @@ const CategoriaPorAño = () => {
                                             return [value, name];
                                         }}
                                     />
-                                    <Bar dataKey="total" fill="#8884d8">
+                                    <Bar dataKey="total" fill={COLORS[0]}>
                                         <LabelList dataKey="quantity" position="right" formatter={(v: number) => `${v} units`} />
                                     </Bar>
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
 
-                        <div className="h-[400px]">
+                        <div className="h-[400px] overflow-hidden max-w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie
@@ -120,7 +156,7 @@ const CategoriaPorAño = () => {
                                         cx="50%"
                                         cy="50%"
                                         outerRadius={120}
-                                        label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
+                                        label={showPieLabels ? ({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)` : false}
                                     >
                                         {categorias.map((_, index) => (
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
