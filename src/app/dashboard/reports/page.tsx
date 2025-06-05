@@ -6,12 +6,12 @@ import React from "react";
 
 const reports = () => {
     return (
-        <div className="min-h-screen flex flex-col ">
+        <div className="min-h-screen flex flex-col overflow-x-hidden">
             <NavbarAdmin />
 
-            <div className="flex flex-1">
+            <div className="flex flex-1 overflow-x-hidden">
                 <MenuAdmin />
-                <main className="flex-1 p-4">
+                <main className="flex-1 p-4 overflow-x-hidden">
                     <Reports/>
                 </main>
             </div>

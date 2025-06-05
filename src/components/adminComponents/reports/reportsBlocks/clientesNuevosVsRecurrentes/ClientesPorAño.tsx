@@ -59,24 +59,21 @@ const ClientesPorAño = () => {
         );
     }
 
-    if (error || !data) return <p>There was a problem loading the data.</p>;
-    if (data.newCustomers + data.returningCustomers === 0) return <p>No customers this year.</p>;
+    if (error || !data) return <p className="text-center text-sm text-red-500">There was a problem loading the data.</p>;
+    if (data.newCustomers + data.returningCustomers === 0) return <p className="text-center text-sm text-gray-500">No customers this year.</p>;
 
     const chartData = [
-        {
-            name: "New",
-            value: data.newCustomers,
-        },
-        {
-            name: "Returning",
-            value: data.returningCustomers,
-        },
+        { name: "New", value: data.newCustomers },
+        { name: "Returning", value: data.returningCustomers },
     ];
 
-    const COLORS = ["#8884d8", "#82ca9d"];
+    const COLORS = ["#00c49f", "#4b0082"];
 
     return (
-        <div className="space-y-4">
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md w-full mb-6">
+            <h3 className="text-lg sm:text-xl font-bold mb-4 text-center sm:text-left">This Year's Customers</h3>
+
+            {/* Donut Chart */}
             <div className="w-full h-60">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -84,7 +81,7 @@ const ClientesPorAño = () => {
                             data={chartData}
                             dataKey="value"
                             nameKey="name"
-                            innerRadius={50}
+                            innerRadius={30}
                             outerRadius={80}
                             paddingAngle={3}
                             label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
@@ -97,15 +94,16 @@ const ClientesPorAño = () => {
                 </ResponsiveContainer>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 text-center">
-                    <h3 className="text-lg font-semibold">New Customers</h3>
-                    <p className="text-2xl">{data.newCustomers}</p>
+            {/* Summary Boxes */}
+            <div className="grid grid-cols-2 gap-4 mt-6">
+                <div className="p-4 rounded-lg text-center bg-[#f0fdfa]">
+                    <h3 className="text-md font-semibold text-[#054237]">New Customers</h3>
+                    <p className="text-lg font-bold">{data.newCustomers}</p>
                     <p className="text-gray-500">{data.newPercentage.toFixed(1)}%</p>
                 </div>
-                <div className="p-4  text-center">
-                    <h3 className="text-lg font-semibold">Returning Customers</h3>
-                    <p className="text-2xl">{data.returningCustomers}</p>
+                <div className="p-4 rounded-lg text-center bg-[#f5f3ff]">
+                    <h3 className="text-md font-semibold text-[#4b0082]">Returning Customers</h3>
+                    <p className="text-lg font-bold">{data.returningCustomers}</p>
                     <p className="text-gray-500">{data.returningPercentage.toFixed(1)}%</p>
                 </div>
             </div>

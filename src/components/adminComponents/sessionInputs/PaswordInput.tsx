@@ -17,7 +17,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ register, name, error, pl
     return (
         <div className="relative">
             <input type={showPassword ? "text" : "password"} {...register(name)} placeholder={placeholder || "Enter your password"} className="w-full p-2 bg-white rounded-md pr-10" />
-            <div className="absolute inset-y-0 right-3 flex items-center cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
+            <div className="absolute inset-y-2.5 right-3 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </div>
             {error && <p className="text-red-500">{error}</p>}

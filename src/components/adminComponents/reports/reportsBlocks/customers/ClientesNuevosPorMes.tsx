@@ -1,11 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, LabelList } from "recharts";
+import {
+    LineChart, Line, XAxis, YAxis, Tooltip,
+    CartesianGrid, ResponsiveContainer, LabelList
+} from "recharts";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
 dayjs.locale("en");
+
+// Hook to detect screen width
+function useWindowWidth() {
+    const [width, setWidth] = useState<number | null>(null);
+    useEffect(() => {
+        const handleResize = () => setWidth(window.innerWidth);
+        setWidth(window.innerWidth);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+    return width;
+}
 
 type Cliente = {
     id: string;
@@ -13,7 +28,7 @@ type Cliente = {
 };
 
 type ClienteNuevoPorMes = {
-    month: string; // Example: "May 2025"
+    month: string;
     count: number;
 };
 
@@ -21,6 +36,8 @@ const ClientesNuevosPorMes = () => {
     const { user } = useAuth();
     const slug = user?.payload?.slug;
     const token = user?.token;
+    const screenWidth = useWindowWidth();
+
     const [data, setData] = useState<ClienteNuevoPorMes[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -47,7 +64,7 @@ const ClientesNuevosPorMes = () => {
 
                 const formatted: ClienteNuevoPorMes[] = Object.entries(grouped)
                     .map(([month, count]) => ({ month, count }))
-                    .sort((a, b) => dayjs(a.month, "MMMM YYYY").toDate().getTime() - dayjs(b.month, "MMMM YYYY").toDate().getTime());
+                    .sort((a, b) => dayjs(a.month, "MMMM YYYY").valueOf() - dayjs(b.month, "MMMM YYYY").valueOf());
 
                 setData(formatted);
             } catch (err) {
@@ -61,8 +78,10 @@ const ClientesNuevosPorMes = () => {
         fetchData();
     }, [slug, token]);
 
+    const xTickFontSize = screenWidth && screenWidth < 480 ? 10 : 12;
+
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-xl w-full mb-6">
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md w-full mb-6">
             <h3 className="text-lg sm:text-xl font-bold mb-4 text-left sm:text-center">New Monthly Customers</h3>
 
             {loading ? (
@@ -73,15 +92,34 @@ const ClientesNuevosPorMes = () => {
             ) : data.length === 0 ? (
                 <p className="text-sm text-gray-500 text-center">No new customer records found.</p>
             ) : (
-                <div className="h-[400px]">
+                <div className="h-[400px] overflow-hidden">
                     <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 40 }}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="month" tick={{ fontSize: 11 }} angle={-45} textAnchor="end" height={60} />
+                        <LineChart
+                            data={data}
+                            margin={{ top: 20, right: 30, left: 10, bottom: 60 }}
+                        >
+                            {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                            <XAxis
+                                dataKey="month"
+                                tick={{ fontSize: xTickFontSize }}
+                                angle={-45}
+                                textAnchor="end"
+                                height={80}
+                            />
                             <YAxis allowDecimals={false} />
                             <Tooltip formatter={(value: number) => [`${value}`, "New Customers"]} />
-                            <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={2} dot={{ r: 4 }}>
-                                <LabelList dataKey="count" position="top" formatter={(v: number) => `${v}`} />
+                            <Line
+                                type="monotone"
+                                dataKey="count"
+                                stroke="#36a2eb"
+                                strokeWidth={2}
+                                dot={{ r: 4 }}
+                            >
+                                <LabelList
+                                    dataKey="count"
+                                    position="top"
+                                    formatter={(v: number) => `${v}`}
+                                />
                             </Line>
                         </LineChart>
                     </ResponsiveContainer>
