@@ -27,7 +27,7 @@ const IndexFrecuencia = () => {
     };
 
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-xl w-full max-w-8xl mx-auto mb-6">
+        <div className="bg-white p-4 sm:p-6 rounded-xl w-full mb-6">
             <h2 className="text-lg sm:text-xl font-bold mb-6 text-center sm:text-left">Sales Frequency</h2>
 
             <div className="flex justify-center sm:justify-start mb-6">

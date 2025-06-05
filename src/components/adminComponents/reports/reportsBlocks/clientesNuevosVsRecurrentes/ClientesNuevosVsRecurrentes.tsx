@@ -6,15 +6,15 @@ import ClientesPorSemana from "./ClientesPorSemana";
 import ClientesPorMes from "./ClientesPorMes";
 import ClientesPorAño from "./ClientesPorAño";
 
-const tabs = ["Week", "Month", "Year"]; // Day is disabled
+const tabs = ["Week", "Month", "Year", "Day"]; // Day is disabled
 
 const ClientesNuevosVsRecurrentes = () => {
     const [tab, setTab] = useState("Week");
 
     const renderTab = () => {
         switch (tab) {
-            // case "Day":
-            //   return <ClientesPorDia />;
+            case "Day":
+              return <ClientesPorDia />;
             case "Week":
                 return <ClientesPorSemana />;
             case "Month":
@@ -34,7 +34,7 @@ const ClientesNuevosVsRecurrentes = () => {
                 <select
                     value={tab}
                     onChange={(e) => setTab(e.target.value)}
-                    className="border px-4 py-2 rounded-full text-sm w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg focus:outline-none focus:ring-2 focus:ring-branding-500"
+                    className="border px-4 py-2 rounded-full text-sm max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg focus:outline-none focus:ring-2 focus:ring-branding-500"
                 >
                     {tabs.map((item) => (
                         <option key={item} value={item}>

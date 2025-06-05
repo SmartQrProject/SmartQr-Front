@@ -1,8 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from "recharts";
+import {
+    BarChart, Bar, XAxis, YAxis, CartesianGrid,
+    Tooltip, ResponsiveContainer, LabelList
+} from "recharts";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
+
+// Hook para detectar el ancho de pantalla
+function useWindowWidth() {
+    const [width, setWidth] = useState<number | null>(null);
+    useEffect(() => {
+        const handleResize = () => setWidth(window.innerWidth);
+        setWidth(window.innerWidth);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+    return width;
+}
 
 type Cliente = {
     name: string;
@@ -14,6 +29,8 @@ const TopClientesPorTicket = () => {
     const { user } = useAuth();
     const slug = user?.payload?.slug;
     const token = user?.token;
+    const screenWidth = useWindowWidth();
+
     const [data, setData] = useState<Cliente[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -40,8 +57,10 @@ const TopClientesPorTicket = () => {
         fetchData();
     }, [slug, token]);
 
+    const yTickFontSize = screenWidth && screenWidth < 480 ? 11 : 12;
+
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-xl w-full mb-6">
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md w-full mb-6">
             <h3 className="text-lg sm:text-xl font-bold mb-4 text-left sm:text-center">Top 10 Customers by Average Ticket</h3>
 
             {loading ? (
@@ -52,16 +71,29 @@ const TopClientesPorTicket = () => {
             ) : data.length === 0 ? (
                 <p className="text-sm text-gray-500 text-center">No data available.</p>
             ) : (
-                <div className="h-[500px]">
+                <div className="h-[500px] overflow-hidden">
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={data} layout="vertical" margin={{ top: 0, right: 50, left: 100, bottom: 0 }}>
+                        <BarChart
+                            data={data}
+                            layout="vertical"
+                            margin={{ top: 0, right: 40, left: 10, bottom: 0 }}
+                        >
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis type="number" />
-                            <YAxis dataKey="name" type="category" width={150} />
-                            <Tooltip
-                                formatter={(value: number, name: string) => (name === "averageOrder" ? [`$${value.toFixed(2)}`, "Average per order"] : [`${value}`, "Orders"])}
+                            <YAxis
+                                dataKey="name"
+                                type="category"
+                                width={100}
+                                tick={{ fontSize: yTickFontSize }}
                             />
-                            <Bar dataKey="averageOrder" fill="#ffc658">
+                            <Tooltip
+                                formatter={(value: number, name: string) =>
+                                    name === "averageOrder"
+                                        ? [`$${value.toFixed(2)}`, "Average per order"]
+                                        : [`${value}`, "Orders"]
+                                }
+                            />
+                            <Bar dataKey="averageOrder" fill="#36a2eb">
                                 <LabelList dataKey="orders" position="right" formatter={(v: number) => `${v} ord`} />
                             </Bar>
                         </BarChart>
