@@ -29,14 +29,24 @@ const PromoCodesList = ({ refreshTrigger }: { refreshTrigger: number }) => {
       const session = localStorage.getItem("adminSession");
       if (!session) return { slug: "", token: "" };
       const parsed = JSON.parse(session);
-      return { slug: parsed.payload?.slug || "", token: parsed.token || "" };
+      const slug =
+        parsed.restaurant?.slug ||
+        parsed.payload?.restaurant?.slug ||
+        parsed.payload?.slug ||
+        parsed.restaurants?.[0]?.slug ||
+        parsed.payload?.restaurants?.[0]?.slug ||
+        "";
+      return { slug, token: parsed.token || "" };
     } catch {
       return { slug: "", token: "" };
     }
   })();
 
   const fetchPromoCodes = async () => {
-    if (!slug || !token) return;
+    if (!slug || !token) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       const response = await getPromoCodes(slug, token);

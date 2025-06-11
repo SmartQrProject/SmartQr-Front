@@ -19,7 +19,14 @@ const PromoCodeForm = ({ onCodeCreated }: { onCodeCreated?: () => void }) => {
       const session = localStorage.getItem("adminSession");
       if (!session) return;
       const parsed = JSON.parse(session);
-      setSlug(parsed.payload?.slug || "");
+      const extractedSlug =
+        parsed.restaurant?.slug ||
+        parsed.payload?.restaurant?.slug ||
+        parsed.payload?.slug ||
+        parsed.restaurants?.[0]?.slug ||
+        parsed.payload?.restaurants?.[0]?.slug ||
+        "";
+      setSlug(extractedSlug);
       setToken(parsed.token || "");
     } catch {
       setSlug("");
