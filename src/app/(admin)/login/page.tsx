@@ -2,7 +2,7 @@ import React from 'react'
 import LoginForm from './adminLoginForm'
 import Navbar from '@/components/subscribers/navbar/Navbar';
 
-const AdminRegisterPage = () => {
+const AdminLoginPage = () => {
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
   return (
@@ -31,4 +31,4 @@ const AdminRegisterPage = () => {
   )
 }
 
-export default AdminRegisterPage
+export default AdminLoginPage
