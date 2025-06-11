@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/subscribers/navbar/Navbar";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary";
+import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 
 interface Restaurant {
   id: string;
@@ -15,6 +16,7 @@ interface Restaurant {
 
 export default function SelectRestaurantPage() {
   const router = useRouter();
+  const { setUser } = useAuth();
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
   useEffect(() => {
@@ -36,6 +38,7 @@ export default function SelectRestaurantPage() {
           parsed.payload.restaurant = r;
           parsed.payload.slug = r.slug;
           localStorage.setItem("adminSession", JSON.stringify(parsed));
+          setUser(parsed);
           router.replace("/dashboard");
           return;
         }
@@ -59,6 +62,7 @@ export default function SelectRestaurantPage() {
       parsed.payload.restaurant = restaurant;
       parsed.payload.slug = restaurant.slug;
       localStorage.setItem("adminSession", JSON.stringify(parsed));
+      setUser(parsed);
       router.replace("/dashboard");
     } catch {
       router.replace("/login");
