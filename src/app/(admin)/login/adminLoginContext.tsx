@@ -3,7 +3,11 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { IAdminLogin, IAdminSessionStorage } from "@/types";
+
+
+import { IAdminLogin } from "@/types";
+import { parseJwt } from "@/utils/jwt";
+
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -17,16 +21,6 @@ interface IAuthContextProps {
 
 const AuthContext = createContext<IAuthContextProps | undefined>(undefined);
 
-function parseJwt(token: string) {
-    try {
-        const base64Payload = token.split(".")[1];
-        const payload = atob(base64Payload);
-        return JSON.parse(payload);
-    } catch (e) {
-        console.error("Error parsing JWT:", e);
-        return null;
-    }
-}
 
 export const AdminLoginProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<IAdminSessionStorage | null>(null);
