@@ -3,14 +3,10 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { IAdminLogin } from "@/types";
+import { IAdminLogin, IAdminSessionStorage } from "@/types";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
-type IAdminSessionStorage = {
-    token: string;
-    payload: any;
-};
 
 interface IAuthContextProps {
     user: IAdminSessionStorage | null;

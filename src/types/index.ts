@@ -25,6 +25,18 @@ export interface IAdminRegister {
     confirmPassword: string;
 }
 
+export interface IAdminSessionPayload {
+    sub: string;
+    id: string;
+    email: string;
+    roles: string[];
+    name: string;
+    phone: string;
+    restaurants?: IRestaurant[];
+    restaurant?: IRestaurant;
+    slug?: string;
+}
+
 export interface IAdminSession {
     token: string;
     payload: {
@@ -35,10 +47,10 @@ export interface IAdminSession {
     };
 }
 
-export type IAdminSessionStorage = {
+export interface IAdminSessionStorage {
     token: string;
-    payload: any;
-};
+    payload: IAdminSessionPayload;
+}
 
 export interface ICategory {
     id: number;
