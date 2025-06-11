@@ -7,17 +7,8 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Loader2, Clock4, ChefHat, Bell } from "lucide-react";
+import { parseJwt } from "@/utils/jwt";
 
-function parseJwt(token: string) {
-    try {
-        const base64Payload = token.split(".")[1];
-        const payload = atob(base64Payload);
-        return JSON.parse(payload);
-    } catch (e) {
-        console.error("Invalid token");
-        return null;
-    }
-}
 
 export default function OrderCardList() {
     const [orders, setOrders] = useState<IOrder[]>([]);

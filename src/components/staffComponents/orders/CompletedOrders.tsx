@@ -11,6 +11,7 @@ import { MdTakeoutDining } from "react-icons/md";
 import { RiTakeawayFill, RiTakeawayLine } from "react-icons/ri";
 import { GiBoxUnpacking } from "react-icons/gi";
 import { CgMenuBoxed } from "react-icons/cg";
+import { parseJwt } from "@/utils/jwt";
 
 const transformOrderFromApi = (order: any): IOrder => ({
     id: order.id,
@@ -30,15 +31,6 @@ const transformOrderFromApi = (order: any): IOrder => ({
     })),
 });
 
-function parseJwt(token: string) {
-    try {
-        const base64Payload = token.split(".")[1];
-        const payload = atob(base64Payload);
-        return JSON.parse(payload);
-    } catch {
-        return null;
-    }
-}
 
 export default function CompletedOrdersPage() {
     const [orders, setOrders] = useState<IOrder[]>([]);

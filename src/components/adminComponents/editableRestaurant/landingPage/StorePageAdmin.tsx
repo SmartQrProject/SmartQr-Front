@@ -9,16 +9,8 @@ import StoreInfoModal from "./StoreInfoAdmin";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
 import { PencilIcon } from "lucide-react";
+import { parseJwt } from "@/utils/jwt";
 
-function parseJwt(token: string) {
-    try {
-        const base64Payload = token.split(".")[1];
-        const payload = atob(base64Payload);
-        return JSON.parse(payload);
-    } catch {
-        return null;
-    }
-}
 
 export default function StorePageAdmin() {
     const router = useRouter();
