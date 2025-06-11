@@ -37,8 +37,22 @@ const PromoCodesPage = () => {
         if (payload?.roles === "owner") {
             setAuthorized(true);
 
-           
-            localStorage.setItem("adminSession", JSON.stringify({ token, payload }));
+            // Preserve existing restaurant/slug data stored in localStorage
+            try {
+                const existing = localStorage.getItem("adminSession");
+                if (existing) {
+                    const parsed = JSON.parse(existing);
+                    const mergedPayload = { ...payload, ...parsed.payload };
+                    localStorage.setItem(
+                        "adminSession",
+                        JSON.stringify({ token, payload: mergedPayload })
+                    );
+                } else {
+                    localStorage.setItem("adminSession", JSON.stringify({ token, payload }));
+                }
+            } catch {
+                localStorage.setItem("adminSession", JSON.stringify({ token, payload }));
+            }
         } else {
             router.push("/404");
         }
