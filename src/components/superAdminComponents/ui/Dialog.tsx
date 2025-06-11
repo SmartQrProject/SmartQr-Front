@@ -12,8 +12,11 @@ export const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children }) 
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-4 relative">{children}</div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center relative">
+            <div className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-none z-40" />
+            <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-4 relative z-50 pointer-events-auto">
+                {children}
+            </div>
         </div>
     );
 };
