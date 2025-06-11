@@ -7,17 +7,8 @@ import NavbarAdmin from "@/components/adminComponents/navbar/NavbarAdmin";
 import PromoCodesContainer from "@/components/adminComponents/promoCodes/PromoCodesContainer";
 import Footer from "@/components/subscribers/footer/Footer";
 import Cookies from "js-cookie";
+import { parseJwt } from "@/utils/jwt";
 
-function parseJwt(token: string) {
-    try {
-        const base64Payload = token.split(".")[1];
-        const payload = atob(base64Payload);
-        return JSON.parse(payload);
-    } catch (e) {
-        console.error("Invalid token");
-        return null;
-    }
-}
 
 const PromoCodesPage = () => {
     const router = useRouter();

@@ -10,16 +10,8 @@ import toast from "react-hot-toast";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary";
 import PasswordInput from "@/components/adminComponents/sessionInputs/PaswordInput";
 import Cookies from "js-cookie";
+import { parseJwt } from "@/utils/jwt";
 
-function parseJwt(token: string) {
-    try {
-        const base64Payload = token.split(".")[1];
-        const payload = atob(base64Payload);
-        return JSON.parse(payload);
-    } catch {
-        return null;
-    }
-}
 
 const Settings = () => {
     const router = useRouter();
