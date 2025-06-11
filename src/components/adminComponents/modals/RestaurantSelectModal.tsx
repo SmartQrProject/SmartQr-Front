@@ -18,8 +18,9 @@ export default function RestaurantSelectModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-xl p-6 shadow-lg w-full max-w-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-none" />
+      <div className="bg-white rounded-xl p-6 shadow-lg w-full max-w-sm pointer-events-auto">
         <h2 className="text-xl font-semibold mb-4 text-center">Select Restaurant</h2>
         <div className="space-y-2">
           {restaurants.map((r) => (
