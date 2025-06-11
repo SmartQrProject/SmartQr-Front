@@ -33,10 +33,25 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
-      await loginAdmin(data); 
+      await loginAdmin(data);
 
       const session = localStorage.getItem("adminSession");
       const parsed = session ? JSON.parse(session) : null;
+
+      if (parsed?.payload && !parsed.payload.restaurant && Array.isArray(parsed.payload.restaurants)) {
+        if (parsed.payload.restaurants.length === 1) {
+          const restaurant = parsed.payload.restaurants[0];
+          parsed.payload.restaurant = restaurant;
+          parsed.payload.slug = restaurant.slug;
+          localStorage.setItem("adminSession", JSON.stringify(parsed));
+        } else {
+          toast.success("Login successful! Redirecting...");
+          reset();
+          setTimeout(() => router.replace("/select-restaurant"), 2000);
+          return;
+        }
+      }
+
       const isActive = parsed?.payload?.restaurant?.is_active;
 
       if (isActive === false) {
