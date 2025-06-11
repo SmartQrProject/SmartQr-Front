@@ -67,9 +67,11 @@ const EditTableButton: React.FC<Props> = ({ tableId, currentCode, isActive, onTa
             </button>
 
             {showModal && (
+
                 <div className="fixed inset-0 z-50 flex justify-center items-center relative">
                     <div className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-none z-40" />
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center relative z-50 pointer-events-auto">
+
                         <h3 className="text-lg font-semibold mb-4">Edit table name</h3>
                         <input
                             type="text"
