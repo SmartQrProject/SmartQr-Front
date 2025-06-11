@@ -12,7 +12,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary";
+
 import { useState, useMemo, useEffect } from "react";
+
 import PasswordInput from "@/components/adminComponents/sessionInputs/PaswordInput";
 
 export default function RegisterForm() {
@@ -31,6 +33,7 @@ export default function RegisterForm() {
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
+        getValues,
     } = useForm<RegisterFormInputs>({
         resolver: formResolver,
         mode: "onChange",
@@ -54,6 +57,16 @@ export default function RegisterForm() {
             toast.error("Unable to verify email");
         }
     };
+
+    useEffect(() => {
+        const values = getValues();
+        reset({
+            ...values,
+            ownerName: "",
+            password: "",
+            confirmPassword: "",
+        });
+    }, [emailExists, reset, getValues]);
 
     const onSubmit = async (data: RegisterFormInputs) => {
         setIsLoading(true);
