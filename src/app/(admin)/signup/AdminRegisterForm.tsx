@@ -12,7 +12,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary";
-import { useState, useEffect } from "react";
+
+import { useState, useMemo, useEffect } from "react";
+
 import PasswordInput from "@/components/adminComponents/sessionInputs/PaswordInput";
 
 export default function RegisterForm() {
@@ -21,6 +23,11 @@ export default function RegisterForm() {
     const router = useRouter();
     const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
+    const formResolver = useMemo(
+        () => zodResolver(emailExists ? AdminRestaurantSchema : AdminRegisterSchema),
+        [emailExists]
+    );
+
     const {
         register,
         handleSubmit,
@@ -28,9 +35,13 @@ export default function RegisterForm() {
         reset,
         getValues,
     } = useForm<RegisterFormInputs>({
-        resolver: zodResolver(emailExists ? AdminRestaurantSchema : AdminRegisterSchema),
+        resolver: formResolver,
         mode: "onChange",
     });
+
+    useEffect(() => {
+        reset();
+    }, [emailExists, reset]);
 
     const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
         const email = e.target.value;
