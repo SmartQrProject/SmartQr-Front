@@ -64,6 +64,14 @@ export const AdminRegisterSchema = z
 
 export type RegisterFormInputs = z.infer<typeof AdminRegisterSchema>;
 
+export const AdminRestaurantSchema = AdminRegisterSchema.omit({
+  ownerName: true,
+  password: true,
+  confirmPassword: true,
+});
+
+export type RestaurantFormInputs = z.infer<typeof AdminRestaurantSchema>;
+
 export const loginSchema = z.object({
   email: z.string().nonempty({ message: "Email is required" }).email(),
   password: z.string()

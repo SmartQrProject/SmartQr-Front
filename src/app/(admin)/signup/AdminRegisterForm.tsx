@@ -2,7 +2,12 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterFormInputs, AdminRegisterSchema } from "./authSchema";
+import {
+    RegisterFormInputs,
+    AdminRegisterSchema,
+    AdminRestaurantSchema,
+} from "./authSchema";
+import { checkEmail } from "@/libs/checkEmail";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
@@ -12,6 +17,7 @@ import PasswordInput from "@/components/adminComponents/sessionInputs/PaswordInp
 
 export default function RegisterForm() {
     const [isLoading, setIsLoading] = useState(false);
+    const [emailExists, setEmailExists] = useState(false);
     const router = useRouter();
     const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -19,23 +25,46 @@ export default function RegisterForm() {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
+        reset,
     } = useForm<RegisterFormInputs>({
-        resolver: zodResolver(AdminRegisterSchema),
+        resolver: zodResolver(emailExists ? AdminRestaurantSchema : AdminRegisterSchema),
         mode: "onChange",
     });
+
+    const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+        const email = e.target.value;
+        if (!email) return;
+        try {
+            const { exists } = await checkEmail(email);
+            setEmailExists(exists);
+            if (exists) {
+                toast.success("Existing account found. We'll link this restaurant to it.");
+            }
+        } catch (err) {
+            console.error("Email check error", err);
+            toast.error("Unable to verify email");
+        }
+    };
 
     const onSubmit = async (data: RegisterFormInputs) => {
         setIsLoading(true);
 
         try {
-            const restaurantData = {
-                owner_name: data.ownerName,
-                name: data.storeName,
-                slug: data.slug,
-                owner_email: data.email,
-                owner_pass: data.password,
-                isTrial: data.isTrial,
-            };
+            const restaurantData = emailExists
+                ? {
+                      name: data.storeName,
+                      slug: data.slug,
+                      owner_email: data.email,
+                      isTrial: data.isTrial,
+                  }
+                : {
+                      owner_name: data.ownerName,
+                      name: data.storeName,
+                      slug: data.slug,
+                      owner_email: data.email,
+                      owner_pass: data.password,
+                      isTrial: data.isTrial,
+                  };
 
             const createRes = await fetch(`${APIURL}/restaurants/create`, {
                 method: "POST",
@@ -65,16 +94,26 @@ export default function RegisterForm() {
     return (
         <div className="max-w-md mx-auto mt-10 mb-10 p-6 bg-default-50 rounded-xl">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-sm">
-                <div>
-                    <label htmlFor="ownerName">Name and Last Name</label>
-                    <input id="ownerName" {...register("ownerName")} className="w-full p-2 bg-white rounded-md" placeholder="John Smith" />
-                    {errors.ownerName && <p className="text-red-500">{errors.ownerName.message}</p>}
-                </div>
+                {!emailExists && (
+                    <div>
+                        <label htmlFor="ownerName">Name and Last Name</label>
+                        <input id="ownerName" {...register("ownerName")} className="w-full p-2 bg-white rounded-md" placeholder="John Smith" />
+                        {errors.ownerName && <p className="text-red-500">{errors.ownerName.message}</p>}
+                    </div>
+                )}
 
                 <div>
                     <label htmlFor="email">Email</label>
-                    <input id="email" {...register("email")} className="w-full p-2 bg-white rounded-md" placeholder="johnSmith@mail.com" />
+                    <input
+                        id="email"
+                        {...register("email", { onBlur: handleEmailBlur })}
+                        className="w-full p-2 bg-white rounded-md"
+                        placeholder="johnSmith@mail.com"
+                    />
                     {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+                    {emailExists && (
+                        <p className="text-green-600 text-sm">Existing account detected. We will assign this restaurant to it.</p>
+                    )}
                 </div>
 
                 <div>
@@ -89,15 +128,19 @@ export default function RegisterForm() {
                     {errors.slug && <p className="text-red-500">{errors.slug.message}</p>}
                 </div>
 
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <PasswordInput register={register} name="password" error={errors.password?.message} />
-                </div>
+                {!emailExists && (
+                    <>
+                        <div>
+                            <label htmlFor="password">Password</label>
+                            <PasswordInput register={register} name="password" error={errors.password?.message} />
+                        </div>
 
-                <div>
-                    <label htmlFor="confirmPassword">Confirm Password</label>
-                    <PasswordInput register={register} name="confirmPassword" error={errors.confirmPassword?.message} />
-                </div>
+                        <div>
+                            <label htmlFor="confirmPassword">Confirm Password</label>
+                            <PasswordInput register={register} name="confirmPassword" error={errors.confirmPassword?.message} />
+                        </div>
+                    </>
+                )}
 
                 <div>
                     <label className="block font-medium mb-2">Start with:</label>
