@@ -38,13 +38,20 @@ export default function LoginForm() {
       const session = localStorage.getItem("adminSession");
       const parsed = session ? JSON.parse(session) : null;
 
-      if (parsed?.payload && !parsed.payload.restaurant && Array.isArray(parsed.payload.restaurants)) {
+      if (
+        parsed?.payload &&
+        !parsed.payload.restaurant &&
+        Array.isArray(parsed.payload.restaurants)
+      ) {
         if (parsed.payload.restaurants.length === 1) {
           const restaurant = parsed.payload.restaurants[0];
           parsed.payload.restaurant = restaurant;
           parsed.payload.slug = restaurant.slug;
           localStorage.setItem("adminSession", JSON.stringify(parsed));
-        } else {
+        } else if (parsed.payload.restaurants.length > 1) {
+          delete parsed.payload.slug;
+          delete parsed.payload.restaurant;
+          localStorage.setItem("adminSession", JSON.stringify(parsed));
           toast.success("Login successful! Redirecting...");
           reset();
           setTimeout(() => router.replace("/select-restaurant"), 2000);
