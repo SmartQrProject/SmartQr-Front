@@ -8,14 +8,14 @@ import { loginSchema } from "../signup/authSchema";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
-import { useAuth } from "./adminLoginContext";
+import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import PasswordInput from "@/components/adminComponents/sessionInputs/PaswordInput";
 import { useState } from "react";
 
 type LoginFormInputs = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
-  const { loginAdmin } = useAuth();
+  const { loginAdmin, setUser } = useAuth();
   const router = useRouter();
 
   const [isRestaurantInactive, setIsRestaurantInactive] = useState(false);
@@ -44,6 +44,7 @@ export default function LoginForm() {
           parsed.payload.restaurant = restaurant;
           parsed.payload.slug = restaurant.slug;
           localStorage.setItem("adminSession", JSON.stringify(parsed));
+          setUser(parsed);
         } else {
           toast.success("Login successful! Redirecting...");
           reset();
