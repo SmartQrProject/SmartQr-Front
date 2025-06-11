@@ -113,6 +113,12 @@ export default function OrderCardList() {
         };
 
         fetchData();
+
+        const intervalId = setInterval(() => {
+            fetchData();
+        }, 10000);
+
+        return () => clearInterval(intervalId);
     }, [slug, token, authorized]);
 
         const updateOrderStatus = async (orderId: string, newStatus: string) => {
