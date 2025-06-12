@@ -72,6 +72,9 @@ const Navbar = () => {
                     <Link className="hover:text-[#6494ED]" href="/pricing">
                         Pricing
                     </Link>
+                    <Link className="hover:text-blue-400" href="/about-us">
+                        About Us
+                    </Link>
                     {isLoggedIn && (
                         <Link className="hover:text-[#6494ED]" href="/admin/dashboard">
                             Dashboard
