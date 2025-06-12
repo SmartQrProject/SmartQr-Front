@@ -78,7 +78,11 @@ export default function RegisterForm() {
                       isTrial: data.isTrial,
                   };
 
-            const createRes = await fetch(`${APIURL}/restaurants/create`, {
+            const endpoint = emailExists
+                ? `${APIURL}/restaurants/create-existing`
+                : `${APIURL}/restaurants/create`;
+
+            const createRes = await fetch(endpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(restaurantData),
