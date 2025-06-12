@@ -151,7 +151,7 @@ export default function BillingComponent() {
 
             {showConfirm && (
 
-                <div className="fixed inset-0 z-50 flex items-center justify-center relative">
+                <div className="fixed inset-0 z-50 flex items-center justify-center ">
                     <div className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-none z-40" />
                     <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full space-y-4 relative z-50 pointer-events-auto">
 

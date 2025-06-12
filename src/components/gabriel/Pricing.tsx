@@ -81,9 +81,10 @@ const Pricing = () => {
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
           Simple, Transparent Pricing
         </h2>
-        <p className="text-base sm:text-lg text-gray-600 mb-10">
-          One powerful plan. Start with a <span className="font-semibold text-[#4285F4]">14-day free trial</span>. No credit card required.
+        <p className="text-base sm:text-lg text-gray-600 ">
+          One powerful plan. Start with a <span className="font-semibold text-[#4285F4]">14-day free trial</span> 
         </p>
+          <span className="text-sm xs:text-xs text-gray-600 "> Credit card required to start. No charges during the trial.</span>
       </motion.div>
 
 
@@ -93,7 +94,7 @@ const Pricing = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9 }}
         viewport={{ once: true }}
-        className="max-w-5xl mx-auto bg-white rounded-2xl shadow-md shadow-blue-100 p-6 sm:p-10 text-center transition-transform duration-300 transform hover:scale-105 "
+        className="max-w-5xl mx-auto bg-white mt-3 rounded-2xl shadow-md shadow-blue-100 p-6 sm:p-10 text-center transition-transform duration-300 transform hover:scale-105 "
       >
         <h2 className="text-2xl sm:text-3xl font-semibold text-[#4285F4] mb-4">Pro Plan – $49/month</h2>
         <p className="text-gray-700 mb-6 sm:mb-8 text-sm sm:text-base">
@@ -144,7 +145,14 @@ const Pricing = () => {
         <p className="text-gray-600 mb-10 text-sm sm:text-base">
           Join hundreds of restaurants using SmartQR to streamline service, reduce wait times, and boost satisfaction.
         </p>
+
+        <div className="m-6 p-4 border border-yellow-300 bg-yellow-50 text-sm text-yellow-800 rounded-xl">
+          <strong>Note:</strong> A valid credit or debit card is required to begin the trial. 
+          This allows us to verify that you're not a bot. You won’t be charged unless you continue after the trial.
+        </div>
+        
       </motion.div>
+
     </div>
   );
 };

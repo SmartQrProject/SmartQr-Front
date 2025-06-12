@@ -34,7 +34,7 @@ export default function RegisterForm() {
         getValues,
         trigger,
     } = useForm<RegisterFormInputs>({
-        resolver: formResolver,
+        resolver: zodResolver(AdminRegisterSchema),
         mode: "onChange",
     });
 
