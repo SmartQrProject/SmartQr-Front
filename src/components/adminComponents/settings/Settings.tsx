@@ -43,8 +43,27 @@ const Settings = () => {
 
         const payload = parseJwt(cookieToken);
         const role = payload?.roles;
-        const slug = payload?.slug;
+        let slug = payload?.slug;
         const userId = payload?.sub;
+
+        let slugFromStorage = "";
+        if (typeof window !== "undefined") {
+            const sessionRaw = localStorage.getItem("adminSession");
+            if (sessionRaw) {
+                try {
+                    const session = JSON.parse(sessionRaw);
+                    slugFromStorage =
+                        session.restaurant?.slug ||
+                        session.payload?.restaurant?.slug ||
+                        session.payload?.slug ||
+                        "";
+                } catch {
+                    slugFromStorage = "";
+                }
+            }
+        }
+
+        slug = slug || slugFromStorage;
 
         if (!role || (!role.includes("owner") && !role.includes("staff")) || !slug || !userId) {
             router.push("/404");

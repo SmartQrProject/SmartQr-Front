@@ -57,9 +57,11 @@ export default function EditRestaurantModal({ restaurant, onClose, onUpdated }: 
 
     return (
         <Dialog open={isOpen} onClose={handleClose} className="relative z-50">
-            <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
-            <div className="fixed inset-0 flex items-center justify-center p-4">
-                <DialogPanel className="w-full max-w-md bg-white rounded-xl p-6 space-y-4 shadow-xl">
+
+            <div className="fixed inset-0 bg-black/20 backdrop-blur-sm pointer-events-none z-40" aria-hidden="true" />
+            <div className="fixed inset-0 flex items-center justify-center p-4 relative z-50">
+                <DialogPanel className="w-full max-w-md bg-white rounded-xl p-6 space-y-4 shadow-xl relative z-50">
+
                     <DialogTitle className="text-lg font-bold">Edit Restaurant</DialogTitle>
 
                     <div className="space-y-2">

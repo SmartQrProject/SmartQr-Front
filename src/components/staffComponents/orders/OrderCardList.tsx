@@ -45,9 +45,26 @@ export default function OrderCardList() {
         const payload = parseJwt(cookieToken);
         const role = payload?.roles;
 
+        let slugFromStorage = "";
+        if (typeof window !== "undefined") {
+            const sessionRaw = localStorage.getItem("adminSession");
+            if (sessionRaw) {
+                try {
+                    const session = JSON.parse(sessionRaw);
+                    slugFromStorage =
+                        session.restaurant?.slug ||
+                        session.payload?.restaurant?.slug ||
+                        session.payload?.slug ||
+                        "";
+                } catch {
+                    slugFromStorage = "";
+                }
+            }
+        }
+
         if (role === "owner" || role === "staff") {
             setToken(cookieToken);
-            setSlug(payload?.slug || "");
+            setSlug(payload?.slug || slugFromStorage);
             setAuthorized(true);
         } else {
             router.push("/404");
@@ -96,6 +113,12 @@ export default function OrderCardList() {
         };
 
         fetchData();
+
+        const intervalId = setInterval(() => {
+            fetchData();
+        }, 10000);
+
+        return () => clearInterval(intervalId);
     }, [slug, token, authorized]);
 
         const updateOrderStatus = async (orderId: string, newStatus: string) => {
