@@ -6,63 +6,75 @@ const passwordRegex =
 
   
 
-export const AdminRegisterSchema = z
-  .object({
-    ownerName: z
-      .string()
-      .min(5, "Name must be at least 5 characters")
-      .max(50, "Name must be at most 50 characters")
-      .nonempty({ message: "Name is required" })
-      .regex(/^[A-Za-z0-9 ]+$/, {
-        message: "Name can only contain letters, numbers, and spaces",
-      }),
-
-    email: z
-      .string()
-      .min(5, "Email must be at least 5 characters")
-      .max(100, "Email must be at most 100 characters")
-      .nonempty({ message: "Email is required" })
-      .email("Please enter a valid email address"),
-
-    storeName: z
-      .string()
-      .min(1, { message: "Store name must be at least 1 character" }).max(50, "Store name must be at most 50 characters"),
-
-    slug: z
-      .string()
-      .min(5, { message: "Slug must be at least 5 characters" }).max(15, "Slug must be at most 15 characters"),
-
-    password: z
-      .string()
-      .nonempty({ message: "Password is required" })
-      .min(8, "Password must be at least 8 characters")
-      .max(15, "Password must be at most 15 characters")
-      .regex(passwordRegex, {
-        message:
-          "Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (@$!%?&)",
-      }),
-
-    confirmPassword: z
-      .string()
-      .nonempty({ message: "Confirm Password is required" })
-      .min(8, "Confirm Password must be at least 8 characters")
-      .max(15, "Confirm Password must be at most 15 characters")
-      .regex(passwordRegex, {
-        message:
-          "Confirm Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (@$!%?&)",
-      }),
-
-    isTrial: z.coerce.boolean({
-      required_error: "Please select a trial option",
+const AdminRegisterBase = z.object({
+  ownerName: z
+    .string()
+    .min(5, "Name must be at least 5 characters")
+    .max(50, "Name must be at most 50 characters")
+    .nonempty({ message: "Name is required" })
+    .regex(/^[A-Za-z0-9 ]+$/, {
+      message: "Name can only contain letters, numbers, and spaces",
     }),
 
-  })
-  .refine((data) => data.password === data.confirmPassword, {
+  email: z
+    .string()
+    .min(5, "Email must be at least 5 characters")
+    .max(100, "Email must be at most 100 characters")
+    .nonempty({ message: "Email is required" })
+    .email("Please enter a valid email address"),
+
+  storeName: z
+    .string()
+    .min(1, { message: "Store name must be at least 1 character" })
+    .max(50, "Store name must be at most 50 characters"),
+
+  slug: z
+    .string()
+    .min(5, { message: "Slug must be at least 5 characters" })
+    .max(15, "Slug must be at most 15 characters"),
+
+  password: z
+    .string()
+    .nonempty({ message: "Password is required" })
+    .min(8, "Password must be at least 8 characters")
+    .max(15, "Password must be at most 15 characters")
+    .regex(passwordRegex, {
+      message:
+        "Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (@$!%?&)",
+    }),
+
+  confirmPassword: z
+    .string()
+    .nonempty({ message: "Confirm Password is required" })
+    .min(8, "Confirm Password must be at least 8 characters")
+    .max(15, "Confirm Password must be at most 15 characters")
+    .regex(passwordRegex, {
+      message:
+        "Confirm Password must be 8 to 15 characters with uppercase, lowercase, number, and special character (@$!%?&)",
+    }),
+
+  isTrial: z.coerce.boolean({
+    required_error: "Please select a trial option",
+  }),
+});
+
+export const AdminRegisterSchema = AdminRegisterBase.refine(
+  (data) => data.password === data.confirmPassword,
+  {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  });
+  }
+);
 
 export type RegisterFormInputs = z.infer<typeof AdminRegisterSchema>;
+
+export const AdminRestaurantSchema = AdminRegisterBase.omit({
+  ownerName: true,
+  password: true,
+  confirmPassword: true,
+});
+
+export type RestaurantFormInputs = z.infer<typeof AdminRestaurantSchema>;
 
 export const loginSchema = z.object({
   email: z.string().nonempty({ message: "Email is required" }).email(),

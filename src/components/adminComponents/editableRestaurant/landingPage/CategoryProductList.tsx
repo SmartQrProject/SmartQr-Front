@@ -180,6 +180,7 @@ export default function CategoryProductList({ slug, products, refetchProducts }:
                     />
                 </ProductModal>
             )}
+            
 
             <ConfirmDialog
                 isOpen={confirmDeleteOpen}

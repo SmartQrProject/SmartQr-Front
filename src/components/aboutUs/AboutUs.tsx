@@ -12,32 +12,32 @@ interface TeamMember {
 const team: TeamMember[] = [
     {
         name: "Gabriel Amigo",
-        description: "Full Stack Engineer with a focus on Back End development.",
+        description: "Full Stack Developer with a focus on Back End development.",
         imageUrl: "https://res.cloudinary.com/dsrcokjsp/image/upload/w_300,h_300,c_thumb,g_face,q_auto:best,f_auto,dpr_auto/v1749049516/qpipj8bsaeujrqaeq4uv.jpg",
     },
     {
         name: "Federico Alvarez",
-        description: "Full Stack Engineer with a focus on Back End development",
+        description: "Full Stack Developer with a focus on Back End development",
         imageUrl: "https://res.cloudinary.com/dsrcokjsp/image/upload/w_300,h_300,c_thumb,g_face,q_auto:best,f_auto,dpr_auto/v1749049516/fjetxvs13ts8qrh0hj9m.jpg",
     },
     {
         name: "Matías Gallardo",
-        description: "Full Stack Engineer with a focus on Back End development.",
+        description: "Full Stack Developer with a focus on Back End development.",
         imageUrl: "https://res.cloudinary.com/dsrcokjsp/image/upload/w_300,h_300,c_thumb,g_face,q_auto:best,f_auto,dpr_auto/v1749049516/gwvvjt4gdtuoemwj2bxq.jpg",
     },
     {
         name: "Andrea Larsen",
-        description: "Full Stack Engineer with a focus on Front End development.",
+        description: "Full Stack Developer with a focus on Front End development.",
         imageUrl: "https://res.cloudinary.com/dsrcokjsp/image/upload/w_300,h_300,c_thumb,g_face,q_auto:best,f_auto,dpr_auto/v1749049516/bkrlzx9xqtmkxmvuillc.jpg",
     },
     {
         name: "Eliana Tangarife Blandon",
-        description: "Full Stack Engineer with a focus on Front End development.",
+        description: "Full Stack Developer with a focus on Front End development.",
         imageUrl: "https://res.cloudinary.com/dsrcokjsp/image/upload/w_300,h_300,c_thumb,g_face,q_auto:best,f_auto,dpr_auto/v1749049516/bcpk3lzotonyt4qfkpdt.jpg",
     },
     {
         name: "Francisco José D'Alessandro",
-        description: "Full Stack Engineer with a focus on Front End development.",
+        description: "Full Stack Developer with a focus on Front End development.",
         imageUrl: "https://res.cloudinary.com/dsrcokjsp/image/upload/w_300,h_300,c_thumb,g_face,q_auto:best,f_auto,dpr_auto/v1749049516/dbocpx3aeavev3epn3qb.jpg",
     },
 ];

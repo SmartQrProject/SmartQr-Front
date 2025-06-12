@@ -21,6 +21,8 @@ export default function RestaurantList() {
     const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
     const [checkingAuth, setCheckingAuth] = useState(true);
     const [authorized, setAuthorized] = useState(false);
+    const [isUpdatingSlug, setIsUpdatingSlug] = useState<string | null>(null);
+
 
     useEffect(() => {
         const sessionRaw = localStorage.getItem("adminSession");
@@ -115,6 +117,7 @@ export default function RestaurantList() {
 
     const handleToggleStatus = async (slug: string, currentStatus: boolean) => {
         try {
+            setIsUpdatingSlug(slug);
             const { token } = getSession();
 
             const res = await fetch(`${APIURL}/restaurants/${slug}`, {
@@ -129,10 +132,12 @@ export default function RestaurantList() {
             if (!res.ok) throw new Error("Failed to update restaurant status");
 
             toast.success("Restaurant status updated");
-            loadData();
+            await loadData();
         } catch {
             toast.error("Error updating status");
-        }
+        } finally {
+        setIsUpdatingSlug(null);
+    }
     };
 
     const handleDeleteRestaurant = async (slug: string) => {
@@ -197,6 +202,7 @@ export default function RestaurantList() {
                                     onToggleStatus={() => handleToggleStatus(r.slug, r.is_active)}
                                     onEdit={() => setEditingRestaurant(r)}
                                     onDelete={() => setDeletingSlug(r.slug)}
+                                    isUpdating={isUpdatingSlug === r.slug}
                                 />
                             ) : null,
                         )}

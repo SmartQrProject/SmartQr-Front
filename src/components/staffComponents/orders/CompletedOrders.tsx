@@ -67,13 +67,30 @@ export default function CompletedOrdersPage() {
         const payload = parseJwt(cookieToken);
         const roles = payload?.roles;
 
+        let slugFromStorage = "";
+        if (typeof window !== "undefined") {
+            const sessionRaw = localStorage.getItem("adminSession");
+            if (sessionRaw) {
+                try {
+                    const session = JSON.parse(sessionRaw);
+                    slugFromStorage =
+                        session.restaurant?.slug ||
+                        session.payload?.restaurant?.slug ||
+                        session.payload?.slug ||
+                        "";
+                } catch {
+                    slugFromStorage = "";
+                }
+            }
+        }
+
         if (!roles || (!roles.includes("owner") && !roles.includes("staff"))) {
             router.push("/404");
             return;
         }
 
         setToken(cookieToken);
-        setSlug(payload.slug);
+        setSlug(payload.slug || slugFromStorage);
         setAuthorized(true);
         setCheckingAuth(false);
     }, [router]);
@@ -111,6 +128,12 @@ export default function CompletedOrdersPage() {
         };
 
         fetchData();
+
+        const intervalId = setInterval(() => {
+            fetchData();
+        }, 10000);
+
+        return () => clearInterval(intervalId);
     }, [slug, token, authorized]);
 
     const updateOrderStatus = async (orderId: string, newStatus: string) => {
