@@ -1,4 +1,4 @@
-import Feature from "@/components/gabriel/Feature";
+import Feature from "@/components/subscribers/staticPages/Feature";
 import Footer from "@/components/subscribers/footer/Footer";
 import Navbar from "@/components/subscribers/navbar/Navbar";
 import React from "react";

@@ -10,7 +10,7 @@ import ProductModal from "@/components/adminComponents/editableRestaurant/landin
 import CreateMenuForm from "@/components/adminComponents/menu/forms/CreateProductForm";
 import { ICategoryWithProducts } from "@/components/adminComponents/menu/menuTypes/menuTypes";
 import { ProductFormData } from "@/components/adminComponents/menu/menuHelpers/schemas/createProductSchema";
-import ConfirmDialog from "../../menu/menuHelpers/confirm/confirmDialog";
+import ConfirmDialog from "../../../confirmModal/confirmDialog";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 

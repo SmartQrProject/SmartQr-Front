@@ -10,7 +10,7 @@ import { userCreateCategory } from "@/libs/hooks/userCreateCategory";
 import AddCategoryModal from "@/components/adminComponents/editableRestaurant/landingPage/AddCategoryModal";
 import CreateMenuForm from "../../menu/forms/CreateProductForm";
 import ProductModal from "@/components/adminComponents/editableRestaurant/landingPage/ProducModal";
-import ConfirmDialog from "../../menu/menuHelpers/confirm/confirmDialog";
+import ConfirmDialog from "../../../confirmModal/confirmDialog";
 
 interface EditableCategoriesProps {
   slug: string;

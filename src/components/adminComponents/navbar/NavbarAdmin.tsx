@@ -9,7 +9,7 @@ import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { useUserRole } from "../hooks/useUserRole";
-import { Menu, Store } from "lucide-react";
+import { Menu, PlusCircle, Store } from "lucide-react";
 
 const NavbarAdmin = () => {
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
@@ -76,6 +76,15 @@ const NavbarAdmin = () => {
               </Link>
             )}
 
+            {slug && role === "owner" && (
+                <Link
+                  className="py-2 px-4 font-semibold hover:text-blue-400 flex gap-2 items-center"
+                  href="/signup"
+                >
+                  <PlusCircle  className="h-4 w-4" />Add Restaurant
+                </Link>
+              )}
+
             <button
               onClick={logOutHandler}
               className="py-2 px-6 bg-branding-500 text-white rounded-full font-semibold hover:bg-brangig-400 cursor-pointer"
@@ -105,6 +114,15 @@ const NavbarAdmin = () => {
                   target="_blank"
                 >
                   <Store className="h-4 w-4" />Your Store
+                </Link>
+              )}
+
+              {slug && role === "owner" && (
+                <Link
+                  className="py-2 px-4 font-semibold hover:text-blue-400 flex gap-2 items-center"
+                  href="/signup"
+                >
+                  <PlusCircle className="h-4 w-4" />Add Restaurant
                 </Link>
               )}
 

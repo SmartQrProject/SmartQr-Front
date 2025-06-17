@@ -70,7 +70,7 @@ export default function PublicCategoryList({ categories, slug }: Props) {
 
           {selectedProduct && (
 
-            <div className="fixed inset-0 z-50 flex items-center justify-center px-4 relative">
+            <div className="fixed inset-0 z-50 flex items-center justify-center px-4 ">
               <div className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-none z-40" />
 
               <ProductDetail

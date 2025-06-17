@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import RestaurantCard from "./RestaurantCard";
 import EditRestaurantModal from "./EditRestaurantModal";
-import ConfirmDeleteModal from "./ConfirmDeleteModal";
+// import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import { IRestaurant } from "@/types";
+import ConfirmDialog from "@/components/confirmModal/confirmDialog";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,10 +19,11 @@ export default function RestaurantList() {
     const router = useRouter();
     const [restaurants, setRestaurants] = useState<IRestaurantWithOwnerName[]>([]);
     const [editingRestaurant, setEditingRestaurant] = useState<IRestaurant | null>(null);
-    const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
+    const [deletingSlug, setDeletingSlug] = useState<{ slug: string; name: string } | null>(null);
     const [checkingAuth, setCheckingAuth] = useState(true);
     const [authorized, setAuthorized] = useState(false);
     const [isUpdatingSlug, setIsUpdatingSlug] = useState<string | null>(null);
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
 
     useEffect(() => {
@@ -201,7 +203,7 @@ export default function RestaurantList() {
                                     is_active={r.is_active}
                                     onToggleStatus={() => handleToggleStatus(r.slug, r.is_active)}
                                     onEdit={() => setEditingRestaurant(r)}
-                                    onDelete={() => setDeletingSlug(r.slug)}
+                                    onDelete={() => setDeletingSlug({ slug: r.slug, name: r.name })}
                                     isUpdating={isUpdatingSlug === r.slug}
                                 />
                             ) : null,
@@ -210,18 +212,18 @@ export default function RestaurantList() {
                 </table>
             </div>
 
-            {editingRestaurant && (
-                <EditRestaurantModal
-                    restaurant={editingRestaurant}
-                    onClose={() => setEditingRestaurant(null)}
-                    onUpdated={() => {
-                        setEditingRestaurant(null);
-                        loadData();
-                    }}
-                />
+            {editingRestaurant && ( <EditRestaurantModal restaurant={editingRestaurant} onClose={() => setEditingRestaurant(null)} onUpdated={() => { setEditingRestaurant(null); loadData()}}/>
             )}
 
-            {deletingSlug && <ConfirmDeleteModal slug={deletingSlug} onCancel={() => setDeletingSlug(null)} onConfirm={() => handleDeleteRestaurant(deletingSlug)} />}
+            <ConfirmDialog
+                isOpen={!!deletingSlug}
+                title="Delete Restaurant"
+                message={`Are you sure you want to delete the restaurant "${deletingSlug?.name}"?`}
+                onConfirm={() => {
+                    if (deletingSlug) handleDeleteRestaurant(deletingSlug.slug);
+                }}
+                onCancel={() => setDeletingSlug(null)}
+                />
         </div>
     );
 }

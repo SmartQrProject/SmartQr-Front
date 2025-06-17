@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Switch } from "@headlessui/react";
 import { Pencil, Trash2 } from "lucide-react";
-import ConfirmDialog from "@/components/adminComponents/menu/menuHelpers/confirm/confirmDialog";
+import ConfirmDialog from "@/components/confirmModal/confirmDialog";
 
 export interface RestaurantCardProps {
     id: string;
@@ -78,14 +78,12 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ id, slug, name, owner_e
             </td>
         </tr>
            <ConfirmDialog
-  isOpen={confirmActiveOpen}
-  title="Deactivate Restaurant"
-  message={`Are you sure you want to deactivate the restaurant "${name}"?`}
-  onConfirm={handleConfirm}
-  onCancel={handleCancel}
- 
-  
-/>
+                isOpen={confirmActiveOpen}
+                title="Deactivate Restaurant"
+                message={`Are you sure you want to deactivate the restaurant "${name}"?`}
+                onConfirm={handleConfirm}
+                onCancel={handleCancel}       
+            />
 
         </>
     );

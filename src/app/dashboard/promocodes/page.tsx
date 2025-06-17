@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import MenuAdmin from "@/components/adminComponents/menudesplegabe/MenuAdmin";
+import MenuAdmin from "@/components/adminComponents/menuLateral/MenuAdmin";
 import NavbarAdmin from "@/components/adminComponents/navbar/NavbarAdmin";
 import PromoCodesContainer from "@/components/adminComponents/promoCodes/PromoCodesContainer";
 import Footer from "@/components/subscribers/footer/Footer";

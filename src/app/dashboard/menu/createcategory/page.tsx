@@ -2,7 +2,7 @@ import FooterAdmin from '@/components/adminComponents/footer/Footer'
 import CreateCategoryForm from '@/components/adminComponents/menu/forms/CreateCategoryForm'
 import Sidebar from '@/components/adminComponents/menu/sidebar/sidebar'
 import CategoriesList from '@/components/adminComponents/menu/views/CategoryView'
-import MenuAdmin from '@/components/adminComponents/menudesplegabe/MenuAdmin'
+import MenuAdmin from '@/components/adminComponents/menuLateral/MenuAdmin'
 import NavbarAdmin from '@/components/adminComponents/navbar/NavbarAdmin'
 import React from 'react'
 

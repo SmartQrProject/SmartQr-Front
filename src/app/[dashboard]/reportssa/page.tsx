@@ -1,5 +1,5 @@
 import FooterAdmin from "@/components/adminComponents/footer/Footer";
-import MenuAdmin from "@/components/adminComponents/menudesplegabe/MenuAdmin";
+import MenuAdmin from "@/components/adminComponents/menuLateral/MenuAdmin";
 import NavbarAdmin from "@/components/adminComponents/navbar/NavbarAdmin";
 import Reportssa from "@/components/superAdminComponents/reports/Reportssa";
 import React from "react";
