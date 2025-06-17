@@ -19,7 +19,7 @@ export default function RestaurantSelectModal({
 
   return (
 
-    <div className="fixed inset-0 z-50 flex items-center justify-center relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center ">
       <div className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-none z-40" />
       <div className="bg-white rounded-xl p-6 shadow-lg w-full max-w-sm relative z-50 pointer-events-auto">
 

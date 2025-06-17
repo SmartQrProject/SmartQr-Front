@@ -1,4 +1,4 @@
-import Benefits from "@/components/gabriel/Benefits";
+import Benefits from "@/components/subscribers/staticPages/Benefits";
 import Footer from "@/components/subscribers/footer/Footer";
 import Navbar from "@/components/subscribers/navbar/Navbar";
 import React from "react";

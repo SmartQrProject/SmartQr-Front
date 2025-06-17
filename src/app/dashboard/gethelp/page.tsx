@@ -1,5 +1,5 @@
 import GetHelp from '@/components/adminComponents/getHelp/GetHelp'
-import MenuAdmin from '@/components/adminComponents/menudesplegabe/MenuAdmin'
+import MenuAdmin from '@/components/adminComponents/menuLateral/MenuAdmin'
 import NavbarAdmin from '@/components/adminComponents/navbar/NavbarAdmin'
 import Footer from '@/components/subscribers/footer/Footer'
 import React from 'react'

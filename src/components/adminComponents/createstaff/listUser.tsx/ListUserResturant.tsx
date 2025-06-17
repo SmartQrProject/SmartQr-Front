@@ -3,7 +3,7 @@
 import { IUserStaff } from '@/types';
 import { deleteUser } from '../form/fectchUsers';
 import { useState } from 'react';
-import ConfirmDialog from '../../menu/menuHelpers/confirm/confirmDialog';
+import ConfirmDialog from '../../../confirmModal/confirmDialog';
 import { Trash, Trash2 } from 'lucide-react';
 
 type Props = {
@@ -67,7 +67,7 @@ const ListUserResturant = ({ users, refreshUsers }: Props) => {
               </div>
               <button
                 onClick={() => openConfirmDialog(user)}
-                className="text-red-600 hover:text-red-500 font-bold text-sm cursor-pointer"
+                className="text-red-400 hover:text-red-600 font-bold text-sm cursor-pointer"
               >
                 <Trash2/>
               </button>
