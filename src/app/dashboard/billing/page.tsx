@@ -1,7 +1,7 @@
 
 import BillingComponent from "@/components/adminComponents/billing/Billing";
 import FooterAdmin from "@/components/adminComponents/footer/Footer";
-import MenuAdmin from "@/components/adminComponents/menudesplegabe/MenuAdmin";
+import MenuAdmin from "@/components/adminComponents/menuLateral/MenuAdmin";
 import NavbarAdmin from "@/components/adminComponents/navbar/NavbarAdmin";
 
 

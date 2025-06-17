@@ -76,7 +76,7 @@ const Navbar = () => {
                         About Us
                     </Link>
                     {isLoggedIn && (
-                        <Link className="hover:text-[#6494ED]" href="/admin/dashboard">
+                        <Link className="hover:text-[#6494ED]" href="/dashboard">
                             Dashboard
                         </Link>
                     )}

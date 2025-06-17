@@ -5,12 +5,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 
 interface ConfirmDeleteModalProps {
     slug: string;
+    name:string;
     onCancel: () => void;
     onConfirm: () => void;
 }
 
-const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({ slug, onCancel, onConfirm }) => {
+const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({ name, slug, onCancel, onConfirm }) => {
     return (
+        <>
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+
+       
         <Dialog open onOpenChange={onCancel}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
@@ -18,7 +24,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({ slug, onCancel,
                 </DialogHeader>
 
                 <div className="py-4 text-sm">
-                    <p>Are you sure you want to delete this restaurant?</p>
+                    <p>Are you sure you want to delete this restaurant <span className="text-red-600 font-bold ">{name}</span>?</p>
                     <p className="text-muted-foreground mt-2">This action cannot be undone.</p>
                     <div className="mt-2 text-xs text-gray-500">
                         <strong>Slug:</strong> {slug}
@@ -35,6 +41,8 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({ slug, onCancel,
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+        </div>
+        </>
     );
 };
 

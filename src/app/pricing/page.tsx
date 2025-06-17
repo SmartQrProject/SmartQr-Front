@@ -1,5 +1,5 @@
-import Hero from "@/components/adminComponents/landingPage/heroComponent/Hero";
-import Pricing from "@/components/gabriel/Pricing";
+import Hero from "@/components/subscribers/landingPage/heroComponent/Hero";
+import Pricing from "@/components/subscribers/staticPages/Pricing";
 import Footer from "@/components/subscribers/footer/Footer";
 import Navbar from "@/components/subscribers/navbar/Navbar";
 import React from "react";

@@ -1,6 +1,7 @@
 import React from 'react'
 import RegisterForm from './AdminRegisterForm'
 import Navbar from '@/components/subscribers/navbar/Navbar';
+import { useUserRole } from '@/components/adminComponents/hooks/useUserRole';
 
 const AdminRegisterPage = () => {
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;

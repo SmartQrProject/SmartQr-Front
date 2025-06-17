@@ -1,6 +1,6 @@
 
 import StorePageClient from "@/components/adminComponents/editableRestaurant/landingPage/StorePageAdmin";
-import MenuAdmin from "@/components/adminComponents/menudesplegabe/MenuAdmin";
+import MenuAdmin from "@/components/adminComponents/menuLateral/MenuAdmin";
 
 import NavbarAdmin from "@/components/adminComponents/navbar/NavbarAdmin";
 import Footer from "@/components/subscribers/footer/Footer";

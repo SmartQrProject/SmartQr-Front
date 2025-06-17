@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getPromoCodes, deletePromoCodes } from "./fetch";
 import { Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
-import ConfirmDialog from "../menu/menuHelpers/confirm/confirmDialog";
+import ConfirmDialog from "../../confirmModal/confirmDialog";
 
 type PromoCode = {
   code: string;
