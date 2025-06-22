@@ -9,12 +9,13 @@ import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { useUserRole } from "../hooks/useUserRole";
-import { Menu, PlusCircle, Store } from "lucide-react";
+import { Building2, Menu, PlusCircle, Store } from "lucide-react";
 
 const NavbarAdmin = () => {
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const [open, setOpen] = useState(false);
   const [slug, setSlug] = useState<string | null>(null);
+  const [restaurantName, setRestaurantName] = useState<string | null>(null);
 
   const { logoutAdmin } = useAuth();
   const router = useRouter();
@@ -28,7 +29,9 @@ const NavbarAdmin = () => {
       try {
         const parsed = JSON.parse(session);
         const slug = parsed?.payload?.slug;
+        const name = parsed?.payload?.restaurant?.name;
         if (slug) setSlug(slug);
+        if (name) setRestaurantName(name);
       } catch (err) {
         console.error("Invalid session JSON:", err);
       }
@@ -49,17 +52,28 @@ const NavbarAdmin = () => {
   return (
     <div>
       <nav className="py-4 px-8 bg-[#f6f9fe] ">
-        <div className="flex justify-between items-center">
-          <Link className="font-bold text-xl" href={"/"}>
-            <img
-              src={`https://res.cloudinary.com/${cloudName}/image/upload/logo2_jzvw9b.png`}
-              alt="SmartQR"
-              className="h-8 md:h-16 inline-block rounded-lg"
-            />
-          </Link>
+        <div className="flex justify-between items-center w-full">
+
+          <div className="flex items-center">            
+            <Link className="font-bold text-xl" href={"/"}>
+              <img
+                src={`https://res.cloudinary.com/${cloudName}/image/upload/logo2_jzvw9b.png`}
+                alt="SmartQR"
+                className="h-8 md:h-16 inline-block rounded-lg"
+                />
+            </Link>
+
+              {restaurantName && (
+                <div className="ml-4 italic  text-lg font-medium  block">
+                    <span className="font-semibold">{restaurantName}</span>
+                  </div>
+                )}
+          
+            </div>
+
           <button className="sm:hidden text-2xl" onClick={() => setOpen(true)}>
             <Menu />
-          </button>
+          </button>          
 
           <div className="hidden sm:flex items-center space-x-4">
             <Link className="py-2 px-4 font-semibold hover:text-branding-500 flex gap-2 items-center" href="/dashboard/gethelp">
@@ -79,9 +93,9 @@ const NavbarAdmin = () => {
             {slug && role === "owner" && (
                 <Link
                   className="py-2 px-4 font-semibold hover:text-blue-400 flex gap-2 items-center"
-                  href="/signup"
+                  href="/dashboard/myRestaurants"
                 >
-                  <PlusCircle  className="h-4 w-4" />Add Restaurant
+                 <Building2 className="h-4 w-4" /> My Restaurants
                 </Link>
               )}
 
@@ -120,9 +134,9 @@ const NavbarAdmin = () => {
               {slug && role === "owner" && (
                 <Link
                   className="py-2 px-4 font-semibold hover:text-blue-400 flex gap-2 items-center"
-                  href="/signup"
+                  href="/dashboard/myRestaurants"
                 >
-                  <PlusCircle className="h-4 w-4" />Add Restaurant
+                 <Building2 className="h-4 w-4" /> My Restaurants
                 </Link>
               )}
 
@@ -134,6 +148,8 @@ const NavbarAdmin = () => {
               </button>
             </div>
           </div>
+
+
         )}
       </nav>
     </div>

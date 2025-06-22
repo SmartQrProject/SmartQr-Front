@@ -62,7 +62,6 @@ const MenuAdmin = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // 👇 Detect outside click to close on mobile
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (

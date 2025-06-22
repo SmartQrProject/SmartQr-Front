@@ -10,7 +10,7 @@ import { toast } from "react-hot-toast";
 import Link from "next/link";
 import { useAuth } from "@/app/(admin)/login/adminLoginContext";
 import PasswordInput from "@/components/adminComponents/sessionInputs/PaswordInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RestaurantSelectModal from "@/components/adminComponents/modals/RestaurantSelectModal";
 import { Restaurant } from "@/types";
 
@@ -82,25 +82,34 @@ export default function LoginForm() {
     }
   };
 
-  const handleRestaurantSelect = (restaurant: Restaurant) => {
-    const session = localStorage.getItem("adminSession");
-    if (!session) {
-      router.replace("/login");
-      return;
-    }
-    try {
-      const parsed = JSON.parse(session);
-      parsed.payload.restaurant = restaurant;
-      parsed.payload.slug = restaurant.slug;
-      localStorage.setItem("adminSession", JSON.stringify(parsed));
-      setUser(parsed);
-      toast.success("Restaurant selected! Redirecting...");
-      setShowRestaurantModal(false);
-      router.replace("/dashboard");
-    } catch {
-      router.replace("/login");
-    }
-  };
+const handleRestaurantSelect = (restaurant: Restaurant) => {
+  const session = localStorage.getItem("adminSession");
+  if (!session) {
+    router.replace("/login");
+    return;
+  }
+  try {
+    const parsed = JSON.parse(session);
+    parsed.payload.restaurant = restaurant;
+    parsed.payload.slug = restaurant.slug;
+    localStorage.setItem("adminSession", JSON.stringify(parsed));
+    setUser(parsed);
+    toast.success("Restaurant selected! Redirecting...");
+    setShowRestaurantModal(false);
+
+       const interval = setInterval(() => {
+      const check = localStorage.getItem("adminSession");
+      const checkParsed = check ? JSON.parse(check) : null;
+      if (checkParsed?.payload?.restaurant) {
+        clearInterval(interval);
+        router.replace("/dashboard");
+      }
+    }, 500);
+  } catch (err) {
+    console.error(err);
+    router.replace("/login");
+  }
+};  
 
   const closeRestaurantModal = () => setShowRestaurantModal(false);
 
