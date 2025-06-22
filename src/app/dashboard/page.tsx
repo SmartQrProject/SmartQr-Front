@@ -3,21 +3,34 @@ import React, { useEffect, useState } from "react";
 import FooterAdmin from '@/components/adminComponents/footer/Footer';
 import MenuAdmin from '@/components/adminComponents/menuLateral/MenuAdmin';
 import NavbarAdmin from '@/components/adminComponents/navbar/NavbarAdmin';
+import { useRouter } from "next/navigation";
+
 
 const Home = () => {
+    const router = useRouter();
+  
   const [restaurantName, setRestaurantName] = useState("Restaurant");
 
+
   useEffect(() => {
-    const session = localStorage.getItem("adminSession");
-    if (session) {
-      try {
-        const parsed = JSON.parse(session);
-        setRestaurantName(parsed.payload.restaurant.name || "Restaurant");
-      } catch {
-        setRestaurantName("Restaurant");
-      }
+  const session = localStorage.getItem("adminSession");
+  if (!session) {
+    router.replace("/login");
+    return;
+  }
+
+  try {
+    const parsed = JSON.parse(session);
+    if (!parsed?.payload?.restaurant) {
+      router.replace("/login");
+      return;
     }
-  }, []);
+
+    setRestaurantName(parsed.payload.restaurant.name || "Restaurant");
+  } catch {
+    router.replace("/login");
+  }
+}, []);
 
   return (
     <div className='min-h-screen flex flex-col'>
