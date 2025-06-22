@@ -51,23 +51,23 @@ export default function SelectRestaurantPage() {
     }
   }, [router]);
 
-  const handleSelect = (restaurant: Restaurant) => {
-    const stored = localStorage.getItem("adminSession");
-    if (!stored) {
-      router.replace("/login");
-      return;
-    }
-    try {
-      const parsed = JSON.parse(stored);
-      parsed.payload.restaurant = restaurant;
-      parsed.payload.slug = restaurant.slug;
-      localStorage.setItem("adminSession", JSON.stringify(parsed));
-      setUser(parsed);
-      router.replace("/dashboard");
-    } catch {
-      router.replace("/login");
-    }
-  };
+const handleSelect = (restaurant: Restaurant) => {
+  const stored = localStorage.getItem("adminSession");
+  if (!stored) {
+    router.replace("/login");
+    return;
+  }
+  try {
+    const parsed = JSON.parse(stored);
+    parsed.payload.restaurant = restaurant;
+    parsed.payload.slug = restaurant.slug;
+    localStorage.setItem("adminSession", JSON.stringify(parsed));
+    setUser(parsed);
+  //       router.replace("/dashboard");
+  } catch {
+//     router.replace("/login");
+   }
+ };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#e6ebf2]">

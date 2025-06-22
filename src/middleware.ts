@@ -18,6 +18,7 @@ export async function middleware(request: NextRequest) {
         pathname === "/dashboard/store" ||
         pathname === "/dashboard/reportssa" ||
         pathname === "/dashboard/reports" ||
+        pathname === "/dashboard/myRestaurants" ||
         pathname === "/dashboard/promocodes" ||
         pathname === "/dashboard/staffcreation" ||
         pathname === "/dashboard/billing" ||
