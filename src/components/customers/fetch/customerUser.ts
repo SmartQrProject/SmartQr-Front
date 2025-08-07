@@ -4,6 +4,11 @@ interface CustomerData {
     name?: string;
     email?: string;
     phone?: string;
+    address?: {
+        full: string;
+        coords: [number, number];
+    };
+    picture?: FileList | null;
     password?: string;
     reward?: number;
 }

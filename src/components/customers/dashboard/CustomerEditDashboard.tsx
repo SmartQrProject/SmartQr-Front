@@ -11,6 +11,9 @@ import { getCustomerById, modifyCustomersData } from '../fetch/customerUser';
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from 'react-hot-toast';
 import { uploadImageToServer } from '@/utils/uploadImageToServer';
+import AddressInput from '@/components/adminComponents/maps/AddressInput';
+import { watch } from 'fs';
+
 
 const CustomerEditDashboard = () => {
 const [customer, setCustomer] = useState<any>(null);
@@ -22,11 +25,17 @@ const {
   register,
   handleSubmit,
   reset,
+  setValue,
+  watch,
   formState: { errors, isSubmitting },
 } = useForm<UserProfileData>({
   resolver: zodResolver(UserProfileSchema),
   mode: "onChange",
 });
+
+
+const selectedAddress = watch("address") as { full: string; coords: [number, number] } | undefined;
+
 
 useEffect(() => {
   const session = localStorage.getItem("customerSession");
@@ -48,7 +57,8 @@ useEffect(() => {
       setCustomer(response.data);
       reset({
         phone: response.data.phone ?? "",
-        name: response.data.name ?? ""
+        name: response.data.name ?? "",
+        address: typeof response.data.address === "object" ? response.data.address : undefined,
       });
     } else {
       console.error("❌ Failed to load customer data:", response.message);
@@ -67,6 +77,13 @@ const onSubmit = async (data: UserProfileData) => {
 
   if (data.name?.trim()) sendData.name = data.name.trim();
   if (data.phone?.trim()) sendData.phone = data.phone.trim();
+  if (typeof data.address === "object" && data.address.full.trim()) {
+  sendData.address = {
+    full: data.address.full.trim(),
+    coords: data.address.coords,
+  };
+}
+
 
   const selectedPicture = data.picture as FileList | undefined;
   if (selectedPicture && selectedPicture.length > 0) {
@@ -169,6 +186,34 @@ if (!customer ) return <p className="text-center mt-20">Loading...</p>;
                 <p className="text-red-500 text-sm">{errors.picture.message}</p>
               )}
             </div>
+         
+
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-900">Address</label>
+                <AddressInput
+                  value={typeof selectedAddress === "object" ? selectedAddress.full : ""}
+                  onSelect={(address, coords) => {
+                    setValue("address", {
+                      full: address,
+                      coords: coords,
+                    });
+                  }}
+                />
+
+              {typeof selectedAddress === "object" && selectedAddress.full && (
+                <p className="text-sm text-gray-500 mt-1">Selected: {selectedAddress.full}</p>
+              )}
+
+              {errors.address && (
+                <p className="text-red-500 text-sm">
+                  {typeof errors.address === "object" && "full" in errors.address && errors.address.full && typeof errors.address.full === "object" && "message" in errors.address.full
+                  ? (errors.address.full as { message?: string }).message
+                  : "Invalid address"}
+
+                </p>
+              )}
+            </div>
+
 
             <button
               type="submit"

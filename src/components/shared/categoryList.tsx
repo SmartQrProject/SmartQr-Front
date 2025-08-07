@@ -67,8 +67,8 @@ export default function PublicCategoryList({ categories, slug }: Props) {
                     </div>
 
                     {selectedProduct && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 ">
-                            <div className="absolute inset-0 bg-black/20 pointer-events-none z-40" />
+                        <div className="z-50 flex items-center justify-center px-4 absolute inset-0 bg-black/20 ">
+                            <div className=" pointer-events-none z-40" />
 
                             <ProductDetail {...selectedProduct} slug={slug} onCancel={() => setSelectedProduct(null)} />
                         </div>

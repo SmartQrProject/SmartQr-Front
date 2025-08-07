@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import AuthLinks from '@/components/auth0/AuthLinks';
-import { Map, MapPin, Menu, PinIcon, StoreIcon } from 'lucide-react';
+import { StoreIcon, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { FiShoppingCart } from 'react-icons/fi';
 import { HiOutlineUser } from 'react-icons/hi';
-import PublicStoreInfoModal from '@/components/shared/storeInfoCustomer';
-import { MdDinnerDining } from 'react-icons/md';
 import { IoRestaurantSharp } from 'react-icons/io5';
+import PublicStoreInfoModal from '@/components/shared/storeInfoCustomer';
 
 interface NavbarCustomerProps {
   slug?: string;
@@ -22,7 +21,6 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
   const [customerProfileImg, setCustomerProfileImg] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isStoreInfoModalOpen, setIsStoreInfoModalOpen] = useState(false);
-
   const [tableNumber, setTableNumber] = useState('');
 
   useEffect(() => {
@@ -35,16 +33,15 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
   }, [slug, name]);
 
   useEffect(() => {
-  const handleOpenHamburgerMenu = () => {
-    setIsMenuOpen(true);
-  };
+    const handleOpenHamburgerMenu = () => {
+      setIsMenuOpen(true);
+    };
 
-  window.addEventListener('openHamburgerMenu', handleOpenHamburgerMenu);
-
-  return () => {
-    window.removeEventListener('openHamburgerMenu', handleOpenHamburgerMenu);
-  };
-}, []);
+    window.addEventListener('openHamburgerMenu', handleOpenHamburgerMenu);
+    return () => {
+      window.removeEventListener('openHamburgerMenu', handleOpenHamburgerMenu);
+    };
+  }, []);
 
   useEffect(() => {
     const loadSession = () => {
@@ -56,7 +53,7 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
           setCustomerProfileImg(picture || null);
           setIsLoggedIn(true);
         } catch (error) {
-          console.error('Error parsing customerSession from localStorage', error);
+          console.error('Error parsing customerSession', error);
           setIsLoggedIn(false);
           setCustomerProfileImg(null);
         }
@@ -65,6 +62,7 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
         setCustomerProfileImg(null);
       }
     };
+
     loadSession();
     window.addEventListener('customerSessionUpdated', loadSession);
     return () => {
@@ -78,13 +76,17 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
   const displaySlug = slug || localSlug;
   const displayName = name || localName;
 
+  const baseMenuUrl = tableNumber
+    ? `/menu/${displaySlug}?table=${tableNumber}`
+    : `/menu/${displaySlug}`;
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <nav className="border-b border-gray-200 text-default-800 relative">
       <div className="flex items-center justify-between p-4">
 
-        <Link href={`/menu/${displaySlug}?table=${tableNumber}`} className="flex items-center space-x-3 rtl:space-x-reverse">
+        <Link href={baseMenuUrl} className="flex items-center space-x-3 rtl:space-x-reverse">
           <span className="self-center text-2xl font-semibold whitespace-nowrap flex items-center gap-2">
             <StoreIcon className="w-6 h-6 text-sky-800" />
             {displayName || 'Store'}
@@ -94,95 +96,91 @@ const NavbarCustomer = ({ slug, name }: NavbarCustomerProps) => {
         <div className="flex items-center gap-4">
           <Link
             href={isLoggedIn ? `/customer/dashboard` : '#'}
-            className={`cursor-pointer flex items-center justify-center w-10 h-10 rounded-lg bg-transparent transition overflow-hidden
-              ${!isLoggedIn ? 'opacity-50 pointer-events-none' : ''}
-            `}
+            className={`cursor-pointer flex items-center justify-center w-10 h-10 rounded-lg transition overflow-hidden ${
+              !isLoggedIn ? 'opacity-50 pointer-events-none' : ''
+            }`}
             aria-disabled={!isLoggedIn}
             tabIndex={isLoggedIn ? 0 : -1}
           >
             {customerProfileImg ? (
               <img src={customerProfileImg} alt="Profile" className="w-9 h-9 rounded-full object-cover" />
             ) : (
-              <div className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition">
+              <div className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent">
                 <HiOutlineUser className="text-xl text-black" />
               </div>
             )}
           </Link>
 
           <Link
-            href={`/menu/${displaySlug}/cart?table=${tableNumber}`}
-            className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition"
+            href={`${baseMenuUrl}/cart`}
+            className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg"
           >
             <FiShoppingCart className="text-xl text-black" />
           </Link>
+
           <Link
-            href={`/menu/${displaySlug}?table=${tableNumber}`}
-            className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg bg-transparent transition"
+            href={baseMenuUrl}
+            className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg"
             title="Back to Menu"
           >
-            <IoRestaurantSharp/>
+            <IoRestaurantSharp />
           </Link>
 
-
-          <button onClick={toggleMenu} type="button" className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-gray-200"
+          <button
+            onClick={toggleMenu}
+            type="button"
+            className="flex items-center justify-center w-10 h-10 border border-gray-400 rounded-lg text-black"
             aria-controls="navbar-hamburger"
             aria-expanded={isMenuOpen}
           >
             <span className="sr-only">Open main menu</span>
-            <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <svg className="w-5 h-5" viewBox="0 0 17 14">
               <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
             </svg>
           </button>
         </div>
 
         {isMenuOpen && (
-          <div
-  id="navbar-hamburger"
-  className="fixed top-0 right-0 h-full w-full max-w-xs bg-white shadow-lg z-20 p-4 flex flex-col justify-start"
->
-  <div>
-    {/* Header con nombre y botón cerrar */}
-    <div className="flex items-center gap-4 flex-row justify-between mb-">
-      <span className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-        <StoreIcon className="w-6 h-6 text-sky-800" /> {displayName || 'Store'}
-      </span>
-      <button
-        onClick={() => setIsMenuOpen(false)}
-        className="text-gray-800 hover:text-red-500 text-2xl"
-        aria-label="Close menu"
-      >
-        &times;
-      </button>
-    </div>
+          <div id="navbar-hamburger" className="fixed top-0 right-0 h-full w-full max-w-xs bg-white shadow-lg z-20 p-4 flex flex-col">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                  <StoreIcon className="w-6 h-6 text-sky-800" /> {displayName || 'Store'}
+                </span>
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-gray-800 hover:text-red-500 text-2xl"
+                  aria-label="Close menu"
+                >
+                  &times;
+                </button>
+              </div>
 
-    {/* Botón Store Info debajo del nombre */}
-    <button
-      onClick={handleOpenModal}
-      className="mt-2 py-2 px-3 rounded-sm hover:bg-gray-300 cursor-pointer w-full text-left text-gray-800 flex gap-2"
-    >
-      <MapPin/>Store Info
-    </button>
-    <PublicStoreInfoModal
-      open={isStoreInfoModalOpen}
-      onClose={handleCloseModal}
-      slug={displaySlug}
-    />
-  </div>
-  <Link
-    href={`/menu/${displaySlug}?table=${tableNumber}`}
-    className="mt-2 py-2 px-3 rounded-sm hover:bg-gray-300 cursor-pointer w-full text-left text-gray-800 flex gap-2"
-    title="Back to Menu"
-  >
-    <IoRestaurantSharp/>Store Menu
-  </Link>
+              <button
+                onClick={handleOpenModal}
+                className="mt-2 py-2 px-3 rounded-sm hover:bg-gray-300 w-full text-left text-gray-800 flex gap-2"
+              >
+                <MapPin /> Store Info
+              </button>
 
+              <PublicStoreInfoModal
+                open={isStoreInfoModalOpen}
+                onClose={handleCloseModal}
+                slug={displaySlug}
+              />
 
+              <Link
+                href={baseMenuUrl}
+                className="mt-2 py-2 px-3 rounded-sm hover:bg-gray-300 w-full text-left text-gray-800 flex gap-2"
+              >
+                <IoRestaurantSharp /> Store Menu
+              </Link>
+            </div>
 
-  {/* Footer con links de auth */}
-  <div className="flex flex-row gap-3 mt-auto mb-20">
-    <AuthLinks />
-  </div>
-</div>
+            <div className="flex flex-row gap-3 mt-auto mb-20">
+              <AuthLinks />
+            </div>
+          </div>
         )}
       </div>
     </nav>

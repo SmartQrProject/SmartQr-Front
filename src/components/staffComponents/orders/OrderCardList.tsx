@@ -28,12 +28,16 @@ export default function OrderCardList() {
     const [token, setToken] = useState<string>("");
     const router = useRouter();
 
-    const getTableName = (order: IOrder) => {
-        if (!order.tableId || !tableNames[order.tableId]) {
-            return "Counter";
-        }
-        return tableNames[order.tableId];
+   const getTableName = (order: IOrder) => {
+    if (order.order_type === "delivery") return "Delivery";
+
+    if (order.tableId && tableNames[order.tableId]) {
+        return `Table ${tableNames[order.tableId]}`;
+    }
+
+    return "Counter";
     };
+
 
     useEffect(() => {
         const cookieToken = Cookies.get("adminSession");

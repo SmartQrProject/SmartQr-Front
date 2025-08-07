@@ -12,11 +12,20 @@ export const UserProfileSchema = z.object({
   phone: z
     .string()
     .regex(/^\+?[()\-\d\s]{6,40}$/, "Please enter a valid phone number") 
-    .optional()
-    .or(z.literal("")),
+    .or(z.literal(""))
+    .optional(),
   picture: z
   .any({message:"Please enter a valid file" })
-  .optional()
+  .optional(),
+  address: z.union([
+    z.object({
+      full: z.string().max(200),
+      coords: z.tuple([z.number(), z.number()])
+    }),
+    z.literal("")
+  ]).optional()
+
+
   
 })
   

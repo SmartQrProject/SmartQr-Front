@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface AddressInputProps {
   onSelect: (address: string, coords: [number, number]) => void;
+  value?: string;
 }
 
-const AddressInput: React.FC<AddressInputProps> = ({ onSelect }) => {
-  const [query, setQuery] = useState('');
+const AddressInput: React.FC<AddressInputProps> = ({ onSelect, value }) => {
+  const [query, setQuery] = useState(value || '');
+
   const [results, setResults] = useState<any[]>([]);
+
 
   const handleSearch = async (text: string) => {
     setQuery(text);
@@ -27,6 +30,11 @@ const AddressInput: React.FC<AddressInputProps> = ({ onSelect }) => {
     onSelect(place.place_name, place.geometry.coordinates); // [lng, lat]
   };
 
+  useEffect(() => {
+  setQuery(value || '');
+  }, [value]);
+
+
   return (
     <div>
       <input
@@ -34,21 +42,26 @@ const AddressInput: React.FC<AddressInputProps> = ({ onSelect }) => {
         value={query}
         onChange={(e) => handleSearch(e.target.value)}
         placeholder="Enter an Address"
-        className="rounded px-3 py-2 w-full bg-gray-100 text-sm"
+        className="rounded px-3 py-2 w-full bg-neutral-100 text-sm"
       />
-      {results.length > 0 && (
-        <ul className="rounded mt-1 bg-white shadow">
-          {results.map((place) => (
-            <li
-              key={place.id}
-              className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleSelect(place)}
-            >
-              {place.place_name}
-            </li>
-          ))}
-        </ul>
-      )}
+      {Array.isArray(results) && results.length > 0 ? (
+        results[0].place_name ? (
+          <ul className="rounded mt-1 bg-white shadow">
+            {results.map((place) => (
+              <li
+                key={place.id}
+                className="rounded mt-1 p-2 hover:bg-gray-100 z-10"
+                onClick={() => handleSelect(place)}
+              >
+                {place.place_name}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-500">No results found</p>
+        )
+      ) : null}
+
     </div>
   );
 };

@@ -25,6 +25,11 @@ export function useSyncCustomerSession(slug: string | null) {
                         email: user.email,
                         auth0Id: user.sub,
                         picture: user.picture,
+                        address: user.address ? {
+                            full: user.address.full,
+                            coords: user.address.coords,
+                        } : undefined,
+                        phone: user.phone,
                     }),
                 });
 
