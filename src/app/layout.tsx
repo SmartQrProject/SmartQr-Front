@@ -44,7 +44,7 @@ export default function RootLayout({
                 async
                 />
             </head>
-            <body className=" min-h-screen flex flex-col">
+            <body className=" min-h-screen flex flex-col bg-white">
                 
                 <Toaster position="top-center" />
                 <AdminLoginProvider>

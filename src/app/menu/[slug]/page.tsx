@@ -11,7 +11,7 @@ export default async function MenuPage({ params }: { params: Promise<{ slug: str
   if (!data) return notFound();
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#7554390A]">
+    <div className="flex flex-col min-h-screen bg-[#7554390A] md:mx-auto">
       <NavbarCustomer slug={slug} name={data.name} />
       <div className="flex-1">
         <StorePageClient data={data} slug={slug} />

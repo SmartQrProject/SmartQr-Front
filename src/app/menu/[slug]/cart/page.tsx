@@ -21,7 +21,7 @@ export default async function Cart({ params }: CartProps) {
       <NavbarCustomer slug={slug} name={data.name} />
 
       <main className="flex-grow p-4">
-        <h2 className="text-2xl mb-4 text-center font-semibold">Shopping Cart</h2>
+        
         <CartView />
       </main>
 

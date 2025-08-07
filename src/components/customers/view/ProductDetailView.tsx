@@ -70,7 +70,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
 
       <button
         onClick={onCancel}
-        className="absolute top-4 right-4 z-10 w-8 h-8 border border-gray-300 rounded-full text-gray-600 hover:text-black flex items-center justify-center bg-white shadow cursor-pointer"
+        className="absolute top-4 right-4 z-10 w-8 h-8 border border-gray-200 rounded-full text-branding-500 hover:text-branding-600 flex items-center justify-center bg-white shadow cursor-pointer"
       >
        <CgClose className="h-5 w-5" />
       </button>
@@ -123,7 +123,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         <div className="flex justify-end space-x-4 pt-4">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-default-800 border-default-800 border-2 rounded hover:bg-default-600 hover:text-white transition cursor-pointer"
+            className="px-4 py-2 text-branding-500 border-branding-500 border-2 rounded hover:bg-branding-600 hover:text-white transition cursor-pointer"
           >
             Cancel
           </button>
@@ -132,7 +132,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
             disabled={!is_available}
             className={`px-4 py-2 rounded transition ${
               is_available
-                ? 'bg-default-800 text-white hover:bg-default-700 cursor-pointer'
+                ? 'bg-branding-500 text-white hover:bg-branding-600 cursor-pointer'
                 : 'bg-gray-400 text-gray-700 cursor-not-allowed'
             }`}
           >
