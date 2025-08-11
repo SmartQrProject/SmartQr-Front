@@ -14,6 +14,8 @@ import {
 import toast from "react-hot-toast";
 import { CgClose } from "react-icons/cg";
 import AddressInput from "@/components/adminComponents/maps/AddressInput";
+import { getCustomerById } from "../fetch/customerUser";
+import DeliveryAddressModal from "./ModalDeliveryAddress";
 
 const CartView = () => {
   const router = useRouter();
@@ -22,6 +24,8 @@ const CartView = () => {
   const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
   const [customerId, setCustomerId] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [customerData, setCustomerData] = useState<any>(null);
   const [loadingSession, setLoadingSession] = useState(true);
   const [totalCart, setTotalCart] = useState<number>(0);
   const [cart, setCart] = useState<ICartProduct[]>([]);
@@ -31,6 +35,9 @@ const CartView = () => {
   const [useDefaultAddress, setUseDefaultAddress] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState<{ full: string; coords?: number[] } | null>(null);
   const [tableNumber, setTableNumber] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
 
   const discountAmount = promoPercentage ? (totalCart * promoPercentage) / 100 : 0;
   const finalTotal = totalCart - discountAmount;
@@ -38,11 +45,11 @@ const CartView = () => {
   useEffect(() => {
     const session = localStorage.getItem("customerSession");
     if (session) {
-      const parsed = JSON.parse(session);
-      setCustomerId(parsed.payload?.id);
+    const parsed = JSON.parse(session);
+    setCustomerId(parsed.payload?.id);
+    setToken(parsed.token || null);
     }
 
-  
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]") as ICartProduct[];
     const cartWithQuantity = storedCart.map((product) => ({
       ...product,
@@ -51,7 +58,6 @@ const CartView = () => {
     setCart(cartWithQuantity);
     recalculateTotal(cartWithQuantity);
 
-   
     const storedTableNumber = localStorage.getItem("tableNumber") || null;
     if (storedTableNumber?.includes("/")) {
       const clean = storedTableNumber.split("/")[0];
@@ -63,6 +69,25 @@ const CartView = () => {
 
     setLoadingSession(false);
   }, []);
+
+  // traemos address de getcustomerById
+  useEffect(() => {
+    if (!customerId || !token) return;
+
+    async function fetchCustomer() {
+      const res = await getCustomerById(token!, slug, customerId!);
+      if (res.success) {
+        setCustomerData(res.data);
+
+        localStorage.setItem(
+          "customerSession",
+          JSON.stringify({ token, payload: res.data })
+        );
+      }
+    }
+
+    fetchCustomer();
+  }, [customerId, token, slug]);
 
   const recalculateTotal = (cartData: ICartProduct[]) => {
     const total = cartData.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
@@ -121,14 +146,15 @@ const CartView = () => {
       return;
     }
 
+     setIsRedirecting(true);
+
     const isDelivery = !tableNumber;
     let addressToUse = "";
 
     if (isDelivery) {
       if (useDefaultAddress) {
-        const session = localStorage.getItem("customerSession");
-        const customer = session ? JSON.parse(session).payload : null;
-        addressToUse = customer?.address?.full;
+        addressToUse = customerData?.address?.full;
+
         if (!addressToUse) {
           toast.error("No default address found. Please enter one.");
           return;
@@ -155,8 +181,6 @@ const CartView = () => {
       products: productsForOrder,
     };
 
- 
-
     const session = localStorage.getItem("customerSession");
     const token = session ? JSON.parse(session).token : null;
     if (!token) throw new Error("Missing auth token");
@@ -173,6 +197,7 @@ const CartView = () => {
 
       const data = await res.json();
       if (!res.ok) {
+        setIsRedirecting(false);
         toast.error(data.message || "Order creation failed");
         return;
       }
@@ -180,14 +205,28 @@ const CartView = () => {
       localStorage.setItem("cart", "[]");
       toast.success("Order created. Redirecting to payment...");
 
-      if (!data.stripeSession) throw new Error("Missing Stripe session URL");
+      if (!data.stripeSession) {
+        setIsRedirecting(false);
+        throw new Error("Missing Stripe session URL");
+    }
 
+      setTimeout(() => {
       window.location.href = data.stripeSession;
+    }, 300);
     } catch (error: any) {
+        setIsRedirecting(false);
       console.error("Checkout error:", error);
       toast.error(error.message || "Checkout failed.");
     }
   };
+        if (isRedirecting) {
+        return (
+            <div className="flex items-center justify-center h-40 gap-3">
+                <p className="text-lg text-branding-900"> Redirecting, please wait...</p>
+                <div className="w-6 h-6 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+        }
 
   return (
     <>
@@ -231,29 +270,6 @@ const CartView = () => {
            )}
          </div>
 
-         
-         {!tableNumber && (
-           <div className="mt-4">
-             <label className="font-semibold text-gray-700 block mb-2">Delivery Address</label>
-             <div className="mb-2">
-               <label className="flex items-center gap-2">
-                 <input type="radio" checked={useDefaultAddress} onChange={() => setUseDefaultAddress(true)} />
-                 Use my default address
-               </label>
-               <label className="flex items-center gap-2 mt-1">
-                 <input type="radio" checked={!useDefaultAddress} onChange={() => setUseDefaultAddress(false)} />
-                 Enter a new address
-               </label>
-             </div>
-
-             {!useDefaultAddress && (
-               <div className="mt-2">
-                 <AddressInput onSelect={(address, coords) => setSelectedAddress({ full: address, coords })} />
-                 {selectedAddress?.full && <p className="text-sm text-gray-600 mt-1">Selected: {selectedAddress.full}</p>}
-               </div>
-             )}
-           </div>
-         )}
        </div>
 
        {/* Order Summary */}
@@ -316,9 +332,19 @@ const CartView = () => {
 
          {cart.length > 0 && (
            <div className="mt-6 flex flex-col gap-2">
-             <button onClick={handleCheckout} className="bg-branding-500 hover:bg-branding-600 text-white py-2 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-pointer">
-               <CreditCard className="h-6 w-6" /> Proceed to Checkout
-             </button>
+            <button
+                onClick={() => {
+                    if (!customerId) {
+                    toast.error("You must be logged in to checkout.");
+                    window.dispatchEvent(new CustomEvent("openHamburgerMenu"));
+                    return;
+                    }
+                    setIsModalOpen(true);
+                }}
+                className="bg-branding-500 hover:bg-branding-600 text-white py-2 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-pointer"
+                >
+                <CreditCard className="h-6 w-6" /> Continue
+            </button>
 
              <button onClick={() => router.push(`/menu/${slug}`)} className="text-branding-500 hover:bg-branding-600 hover:text-white hover:border-0 border-2 border-branding-500 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-pointer">
                <ShoppingCart className="h-6 w-6" /> Continue Shopping
@@ -326,7 +352,19 @@ const CartView = () => {
            </div>
          )}
        </div>
+
+      <DeliveryAddressModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            useDefaultAddress={useDefaultAddress}
+            setUseDefaultAddress={setUseDefaultAddress}
+            selectedAddress={selectedAddress}
+            setSelectedAddress={setSelectedAddress}
+            defaultAddress={customerData?.address?.full}
+            onCheckout={handleCheckout}
+            />
      </div>
+     
    </div>
     </>
  );

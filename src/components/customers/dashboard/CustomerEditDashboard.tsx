@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import { uploadImageToServer } from '@/utils/uploadImageToServer';
 import AddressInput from '@/components/adminComponents/maps/AddressInput';
 import { watch } from 'fs';
+import { useRouter } from 'next/navigation';
 
 
 const CustomerEditDashboard = () => {
@@ -20,6 +21,8 @@ const [customer, setCustomer] = useState<any>(null);
 const [token, setToken] = useState('');
 const [slug, setSlug] = useState('');
 const [id, setId] = useState('');
+
+const router = useRouter();
 
 const {
   register,
@@ -113,6 +116,7 @@ const onSubmit = async (data: UserProfileData) => {
 
         window.dispatchEvent(new Event("customerSessionUpdated"));
       }
+       router.push(`/menu/${slug}/cart`);
     }
   } else {
     toast.error("❌ Failed to update data");
@@ -120,7 +124,10 @@ const onSubmit = async (data: UserProfileData) => {
 
 };
 
-if (!customer ) return <p className="text-center mt-20">Loading...</p>;
+if (!customer ) return <div className="flex items-center justify-center h-40 gap-3">
+                <p className="text-lg text-branding-900"> Loading</p>
+                <div className="w-6 h-6 border-4 border-branding-600 border-t-transparent rounded-full animate-spin" />
+            </div>
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -132,7 +139,7 @@ if (!customer ) return <p className="text-center mt-20">Loading...</p>;
             className="flex items-center gap-1 text-blue-500 text-md hover:underline"
           >
             <FiArrowLeft className="w-5 h-5" />
-            Back to Profile
+            View My Orders
           </Link>
         </div>
 
