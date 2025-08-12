@@ -158,19 +158,7 @@ if (!customer ) return <div className="flex items-center justify-center h-40 gap
             </div>
             <span className="text-center block mb-2 text-sm font-medium text-gray-500">
               {customer.email}
-            </span>
-
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900">Phone</label>
-              <input
-                type="string"
-                {...register('phone')}
-                className="w-full p-2 bg-white rounded-md"
-              />
-              {errors.phone && (
-                <p className="text-red-500 text-sm">{errors.phone.message}</p>
-              )}
-            </div>
+            </span>            
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-900">Name</label>
               <input
@@ -183,18 +171,16 @@ if (!customer ) return <div className="flex items-center justify-center h-40 gap
               )}
             </div>
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900">Picture</label>
+              <label className="block mb-2 text-sm font-medium text-gray-900">Phone</label>
               <input
-                type="file"
-                {...register('picture')}
-                className="w-full p-2 bg-white rounded-md cursor-pointer"
+                type="string"
+                {...register('phone')}
+                className="w-full p-2 bg-white rounded-md"
               />
-              {typeof errors.picture?.message === 'string' && (
-                <p className="text-red-500 text-sm">{errors.picture.message}</p>
+              {errors.phone && (
+                <p className="text-red-500 text-sm">{errors.phone.message}</p>
               )}
             </div>
-         
-
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-900">Address</label>
                 <AddressInput
@@ -220,7 +206,17 @@ if (!customer ) return <div className="flex items-center justify-center h-40 gap
                 </p>
               )}
             </div>
-
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-900">Picture</label>
+              <input
+                type="file"
+                {...register('picture')}
+                className="w-full p-2 bg-white rounded-md cursor-pointer"
+              />
+              {typeof errors.picture?.message === 'string' && (
+                <p className="text-red-500 text-sm">{errors.picture.message}</p>
+              )}
+            </div>
 
             <button
               type="submit"

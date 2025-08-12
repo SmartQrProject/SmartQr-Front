@@ -29,6 +29,7 @@ interface Order {
     created_at: string;
     table?: Table;
     items: OrderItem[];
+    address?: string;
 }
 
 const OrderHistory: React.FC = () => {
@@ -54,6 +55,8 @@ const OrderHistory: React.FC = () => {
         try {
             const response = await getOrdersById(token, id, slug);
             setOrders(response.orders || []);
+
+            console.log("respuesta",)
         } catch (err) {
             console.error("❌ Error fetching orders:", err);
             setError("Error loading orders");
@@ -87,61 +90,78 @@ const OrderHistory: React.FC = () => {
         .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
     const renderOrderCard = (order: Order) => (
-        <div key={order.id} className="bg-white rounded-lg shadow-md p-6 flex flex-col gap-3">
-            <p className="text-lg font-semibold text-gray-800 flex justify-between">
-                Order ID:
-                <span className="font-normal text-gray-600">{order.id}</span>
-            </p>
+        <div key={order.id} className="bg-white rounded-md shadow-md p-3 flex flex-col gap-2 text-sm text-gray-700">
 
-            <p className="text-lg font-semibold text-gray-800 flex justify-between">
-                Order Status:
-                <span
-                    className={`font-semibold ${
-                        order.status === "approved"
-                            ? "text-blue-600"
-                            : order.status === "pending"
-                              ? "text-red-600"
-                              : order.status === "in-process"
-                                ? "text-yellow-600"
-                                : order.status === "ready"
-                                  ? "text-green-600"
-                                  : order.status === "rejected"
-                                    ? "text-gray-600"
-                                    : order.status === "completed"
-                                      ? "text-green-700"
-                                      : "text-purple-600"
-                    }`}
-                >
+            <div className="flex justify-between">
+                <span className="font-medium">Order Date:</span>
+                <span>{new Date(order.created_at).toLocaleString()}</span>
+            </div>
+
+            <div className="flex justify-between">
+                <span className="font-medium text-gray-500">Order Status:</span>
+                <span className={`text-red-600 font-semibold ${
+                    order.status === "approved"
+                        ? "text-blue-600"
+                        : order.status === "pending"
+                        ? "text-red-600"
+                        : order.status === "in-process"
+                            ? "text-yellow-600"
+                            : order.status === "ready"
+                            ? "text-green-600"
+                            : order.status === "rejected"
+                                ? "text-gray-600"
+                                : order.status === "completed"
+                                ? "text-green-700"
+                                : "text-purple-600"
+                }`}>
                     {order.status.replace(/_/g, " ").replace(/^\w/, (c) => c.toUpperCase())}
                 </span>
-            </p>
-            <p className="text-lg font-semibold text-gray-800 flex justify-between">
-                Table:
-                <span className="font-normal text-gray-600">{order.table?.code}</span>
-            </p>
+            </div>
+            <div className="flex justify-between ">
+                <span className="font-medium">Order Type:</span>
+                <span className="text-gray-600">
+                    {order.order_type === "delivery"
+                        ? "Delivery"
+                        : order.order_type === "dine-in"
+                        ? "Dine-in"
+                        : "Pick-up"}
+                </span>
+            </div>
 
-            <p className="text-lg font-semibold text-gray-800 flex justify-between">
-                Payment Status:
-                <span className="text-gray-600">{order.payStatus}</span>
-            </p>
+            <div className="flex justify-between items-start gap-2">
+                <span className="font-medium">{order.order_type === "delivery" ? "Address:" : "Table:"}</span>
+                <span className="text-right max-w-[60%] break-words text-gray-500">
+                    {order.order_type === "delivery"
+                        ? order.address || "No especificada"
+                        : order.table?.code || "N/A"}
+                </span>
+            </div>
 
-            <p className="text-lg font-semibold text-gray-800 flex justify-between">
-                Order Date:
-                <span className="text-gray-600">{new Date(order.created_at).toLocaleString()}</span>
-            </p>
+            <div className="flex justify-between">
+                <span className="font-medium">Total Price:</span>
+                <span>${order.total_price}</span>
+            </div>
 
-            <p className="text-lg font-semibold text-gray-800 flex justify-between">
-                Total Price:
-                <span className="text-gray-600">${order.total_price}</span>
-            </p>
+            <div className="flex justify-between">
+                <span className="font-medium">Payment Status:</span>
+                <span>{order.payStatus}</span>
+            </div>
 
-            <div className="mt-3">
-                <p className="text-lg font-semibold text-gray-800 mb-2">Items:</p>
-                <ul className="divide-y divide-gray-200 border border-gray-200 rounded-md">
+            <div className="text-xs text-gray-400 truncate">ID: {order.id}</div>
+            {/* <div className="flex justify-between">
+                <span>Order ID:</span>
+                <span>{order.id}</span>
+            </div> */}
+
+
+            <hr className="my-1 border-gray-200" />
+            <div className="">
+                <p className="font-medium text-gray-800 mb-1">Items:</p>
+                <ul className="bg-gray-50 border rounded-md divide-y text-sm text-gray-700">
                     {order.items.map((item, index) => (
-                        <li key={index} className="flex justify-between px-4 py-2 text-gray-700">
-                            <span>{item.product.name}</span>
-                            <span className="font-semibold">x{item.quantity}</span>
+                        <li key={index} className="flex justify-between px-3 py-2">
+                        <span>{item.product.name}</span>
+                        <span className="font-semibold">x{item.quantity}</span>
                         </li>
                     ))}
                 </ul>
