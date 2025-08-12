@@ -188,4 +188,5 @@ export interface IOrder {
     customerId?: string;
     exist?: boolean;
     items: IOrderItem[];
+    address?: string;
 }

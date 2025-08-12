@@ -132,7 +132,7 @@ const OrderHistory: React.FC = () => {
                 <span className="font-medium">{order.order_type === "delivery" ? "Address:" : "Table:"}</span>
                 <span className="text-right max-w-[60%] break-words text-gray-500">
                     {order.order_type === "delivery"
-                        ? order.address || "No especificada"
+                        ? order.address || "No address"
                         : order.table?.code || "N/A"}
                 </span>
             </div>

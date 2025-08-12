@@ -88,10 +88,23 @@ const OrderCard: React.FC<Props> = ({ order, tableName, onAdvanceStatus, onRetre
                     <ReceiptIcon className="h-4 w-4 text-branding-600" />
                     <span className="font-semibold">Total:</span> ${total.toFixed(2)}
                 </p>
+                <p className="flex items-center gap-1">
+                    <span className="font-semibold">Order Type:</span>{" "}
+                    {order.order_type === "delivery"
+                        ? "Delivery"
+                        : order.order_type === "dine-in"
+                        ? "Dine-in"
+                        : "Pick-up"}
+                </p>
+                
                 <p className="flex items-center gap-1 font-bold">
                     <FaChair className="h-4 w-4 text-branding-600" />
-                    <span className="font-semibold">Table:</span> {tableName}
+                    <span className="font-semibold">
+                        {order.order_type === "delivery" ? "Address:" : "Table:"}
+                    </span>
+                    {order.order_type === "delivery" ? (order.address || "No address") : (tableName || "N/A")}
                 </p>
+                
             </div>
 
 
