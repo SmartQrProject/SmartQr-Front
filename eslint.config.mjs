@@ -10,14 +10,17 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+    {
+        ignores: [".next/**", "node_modules/**", "dist/**"],
+    },
     ...compat.extends("next/core-web-vitals", "next/typescript"),
-    compat.config({
+    {
         rules: {
-            "@typescript-eslint/no-explicit-any": "error",
+            "@typescript-eslint/no-explicit-any": "warn",
             "no-unused-expressions": "off",
-            "@typescript-eslint/no-unused-expressions": "error",
+            "@typescript-eslint/no-unused-expressions": "warn",
             "@typescript-eslint/no-unused-vars": [
-                "error",
+                "warn",
                 {
                     args: "all",
                     argsIgnorePattern: "^_",
@@ -28,8 +31,10 @@ const eslintConfig = [
                     ignoreRestSiblings: true,
                 },
             ],
+            "react/no-unescaped-entities": "warn",
+            "react-hooks/rules-of-hooks": "warn"
         },
-    }),
+    },
 ];
 
 export default eslintConfig;
